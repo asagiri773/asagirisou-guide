@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>あさぎり荘 館内・外湯ご案内</title>
+<style>
+  :root{
+    --green-deep:#12281F;
+    --green-mid:#20493C;
+    --green-pale:#EEF3EF;
+    --gold:#B8903F;
+    --gold-deep:#9C7530;
+    --gold-light:#E3C78C;
+    --paper:#FAF6EE;
+    --card:#FFFFFF;
+    --ink:#2A2924;
+    --ink-soft:#6B6A60;
+    --alert-bg:#FBEBEA;
+    --alert-border:#BB4B4B;
+    --alert-text:#832F2E;
+    --ok-bg:#EAF4EC;
+    --ok-text:#1F6B41;
+    --shadow-sm:0 3px 12px rgba(18,40,31,0.07);
+    --shadow-md:0 14px 34px rgba(18,40,31,0.15);
+    --radius-lg:20px;
+    --radius-md:14px;
+    --radius-sm:10px;
+    --serif:"Yu Mincho","YuMincho","Hiragino Mincho ProN","Noto Serif JP",serif;
+    --sans:"Yu Gothic","YuGothic","Hiragino Kaku Gothic ProN","Noto Sans JP","Apple SD Gothic Neo","Malgun Gothic","PingFang TC","PingFang SC","Microsoft JhengHei","Microsoft YaHei",sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{transition:none !important; animation:none !important;}
+  }
+  body{
+    margin:0 auto;
+    max-width:500px;
+    background:var(--paper);
+    background-image:repeating-linear-gradient(135deg, rgba(184,144,63,0.035) 0px, rgba(184,144,63,0.035) 1px, transparent 1px, transparent 32px);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:16.5px;
+    line-height:1.8;
+    -webkit-text-size-adjust:100%;
+    padding-bottom:50px;
+  }
+  a{color:inherit; text-decoration:none;}
+  button{font-family:inherit;}
+  strong{color:var(--ink);}
+
+  /* ---------- Alert Banner ---------- */
+  .alert-banner{
+    background:var(--alert-bg);
+    color:var(--alert-text);
+    padding:13px 18px;
+    font-weight:700;
+    font-size:.9rem;
+    text-align:center;
+    border-bottom:1px solid var(--alert-border);
+    letter-spacing:.01em;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    background:linear-gradient(165deg,var(--green-deep),var(--green-mid) 78%);
+    background-image:radial-gradient(circle at 105% -10%, rgba(227,199,140,0.18) 0%, transparent 55%), linear-gradient(165deg,var(--green-deep),var(--green-mid) 78%);
+    color:var(--paper);
+    padding:38px 22px 28px;
+    text-align:center;
+  }
+  .hero .icon{font-size:1.7rem; color:var(--gold-light); display:block; margin-bottom:8px;}
+  .hero h1{
+    font-family:var(--serif);
+    font-size:1.55rem;
+    letter-spacing:.05em;
+    margin:0 0 6px;
+    font-weight:700;
+  }
+  .hero .subtitle{
+    color:var(--gold-light);
+    font-size:.78rem;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    margin:0;
+  }
+  .hero .hairline{
+    width:36px; height:1px;
+    background:var(--gold-light);
+    opacity:.55;
+    margin:18px auto;
+  }
+  .lang-switch{
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+    justify-content:center;
+  }
+  .lang-btn{
+    background:rgba(255,255,255,0.07);
+    border:1px solid rgba(227,199,140,0.45);
+    color:var(--paper);
+    padding:7px 14px;
+    border-radius:999px;
+    font-size:.78rem;
+    cursor:pointer;
+    min-height:34px;
+    transition:background .2s, color .2s, border-color .2s;
+  }
+  .lang-btn.active{
+    background:var(--gold);
+    border-color:var(--gold);
+    color:var(--green-deep);
+    font-weight:700;
+  }
+
+  /* ---------- Chip Nav ---------- */
+  .chip-nav{
+    position:sticky;
+    top:0;
+    z-index:30;
+    background:rgba(250,246,238,.94);
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
+    display:flex;
+    gap:8px;
+    overflow-x:auto;
+    padding:11px 14px;
+    border-bottom:1px solid rgba(184,144,63,.25);
+    scrollbar-width:none;
+  }
+  .chip-nav::-webkit-scrollbar{display:none;}
+  .chip{
+    flex:0 0 auto;
+    background:var(--card);
+    border:1px solid rgba(184,144,63,.4);
+    color:var(--green-mid);
+    padding:7px 14px;
+    border-radius:999px;
+    font-size:.8rem;
+    white-space:nowrap;
+    box-shadow:var(--shadow-sm);
+    font-weight:600;
+  }
+
+  main{padding:22px 16px 4px;}
+  section{scroll-margin-top:62px; margin-bottom:34px;}
+
+  .section-title{
+    font-family:var(--serif);
+    font-size:1.15rem;
+    color:var(--green-deep);
+    margin:0 0 14px;
+    display:flex;
+    align-items:center;
+    gap:9px;
+    font-weight:700;
+  }
+  .section-title::before{
+    content:"";
+    width:4px;
+    height:1.1em;
+    background:var(--gold);
+    border-radius:2px;
+    flex:0 0 auto;
+  }
+
+  /* ---------- Card ---------- */
+  .card{
+    background:var(--card);
+    border-radius:var(--radius-md);
+    padding:18px;
+    box-shadow:var(--shadow-sm);
+    border:1px solid rgba(184,144,63,.16);
+  }
+  .card p{margin:0 0 4px;}
+  .card p.desc{color:var(--ink-soft); font-size:.87rem; margin-top:2px;}
+
+  /* ---------- Wi-Fi ---------- */
+  .wifi-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    padding:11px 0;
+    border-bottom:1px dashed rgba(42,41,36,.14);
+  }
+  .wifi-row:last-of-type{border-bottom:none; padding-bottom:0;}
+  .wifi-label{color:var(--ink-soft); font-size:.8rem;}
+  .wifi-value{font-weight:700; font-size:1.05rem; font-family:ui-monospace,Menlo,Consolas,monospace; letter-spacing:.03em;}
+  .copy-btn{
+    display:flex; align-items:center; gap:9px;
+    background:var(--green-pale);
+    color:var(--green-deep);
+    border:1px solid rgba(32,73,60,.14);
+    padding:9px 15px;
+    border-radius:10px;
+    font-size:1rem;
+    font-weight:700;
+    font-family:ui-monospace,Menlo,Consolas,monospace;
+    letter-spacing:.03em;
+    cursor:pointer;
+    min-height:44px;
+  }
+  .copy-btn .copy-icon{font-size:.8rem; opacity:.6; font-family:var(--sans);}
+  .copy-btn:active{transform:scale(.97);}
+
+  /* ---------- Subcards (info / meals / yukata) ---------- */
+  .subcard{padding:13px 0; border-bottom:1px solid rgba(42,41,36,.08);}
+  .subcard:first-child{padding-top:0;}
+  .subcard:last-child{border-bottom:none; padding-bottom:0;}
+  .subcard h3{
+    font-family:var(--serif);
+    font-size:.98rem;
+    color:var(--green-deep);
+    margin:0 0 5px;
+    font-weight:700;
+  }
+  .subcard p{color:var(--ink-soft); font-size:.9rem; margin:0;}
+
+  /* ---------- Essentials list ---------- */
+  .essentials-list{list-style:none; margin:0 0 12px; padding:0;}
+  .essentials-list li{display:flex; gap:11px; align-items:flex-start; padding:8px 0; font-size:.92rem;}
+  .essentials-num{
+    flex:0 0 24px; height:24px; border-radius:50%;
+    background:var(--green-deep); color:var(--gold-light);
+    display:flex; align-items:center; justify-content:center;
+    font-size:.76rem; font-weight:700; margin-top:1px;
+  }
+  .essentials-note{
+    font-size:.83rem; color:var(--ink-soft);
+    background:var(--green-pale); padding:11px 13px; border-radius:var(--radius-sm);
+  }
+
+  /* ---------- Tattoo note ---------- */
+  .tattoo-note{
+    background:var(--green-deep); color:var(--paper);
+    padding:11px 15px; border-radius:var(--radius-sm);
+    font-size:.86rem; margin-bottom:18px; font-weight:600;
+  }
+
+  /* ---------- Live congestion button ---------- */
+  .live-btn{
+    display:flex; align-items:center; gap:11px;
+    background:var(--card);
+    border:1px solid rgba(184,144,63,.4);
+    color:var(--green-deep);
+    padding:13px 17px;
+    border-radius:999px;
+    font-weight:700;
+    font-size:.9rem;
+    box-shadow:var(--shadow-sm);
+    margin-bottom:22px;
+    width:100%;
+  }
+  .live-dot{
+    flex:0 0 auto;
+    width:9px; height:9px; border-radius:50%;
+    background:var(--gold);
+    animation:live-pulse 1.8s infinite;
+  }
+  @keyframes live-pulse{
+    0%{box-shadow:0 0 0 0 rgba(184,144,63,.45);}
+    70%{box-shadow:0 0 0 8px rgba(184,144,63,0);}
+    100%{box-shadow:0 0 0 0 rgba(184,144,63,0);}
+  }
+  .live-btn .live-text{flex:1; text-align:left;}
+  .live-btn .arrow{color:var(--gold-deep); font-size:1.05rem; flex:0 0 auto;}
+
+  /* ---------- Outer bath timeline ---------- */
+  .bath-card{display:flex; gap:12px;}
+  .bath-step-col{flex:0 0 30px; display:flex; flex-direction:column; align-items:center;}
+  .bath-step{
+    width:30px; height:30px; border-radius:50%;
+    background:var(--green-deep); color:var(--gold-light);
+    display:flex; align-items:center; justify-content:center;
+    font-weight:700; font-size:.86rem; flex:0 0 auto;
+  }
+  .bath-step.closed{background:#C9C6BD; color:#6B685F;}
+  .bath-line{flex:1; width:2px; background:linear-gradient(var(--gold),rgba(184,144,63,.15)); margin:4px 0;}
+  .bath-card:last-child .bath-line{display:none;}
+  .bath-info{
+    flex:1; background:var(--card); border-radius:var(--radius-md);
+    padding:14px 16px 16px; box-shadow:var(--shadow-sm);
+    border:1px solid rgba(184,144,63,.16); margin-bottom:16px;
+  }
+  .bath-name{font-family:var(--serif); font-size:1.04rem; color:var(--green-deep); font-weight:700;}
+  .bath-romaji{color:var(--ink-soft); font-size:.74rem; margin-left:7px; font-weight:400; font-family:var(--sans);}
+  .bath-meta{display:flex; flex-wrap:wrap; align-items:center; gap:7px 13px; font-size:.84rem; color:var(--ink-soft); margin:9px 0 3px;}
+  .status-tag{display:inline-flex; align-items:center; gap:4px; font-size:.72rem; font-weight:700; padding:3px 10px; border-radius:999px;}
+  .status-open{background:var(--ok-bg); color:var(--ok-text);}
+  .status-closed-today{background:var(--alert-bg); color:var(--alert-text);}
+  .map-btn{
+    display:inline-flex; align-items:center; gap:5px; margin-top:10px;
+    font-size:.79rem; color:var(--green-deep); border:1px solid var(--gold);
+    padding:7px 13px; border-radius:999px; font-weight:600;
+  }
+  .badge-closed{
+    display:inline-block; background:var(--alert-bg); color:var(--alert-text);
+    border:1px solid var(--alert-border); padding:4px 11px; border-radius:999px;
+    font-size:.74rem; font-weight:700; margin-top:2px;
+  }
+  .bath-desc{color:var(--ink-soft); font-size:.84rem; margin:8px 0 0;}
+
+  /* ---------- Nearby places ---------- */
+  .place-row{display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid rgba(42,41,36,.07);}
+  .place-row:first-child{padding-top:0;}
+  .place-row.highlight{
+    border-bottom:none; padding:16px; margin:12px -18px -18px;
+    background:var(--green-pale); border-radius:0 0 var(--radius-md) var(--radius-md);
+  }
+  .place-icon{
+    flex:0 0 auto; width:38px; height:38px; border-radius:50%;
+    background:var(--green-pale); display:flex; align-items:center; justify-content:center; font-size:1.05rem;
+  }
+  .place-row.highlight .place-icon{background:var(--card);}
+  .place-body{flex:1; min-width:0;}
+  .place-name{font-weight:700; font-size:.9rem; color:var(--ink);}
+  .place-dist{font-size:.78rem; color:var(--ink-soft); margin-top:2px;}
+  .place-btn{
+    flex:0 0 auto; font-size:.76rem; font-weight:700; color:var(--green-deep);
+    border:1px solid var(--gold); padding:7px 13px; border-radius:999px; white-space:nowrap;
+  }
+  .place-btn.primary{background:var(--green-deep); color:var(--paper); border-color:var(--green-deep);}
+
+  /* ---------- Pointing sheet ---------- */
+  .phrase-card{
+    background:var(--card); border-radius:var(--radius-md); padding:16px 17px;
+    margin-bottom:12px; border-left:4px solid var(--gold);
+    border-top:1px solid rgba(184,144,63,.16); border-right:1px solid rgba(184,144,63,.16); border-bottom:1px solid rgba(184,144,63,.16);
+    box-shadow:var(--shadow-sm);
+  }
+  .phrase-label{font-size:.66rem; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.08em; font-weight:700;}
+  .phrase-ja{font-family:var(--serif); font-size:1.08rem; font-weight:700; color:var(--ink); margin:4px 0 12px;}
+  .phrase-translated{font-size:.95rem; color:var(--green-mid); font-weight:600; margin-top:3px;}
+
+  /* ---------- Review banner ---------- */
+  .review-banner{
+    background:var(--card); border-radius:var(--radius-lg); padding:30px 22px;
+    text-align:center; box-shadow:var(--shadow-md); border-top:3px solid var(--gold);
+    margin:38px 16px 0;
+  }
+  .review-icon{
+    width:44px; height:44px; border-radius:50%; background:var(--green-pale);
+    color:var(--gold-deep); display:flex; align-items:center; justify-content:center;
+    font-size:1.3rem; margin:0 auto 14px;
+  }
+  .review-title{font-family:var(--serif); font-size:1.12rem; color:var(--green-deep); margin:0 0 8px; font-weight:700;}
+  .review-text{font-size:.87rem; color:var(--ink-soft); margin:0 0 18px; line-height:1.75;}
+  .review-btn{
+    display:inline-block; background:var(--green-deep); color:var(--paper);
+    font-size:.88rem; font-weight:700; padding:12px 28px; border-radius:999px;
+  }
+
+  /* ---------- Toast ---------- */
+  .toast{
+    position:fixed; bottom:26px; left:50%; transform:translateX(-50%) translateY(16px);
+    background:var(--green-deep); color:#fff; padding:11px 24px; border-radius:999px;
+    opacity:0; pointer-events:none; transition:opacity .25s ease, transform .25s ease;
+    font-size:.86rem; box-shadow:var(--shadow-md); z-index:100; max-width:80%; text-align:center;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+  footer{text-align:center; padding:8px 20px 40px; color:var(--ink-soft); font-size:.85rem; font-family:var(--serif);}
+
+  button:focus-visible, a:focus-visible{
+    outline:3px solid var(--gold);
+    outline-offset:2px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="alert-banner" data-i18n="alertBanner">⚠️ 鴻の湯・さとの湯は現在【長期休業中】です</div>
+
+  <header class="hero">
+    <span class="icon">♨</span>
+    <h1 data-i18n="appTitle">あさぎり荘 ご案内</h1>
+    <p class="subtitle" data-i18n="subTitle">城崎温泉 Kinosaki Onsen</p>
+    <div class="hairline"></div>
+    <div class="lang-switch">
+      <button class="lang-btn" data-lang="ja">日本語</button>
+      <button class="lang-btn" data-lang="en">English</button>
+      <button class="lang-btn" data-lang="zh-tw">繁體中文</button>
+      <button class="lang-btn" data-lang="zh-cn">简体中文</button>
+      <button class="lang-btn" data-lang="ko">한국어</button>
+    </div>
+  </header>
+
+  <nav class="chip-nav">
+    <a class="chip" href="#wifi" data-i18n="navWifi">Wi-Fi</a>
+    <a class="chip" href="#info" data-i18n="navInfo">館内案内</a>
+    <a class="chip" href="#meals" data-i18n="navMeals">お食事</a>
+    <a class="chip" href="#yukata" data-i18n="navYukata">浴衣・下駄</a>
+    <a class="chip" href="#baths" data-i18n="navBaths">外湯めぐり</a>
+    <a class="chip" href="#places" data-i18n="navPlaces">周辺・観光</a>
+    <a class="chip" href="#shuttle" data-i18n="navShuttle">送迎バス</a>
+    <a class="chip" id="navPointingChip" href="#pointing" data-i18n="navPointing">指差しシート</a>
+  </nav>
+
+  <main>
+
+    <!-- Wi-Fi -->
+    <section id="wifi">
+      <h2 class="section-title" data-i18n="sectionWifi">Wi-Fi接続</h2>
+      <div class="card">
+        <p class="desc" data-i18n="wifiDesc">下のパスワードをタップしてコピーできます。</p>
+        <div class="wifi-row">
+          <span class="wifi-label">SSID</span>
+          <span class="wifi-value">asagirisou</span>
+        </div>
+        <div class="wifi-row">
+          <span class="wifi-label" data-i18n="wifiPassLabel">パスワード</span>
+          <button class="copy-btn" id="copyBtn" type="button">
+            <span>asagiri322921</span><span class="copy-icon">⧉</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 館内案内 -->
+    <section id="info">
+      <h2 class="section-title" data-i18n="sectionInfo">ご滞在・館内設備</h2>
+      <div class="card">
+        <div class="subcard">
+          <h3 data-i18n="coTitle">⏰ チェックアウト・門限</h3>
+          <p data-i18n="coText">チェックアウトは 午前10:00 です。お出かけの際の門限は 24:00 となっております。※お昼頃までお車やお荷物のお預かりも承っております。</p>
+        </div>
+        <div class="subcard">
+          <h3 data-i18n="amenityTitle">♨️ 館内大浴場</h3>
+          <p data-i18n="amenityText">ご利用時間：15:00～24:00 ／ 翌朝 6:00～9:30（男女入替制）。天然温泉の「玄武の湯」「円山の湯」をお楽しみください。</p>
+        </div>
+        <div class="subcard">
+          <h3 data-i18n="facilityTitle">🚬 喫煙所・売店・設備</h3>
+          <p data-i18n="facilityText">当館は全室禁煙です。喫煙所は1階ロビー、2階通路奥にございます。／売店営業時間：7:30～10:00、15:00～20:00。／自動販売機は館内にございます。フロントへのお問い合わせは内線「9番」へ。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- お食事 -->
+    <section id="meals">
+      <h2 class="section-title" data-i18n="sectionMeals">お食事のご案内</h2>
+      <div class="card">
+        <div class="subcard">
+          <h3 data-i18n="breakfastTitle">ご朝食</h3>
+          <p data-i18n="breakfastText">1階「清流の間」にて 7:00より バイキング形式でご用意しております。入場の際に朝食券をお持ちください。</p>
+        </div>
+        <div class="subcard">
+          <h3 data-i18n="dinnerTitle">ご夕食</h3>
+          <p data-i18n="dinnerText">夕食付きプランのお客様は、チェックイン時にお伺いしたお時間に、お部屋またはお食事処へご用意いたします。</p>
+        </div>
+        <div class="subcard">
+          <h3 data-i18n="drinksTitle">フリードリンク</h3>
+          <p data-i18n="drinksText">ロビーのコーヒーはいつでも無料です。売店営業時間（15:00〜20:00）にはヤクルトも無料でご提供しております。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 浴衣・持ち物 -->
+    <section id="yukata">
+      <h2 class="section-title" data-i18n="sectionYukata">浴衣・下駄のご案内</h2>
+      <div class="card">
+        <div class="subcard">
+          <p data-i18n="yukataWomen">女性用色浴衣：ロビーに様々な色柄をご用意しております。お好みの柄をお選びください。</p>
+        </div>
+        <div class="subcard">
+          <p data-i18n="yukataMenText">男性用浴衣：各階エレベーターを出てすぐ左手にご用意しております。</p>
+        </div>
+        <div class="subcard">
+          <p data-i18n="getaText">下駄：玄関にございますので、自由にお使いください。</p>
+        </div>
+      </div>
+
+      <h2 class="section-title" data-i18n="sectionEssentials" style="margin-top:26px;">外湯めぐりの持ち物</h2>
+      <div class="card">
+        <ol class="essentials-list">
+          <li><span class="essentials-num">1</span><span data-i18n="essential1">外湯QRチケット（ロビーのかごよりお取りください）</span></li>
+          <li><span class="essentials-num">2</span><span data-i18n="essential2">お部屋のバスタオル・フェイスタオル</span></li>
+          <li><span class="essentials-num">3</span><span data-i18n="essential3">ロビーの湯かご</span></li>
+        </ol>
+        <p class="essentials-note" data-i18n="essentialsNote">使用後のQRチケットは、フロントへご返却いただくか、お部屋に置いていただいても構いません。</p>
+      </div>
+    </section>
+
+    <!-- 外湯 -->
+    <section id="baths">
+      <h2 class="section-title" data-i18n="sectionBaths">外湯一覧（あさぎり荘からの距離順）</h2>
+      <div class="tattoo-note" data-i18n="tattooNote">✨ タトゥー（刺青）は7つの外湯すべてでご利用いただけます。</div>
+
+      <a href="https://share.google/Lt2GepFM2XT4RbMmz" target="_blank" rel="noopener" class="live-btn">
+        <span class="live-dot"></span>
+        <span class="live-text" data-i18n="btnCongestion">現在の外湯 混雑状況をチェック</span>
+        <span class="arrow">›</span>
+      </a>
+
+      <div id="bathsList"></div>
+    </section>
+
+    <!-- 周辺・観光 -->
+    <section id="places">
+      <h2 class="section-title" data-i18n="sectionPlaces">周辺施設・観光情報</h2>
+      <div class="card">
+        <div class="place-row">
+          <div class="place-icon">🏪</div>
+          <div class="place-body">
+            <div class="place-name">ローソン 駅前店</div>
+            <div class="place-dist" data-i18n="pLawson">徒歩約7分</div>
+          </div>
+          <a class="place-btn" href="https://maps.google.com/?q=ローソン+城崎温泉駅前店" target="_blank" rel="noopener" data-i18n="btnRoute">ルート案内</a>
+        </div>
+        <div class="place-row">
+          <div class="place-icon">🏪</div>
+          <div class="place-body">
+            <div class="place-name">ファミリーマート</div>
+            <div class="place-dist" data-i18n="pFami">徒歩約8分</div>
+          </div>
+          <a class="place-btn" href="https://maps.google.com/?q=ファミリーマート+城崎温泉店" target="_blank" rel="noopener" data-i18n="btnRoute">ルート案内</a>
+        </div>
+        <div class="place-row highlight">
+          <div class="place-icon">🚡</div>
+          <div class="place-body">
+            <div class="place-name">城崎温泉 観光協会 公式サイト</div>
+            <div class="place-dist" data-i18n="pKinosakiOfficial">ロープウェイ・観光情報はこちら</div>
+          </div>
+          <a class="place-btn primary" href="https://kinosaki-spa.gr.jp/" target="_blank" rel="noopener" data-i18n="btnOfficial">公式サイトを開く</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 送迎バス -->
+    <section id="shuttle">
+      <h2 class="section-title" data-i18n="sectionShuttle">外湯めぐり 送迎バス</h2>
+      <div class="card">
+        <p data-i18n="shuttleText">当館から外湯方面への送迎バスを運行しております。ご予約はフロント、またはお部屋の内線「9番」までお申し付けください。</p>
+      </div>
+    </section>
+
+    <!-- 指差しシート -->
+    <section id="pointing">
+      <h2 class="section-title" data-i18n="sectionPointing">フロント指差しシート</h2>
+      <p class="desc" style="margin-bottom:12px;" data-i18n="pointingIntro">下記のカードをスタッフにお見せください。</p>
+      <div class="phrase-card">
+        <div class="phrase-label">Japanese</div>
+        <div class="phrase-ja">外湯行きのシャトルバスに乗りたいです。</div>
+        <div class="phrase-label">Translation</div>
+        <div class="phrase-translated" data-i18n="phrase1">外湯行きのシャトルバスに乗りたいです。</div>
+      </div>
+      <div class="phrase-card">
+        <div class="phrase-label">Japanese</div>
+        <div class="phrase-ja">チェックアウト後、荷物を預かっていただけますか？</div>
+        <div class="phrase-label">Translation</div>
+        <div class="phrase-translated" data-i18n="phrase2">チェックアウト後、荷物を預かっていただけますか？</div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- クチコミ -->
+  <div class="review-banner">
+    <div class="review-icon">💬</div>
+    <h3 class="review-title" data-i18n="revTitle">お客様の声をお聞かせください</h3>
+    <p class="review-text" data-i18n="revText">皆様からの温かいお声がスタッフ一同の励みとなっております。よろしければ、Googleにてご滞在の感想をお聞かせください。</p>
+    <a class="review-btn" href="https://www.google.com/maps/search/?api=1&query=城崎温泉+あさぎり荘" target="_blank" rel="noopener" data-i18n="revBtn">クチコミを投稿する</a>
+  </div>
+
+  <footer data-i18n="footerText">あさぎり荘で心地よいひとときをお過ごしください。</footer>
+
+  <div class="toast" id="copyToast"></div>
+
+<script>
+(function(){
+
+  var translations = {
+    ja:{
+      appTitle:"あさぎり荘 ご案内", subTitle:"城崎温泉 Kinosaki Onsen",
+      navWifi:"Wi-Fi", navInfo:"館内案内", navMeals:"お食事", navYukata:"浴衣・下駄", navBaths:"外湯めぐり", navPlaces:"周辺・観光", navShuttle:"送迎バス", navPointing:"指差しシート",
+      alertBanner:"⚠️ 鴻の湯・さとの湯は現在【長期休業中】です",
+      sectionWifi:"Wi-Fi接続", wifiDesc:"下のパスワードをタップしてコピーできます。", wifiPassLabel:"パスワード", wifiCopied:"コピーしました！",
+      sectionInfo:"ご滞在・館内設備",
+      coTitle:"⏰ チェックアウト・門限",
+      coText:"チェックアウトは 午前10:00 です。お出かけの際の門限は 24:00 となっております。※お昼頃までお車やお荷物のお預かりも承っております。",
+      amenityTitle:"♨️ 館内大浴場",
+      amenityText:"ご利用時間：15:00～24:00 ／ 翌朝 6:00～9:30（男女入替制）。天然温泉の「玄武の湯」「円山の湯」をお楽しみください。",
+      facilityTitle:"🚬 喫煙所・売店・設備",
+      facilityText:"当館は全室禁煙です。喫煙所は1階ロビー、2階通路奥にございます。／売店営業時間：7:30～10:00、15:00～20:00。／自動販売機は館内にございます。フロントへのお問い合わせは内線「9番」へ。",
+      sectionMeals:"お食事のご案内",
+      breakfastTitle:"ご朝食", breakfastText:"1階「清流の間」にて 7:00より バイキング形式でご用意しております。入場の際に朝食券をお持ちください。",
+      dinnerTitle:"ご夕食", dinnerText:"夕食付きプランのお客様は、チェックイン時にお伺いしたお時間に、お部屋またはお食事処へご用意いたします。",
+      drinksTitle:"フリードリンク", drinksText:"ロビーのコーヒーはいつでも無料です。売店営業時間（15:00〜20:00）にはヤクルトも無料でご提供しております。",
+      sectionYukata:"浴衣・下駄のご案内",
+      yukataWomen:"女性用色浴衣：ロビーに様々な色柄をご用意しております。お好みの柄をお選びください。",
+      yukataMenText:"男性用浴衣：各階エレベーターを出てすぐ左手にご用意しております。",
+      getaText:"下駄：玄関にございますので、自由にお使いください。",
+      sectionEssentials:"外湯めぐりの持ち物",
+      essential1:"外湯QRチケット（ロビーのかごよりお取りください）",
+      essential2:"お部屋のバスタオル・フェイスタオル",
+      essential3:"ロビーの湯かご",
+      essentialsNote:"使用後のQRチケットは、フロントへご返却いただくか、お部屋に置いていただいても構いません。",
+      sectionBaths:"外湯一覧（あさぎり荘からの距離順）",
+      tattooNote:"✨ タトゥー（刺青）は7つの外湯すべてでご利用いただけます。",
+      btnCongestion:"現在の外湯 混雑状況をチェック",
+      closedLabel:"定休日", mapBtnLabel:"地図を開く", longClosedBadge:"長期休業中", longClosedDesc:"現在ご利用いただけません。",
+      todayOpen:"本日営業", todayClosed:"本日定休",
+      bath1Walk:"徒歩約6〜8分", bath2Walk:"徒歩約8〜10分", bath3Walk:"徒歩約10〜12分", bath4Walk:"徒歩約13〜15分", bath5Walk:"徒歩約15〜18分", bath6Walk:"徒歩約18〜20分", bath7Walk:"徒歩約7〜9分",
+      bath1Closed:"金曜", bath2Closed:"木曜", bath3Closed:"水曜", bath4Closed:"第1・第3木曜", bath5Closed:"水曜",
+      sectionPlaces:"周辺施設・観光情報",
+      pLawson:"徒歩約7分", pFami:"徒歩約8分", btnRoute:"ルート案内",
+      pKinosakiOfficial:"ロープウェイ・観光情報はこちら", btnOfficial:"公式サイトを開く",
+      sectionShuttle:"外湯めぐり 送迎バス",
+      shuttleText:"当館から外湯方面への送迎バスを運行しております。ご予約はフロント、またはお部屋の内線「9番」までお申し付けください。",
+      sectionPointing:"フロント指差しシート", pointingIntro:"下記のカードをスタッフにお見せください。",
+      phrase1:"外湯行きのシャトルバスに乗りたいです。", phrase2:"チェックアウト後、荷物を預かっていただけますか？",
+      revTitle:"お客様の声をお聞かせください", revText:"皆様からの温かいお声がスタッフ一同の励みとなっております。よろしければ、Googleにてご滞在の感想をお聞かせください。", revBtn:"クチコミを投稿する",
+      footerText:"あさぎり荘で心地よいひとときをお過ごしください。"
+    },
+    en:{
+      appTitle:"Asagirisou Guest Guide", subTitle:"Kinosaki Onsen",
+      navWifi:"Wi-Fi", navInfo:"Information", navMeals:"Meals", navYukata:"Yukata", navBaths:"Outer Baths", navPlaces:"Nearby", navShuttle:"Shuttle", navPointing:"Point & Show",
+      alertBanner:"⚠️ Kono-yu and Sato-no-yu are currently CLOSED for maintenance.",
+      sectionWifi:"Wi-Fi Access", wifiDesc:"Tap the password below to copy it.", wifiPassLabel:"Password", wifiCopied:"Copied!",
+      sectionInfo:"Stay Information",
+      coTitle:"⏰ Check-out & Curfew",
+      coText:"Check-out is at 10:00 AM. Our curfew is 24:00 (Midnight). *We can keep your luggage and car until around noon after check-out.",
+      amenityTitle:"♨️ Indoor Public Baths",
+      amenityText:"Hours: 15:00–24:00 / Morning 6:00–9:30 (Genders swapped daily). Enjoy our natural hot springs.",
+      facilityTitle:"🚬 Smoking Area, Shop & Facilities",
+      facilityText:"All rooms are non-smoking. Smoking areas are on the 1st & 2nd floors. / Gift Shop: 7:30-10:00 & 15:00-20:00. / Vending machines available. For front desk, dial Ext. '9'.",
+      sectionMeals:"Meal Information",
+      breakfastTitle:"Breakfast", breakfastText:"Buffet breakfast starts at 7:00 AM at 1F 'Seiryu-no-ma'. Please bring your breakfast ticket.",
+      dinnerTitle:"Dinner", dinnerText:"For guests with dinner included, it will be served at your selected time in your room or the dining hall.",
+      drinksTitle:"Free Drinks", drinksText:"Lobby coffee is free 24/7. Free Yakult is offered during gift shop hours (15:00-20:00).",
+      sectionYukata:"Yukata & Geta",
+      yukataWomen:"Women's Color Yukata: Choose your favorite design in the lobby.",
+      yukataMenText:"Men's Yukata: Available on each floor next to the elevator.",
+      getaText:"Geta (Clogs): Free pairs are placed at the entrance.",
+      sectionEssentials:"What to Bring to Outer Baths",
+      essential1:"QR Pass Ticket (Take freely from lobby basket)",
+      essential2:"Bath & face towels from your room",
+      essential3:"Bath basket from the lobby",
+      essentialsNote:"You can return the QR pass to the front desk or leave it in your room.",
+      sectionBaths:"7 Outer Baths (by distance)",
+      tattooNote:"✨ Tattoos are 100% welcome at all 7 outer baths.",
+      btnCongestion:"Check Current Bath Congestion",
+      closedLabel:"Closed", mapBtnLabel:"View Map", longClosedBadge:"Closed (Extended)", longClosedDesc:"Currently unavailable.",
+      todayOpen:"Open", todayClosed:"Closed Today",
+      bath1Walk:"6–8 min walk", bath2Walk:"8–10 min walk", bath3Walk:"10–12 min walk", bath4Walk:"13–15 min walk", bath5Walk:"15–18 min walk", bath6Walk:"18–20 min walk", bath7Walk:"7–9 min walk",
+      bath1Closed:"Fridays", bath2Closed:"Thursdays", bath3Closed:"Wednesdays", bath4Closed:"1st & 3rd Thursdays", bath5Closed:"Wednesdays",
+      sectionPlaces:"Nearby & Sightseeing",
+      pLawson:"7 min walk", pFami:"8 min walk", btnRoute:"Map Route",
+      pKinosakiOfficial:"Ropeway & Tourist Info", btnOfficial:"Official Website",
+      sectionShuttle:"Shuttle to Outer Baths",
+      shuttleText:"Free shuttle bus to the outer baths is available. Please book at the front desk or dial Ext. '9'.",
+      sectionPointing:"Point & Show Cards", pointingIntro:"Show this card to front desk staff.",
+      phrase1:"I would like to take the shuttle bus to the outer baths.", phrase2:"Could you store my luggage after check-out?",
+      revTitle:"Share Your Experience", revText:"Your warm feedback is a great encouragement to our staff. We would love to receive your review on Google!", revBtn:"Write a Review",
+      footerText:"We wish you a relaxing stay at Asagirisou."
+    },
+    "zh-tw":{
+      appTitle:"朝霧莊 館內與外湯導覽", subTitle:"城崎溫泉",
+      navWifi:"Wi-Fi", navInfo:"館內設施", navMeals:"用餐資訊", navYukata:"浴衣", navBaths:"外湯巡遊", navPlaces:"周邊・觀光", navShuttle:"接駁車", navPointing:"指指卡",
+      alertBanner:"⚠️ 鴻之湯・里之湯目前【長期停業中】",
+      sectionWifi:"Wi-Fi連線", wifiDesc:"點擊下方密碼即可複製。", wifiPassLabel:"密碼", wifiCopied:"已複製！",
+      sectionInfo:"住宿資訊",
+      coTitle:"⏰ 退房時間與門禁",
+      coText:"退房時間為上午10:00，門禁時間為深夜24:00。（退房後可免費寄放行李與車輛至中午左右）",
+      amenityTitle:"♨️ 館內大浴場",
+      amenityText:"開放時間：15:00～24:00 / 隔日早晨 6:00～9:30（男女湯互換）。歡迎享受天然溫泉。",
+      facilityTitle:"🚬 吸菸區・賣店・設施",
+      facilityText:"全館客房禁菸。吸菸區位於1樓大廳與2樓走廊盡頭。/ 賣店營業時間：7:30-10:00 及 15:00-20:00。/ 如需聯繫櫃檯請撥打內線「9」。",
+      sectionMeals:"用餐資訊",
+      breakfastTitle:"早餐", breakfastText:"1樓「清流之間」從早上 7:00 起提供自助早餐，入場請出示早餐券。",
+      dinnerTitle:"晚餐", dinnerText:"預訂含晚餐方案之貴賓，將於您選擇之時段於客房或宴會廳為您備餐。",
+      drinksTitle:"免費飲品", drinksText:"大廳咖啡全天免費暢飲，賣店營業期間（15:00-20:00）提供免費養樂多。",
+      sectionYukata:"浴衣・木屐",
+      yukataWomen:"女用花浴衣：大廳備有多款花色，歡迎自由挑選。",
+      yukataMenText:"男用浴衣：位於各樓層電梯出口左側。",
+      getaText:"木屐：玄關處備有，歡迎自由使用。",
+      sectionEssentials:"外湯巡遊必備物品",
+      essential1:"外湯QR票券（大廳竹籃中自由領取）",
+      essential2:"客房內的大浴巾與小毛巾",
+      essential3:"大廳的專用湯籃",
+      essentialsNote:"QR票券退房時可交還櫃檯或留在房內。",
+      sectionBaths:"外湯巡遊（距離排序）",
+      tattooNote:"✨ 7座外湯皆100%接受刺青旅客入浴。",
+      btnCongestion:"查看目前外湯擁擠狀況",
+      closedLabel:"公休", mapBtnLabel:"查看地圖", longClosedBadge:"長期停業中", longClosedDesc:"目前無法使用。",
+      todayOpen:"營業", todayClosed:"今日公休",
+      bath1Walk:"約6〜8分", bath2Walk:"約8〜10分", bath3Walk:"約10〜12分", bath4Walk:"約13〜15分", bath5Walk:"約15〜18分", bath6Walk:"約18〜20分", bath7Walk:"約7〜9分",
+      bath1Closed:"週五", bath2Closed:"週四", bath3Closed:"週三", bath4Closed:"第1・3週四", bath5Closed:"週三",
+      sectionPlaces:"周邊設施與觀光",
+      pLawson:"約7分", pFami:"約8分", btnRoute:"路線導航",
+      pKinosakiOfficial:"纜車與觀光資訊", btnOfficial:"開啟官方網站",
+      sectionShuttle:"外湯 接駁巴士",
+      shuttleText:"備有前往外湯的接駁車，請至櫃檯預約或撥打分機「9」。",
+      sectionPointing:"指指卡（給店員看）", pointingIntro:"請將以下卡片出示給工作人員。",
+      phrase1:"我想搭乘前往外湯的接駁車。", phrase2:"退房後可以寄放行李嗎？",
+      revTitle:"期待您的寶貴評價", revText:"您的溫暖回饋是我們最大的動力。歡迎在Google地圖上留下您的住宿心得。", revBtn:"撰寫評論",
+      footerText:"祝您在朝霧莊度過舒適愉快的時光。"
+    },
+    "zh-cn":{
+      appTitle:"朝雾庄 馆内与外汤导览", subTitle:"城崎温泉",
+      navWifi:"Wi-Fi", navInfo:"馆内设施", navMeals:"用餐信息", navYukata:"浴衣", navBaths:"外汤巡游", navPlaces:"周边・观光", navShuttle:"班车", navPointing:"指指卡",
+      alertBanner:"⚠️ 鸿之汤・里之汤目前【长期停业中】",
+      sectionWifi:"Wi-Fi连接", wifiDesc:"点击下方密码即可复制。", wifiPassLabel:"密码", wifiCopied:"已复制！",
+      sectionInfo:"住宿信息",
+      coTitle:"⏰ 退房时间与门禁",
+      coText:"退房时间为上午10:00，门禁时间为深夜24:00。（退房后可免费寄存行李与车辆至中午左右）",
+      amenityTitle:"♨️ 馆内大浴场",
+      amenityText:"开放时间：15:00～24:00 / 次日早晨 6:00～9:30（男女浴池互换）。欢迎享受天然温泉。",
+      facilityTitle:"🚬 吸烟区・商店・设施",
+      facilityText:"全馆客房禁烟。吸烟区位于1楼大堂与2楼走廊尽头。/ 商店营业时间：7:30-10:00 及 15:00-20:00。/ 如需联系前台请拨打内线「9」。",
+      sectionMeals:"用餐信息",
+      breakfastTitle:"早餐", breakfastText:"1楼「清流之间」从早上 7:00 起提供自助早餐，入场请出示早餐券。",
+      dinnerTitle:"晚餐", dinnerText:"预订含晚餐方案之贵宾，将于您选择之时段在客房或宴会厅为您备餐。",
+      drinksTitle:"免费饮品", drinksText:"大堂咖啡全天免费畅饮，商店营业期间（15:00-20:00）提供免费养乐多。",
+      sectionYukata:"浴衣・木屐",
+      yukataWomen:"女式花浴衣：大堂备有多款花色，欢迎自由挑选。",
+      yukataMenText:"男式浴衣：位于各楼层电梯出口左侧。",
+      getaText:"木屐：玄关处备有，欢迎自由使用。",
+      sectionEssentials:"外汤巡游必备物品",
+      essential1:"外汤QR门票（大堂竹篮中自由领取）",
+      essential2:"房间内的浴巾与面巾",
+      essential3:"大堂的专用汤篮",
+      essentialsNote:"门票退房时可交还前台或留在房间内。",
+      sectionBaths:"外汤巡游（距离排序）",
+      tattooNote:"✨ 7处外汤均100%接受纹身旅客入浴。",
+      btnCongestion:"查看当前外汤拥挤状况",
+      closedLabel:"公休", mapBtnLabel:"查看地图", longClosedBadge:"长期停业中", longClosedDesc:"目前无法使用。",
+      todayOpen:"营业", todayClosed:"今日公休",
+      bath1Walk:"约6〜8分", bath2Walk:"约8〜10分", bath3Walk:"约10〜12分", bath4Walk:"约13〜15分", bath5Walk:"约15〜18分", bath6Walk:"约18〜20分", bath7Walk:"约7〜9分",
+      bath1Closed:"周五", bath2Closed:"周四", bath3Closed:"周三", bath4Closed:"第1・3周四", bath5Closed:"周三",
+      sectionPlaces:"周边设施与观光",
+      pLawson:"约7分", pFami:"约8分", btnRoute:"路线导航",
+      pKinosakiOfficial:"缆车与观光信息", btnOfficial:"打开官方网站",
+      sectionShuttle:"外汤 班车",
+      shuttleText:"设有前往外汤的班车，请到前台预约或拨打分机「9」。",
+      sectionPointing:"指指卡（给店员看）", pointingIntro:"请将以下卡片出示给工作人员。",
+      phrase1:"我想乘坐前往外汤的班车。", phrase2:"退房后可以寄存行李吗？",
+      revTitle:"期待您的宝贵评价", revText:"您的温暖反馈是我们最大的动力。欢迎在Google地图上留下您的住宿心得。", revBtn:"撰写评论",
+      footerText:"祝您在朝雾庄度过舒适愉快的时光。"
+    },
+    ko:{
+      appTitle:"아사기리소 시설 및 외탕 안내", subTitle:"기노사키 온천",
+      navWifi:"Wi-Fi", navInfo:"시설 안내", navMeals:"식사", navYukata:"유카타", navBaths:"외탕 순례", navPlaces:"주변 편의점", navShuttle:"셔틀버스", navPointing:"가리키기 시트",
+      alertBanner:"⚠️ 고노유・사토노유는 현재 【장기 휴업 중】입니다",
+      sectionWifi:"Wi-Fi 연결", wifiDesc:"아래 비밀번호를 탭하면 복사됩니다.", wifiPassLabel:"비밀번호", wifiCopied:"복사되었습니다!",
+      sectionInfo:"투숙 안내",
+      coTitle:"⏰ 체크아웃 및 통금 시간",
+      coText:"체크아웃은 오전 10:00이며, 통금 시간은 자정(24:00)입니다. (체크아웃 후 정오 무렵까지 짐과 차량 보관 가능)",
+      amenityTitle:"♨️ 관내 대욕장",
+      amenityText:"이용 시간: 15:00~24:00 / 익일 아침 6:00~9:30 (남녀 탕 교체). 천연 온천을 즐겨보세요.",
+      facilityTitle:"🚬 흡연 구역・매점・시설",
+      facilityText:"전 객실 금연입니다. 흡연 구역은 1층 로비와 2층 복도 끝에 있습니다. / 매점 영업: 7:30-10:00, 15:00-20:00. / 프런트 문의는 내선 '9번'.",
+      sectionMeals:"식사 안내",
+      breakfastTitle:"조식", breakfastText:"1층 '세이류노마'에서 아침 7:00부터 뷔페가 제공됩니다. 조식권을 지참해 주세요.",
+      dinnerTitle:"석식", dinnerText:"석식 포함 플랜 고객님께는 체크인 시 선택하신 시간에 객실 또는 식사처로 준비해 드립니다.",
+      drinksTitle:"무료 음료", drinksText:"로비 커피는 상시 무료이며, 매점 영업시간(15:00-20:00) 중에는 야쿠르트도 무료로 제공됩니다.",
+      sectionYukata:"유카타・게다",
+      yukataWomen:"여성용 색유카타: 로비에서 마음에 드는 디자인을 자유롭게 선택하세요.",
+      yukataMenText:"남성용 유카타: 각 층 엘리베이터 좌측 비치.",
+      getaText:"게다: 현관 나막신 무료 이용 가능.",
+      sectionEssentials:"외탕 이용 준비물",
+      essential1:"외탕 QR 티켓 (로비 바구니에서 수령)",
+      essential2:"객실 내 비치된 바스타월・세안타월",
+      essential3:"로비의 전용 목욕 바구니",
+      essentialsNote:"QR 티켓은 체크아웃 시 반납 또는 객실에 두셔도 됩니다.",
+      sectionBaths:"7대 외탕 순례",
+      tattooNote:"✨ 문신(타투)은 7곳 외탕 모두 100% 입장 가능합니다.",
+      btnCongestion:"현재 외탕 혼잡도 확인",
+      closedLabel:"휴무", mapBtnLabel:"지도 보기", longClosedBadge:"장기 휴업 중", longClosedDesc:"현재 이용 불가.",
+      todayOpen:"영업", todayClosed:"오늘 휴무",
+      bath1Walk:"약 6~8분", bath2Walk:"약 8~10분", bath3Walk:"약 10~12분", bath4Walk:"약 13~15분", bath5Walk:"약 15~18분", bath6Walk:"약 18~20분", bath7Walk:"약 7~9분",
+      bath1Closed:"금요일", bath2Closed:"목요일", bath3Closed:"수요일", bath4Closed:"1・3째 목요일", bath5Closed:"수요일",
+      sectionPlaces:"주변 시설 및 관광",
+      pLawson:"약 7분", pFami:"약 8분", btnRoute:"길찾기",
+      pKinosakiOfficial:"로프웨이 및 관광 정보", btnOfficial:"공식 웹사이트",
+      sectionShuttle:"외탕 행 셔틀버스",
+      shuttleText:"외탕 행 셔틀버스가 운행됩니다. 프런트 또는 객실 내선 '9번'으로 예약해 주세요.",
+      sectionPointing:"가리키기 시트", pointingIntro:"아래 카드를 직원에게 보여주세요.",
+      phrase1:"외탕 행 셔틀버스를 타고 싶습니다.", phrase2:"체크아웃 후 짐을 맡길 수 있을까요?",
+      revTitle:"소중한 후기를 남겨주세요", revText:"고객님의 따뜻한 한마디가 직원들에게 큰 힘이 됩니다. Google에 후기를 남겨주시면 감사하겠습니다.", revBtn:"리뷰 작성하기",
+      footerText:"아사기리소에서 편안하고 아늑한 시간 되시기를 바랍니다."
+    }
+  };
+
+  var bathsData = [
+    {name:"地蔵湯", romaji:"Jizo-yu", num:1, hours:"7:00\u201323:00", closedDay:5, closedKey:"bath1Closed", walkKey:"bath1Walk", longClosed:false},
+    {name:"柳湯", romaji:"Yanagi-yu", num:2, hours:"15:00\u201323:00", closedDay:4, closedKey:"bath2Closed", walkKey:"bath2Walk", longClosed:false},
+    {name:"一の湯", romaji:"Ichino-yu", num:3, hours:"7:00\u201323:00", closedDay:3, closedKey:"bath3Closed", walkKey:"bath3Walk", longClosed:false},
+    {name:"御所の湯", romaji:"Goshono-yu", num:4, hours:"7:00\u201323:00", closedDay:"gosho", closedKey:"bath4Closed", walkKey:"bath4Walk", longClosed:false},
+    {name:"まんだら湯", romaji:"Mandara-yu", num:5, hours:"15:00\u201323:00", closedDay:3, closedKey:"bath5Closed", walkKey:"bath5Walk", longClosed:false},
+    {name:"鴻の湯", romaji:"Konoyu", num:6, hours:null, closedKey:null, walkKey:"bath6Walk", longClosed:true},
+    {name:"さとの湯（駅前）", romaji:"Satono-yu, Ekimae", num:7, hours:null, closedKey:null, walkKey:"bath7Walk", longClosed:true}
+  ];
+
+  var currentLang = "ja";
+
+  function isClosedToday(b){
+    if(b.longClosed) return true;
+    var now = new Date();
+    var day = now.getDay();
+    var date = now.getDate();
+    var weekNum = Math.ceil(date / 7);
+
+    if(b.closedDay === "gosho"){
+      return day === 4 && (weekNum === 1 || weekNum === 3);
+    }
+    return day === b.closedDay;
+  }
+
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  }
+
+  function renderBaths(lang){
+    var t = translations[lang];
+    var container = document.getElementById("bathsList");
+    var html = "";
+    for(var i=0;i<bathsData.length;i++){
+      var b = bathsData[i];
+      var mapUrl = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent("城崎温泉 " + b.name);
+      var stepClass = b.longClosed ? "bath-step closed" : "bath-step";
+      var metaHtml;
+
+      if(b.longClosed){
+        metaHtml = '<span class="badge-closed">' + escapeHtml(t.longClosedBadge) + '</span>' +
+                   '<p class="bath-desc">' + escapeHtml(t.longClosedDesc) + '</p>';
+      } else {
+        var closed = isClosedToday(b);
+        var statusTag = closed
+          ? '<span class="status-tag status-closed-today">' + escapeHtml(t.todayClosed) + '</span>'
+          : '<span class="status-tag status-open">' + escapeHtml(t.todayOpen) + '</span>';
+
+        metaHtml = '<div class="bath-meta">' +
+                     '<span>\uD83D\uDEB6 ' + escapeHtml(t[b.walkKey]) + '</span>' +
+                     '<span>\uD83D\uDD52 ' + escapeHtml(b.hours) + '</span>' +
+                     '<span>' + escapeHtml(t.closedLabel) + '\uFF1A<strong>' + escapeHtml(t[b.closedKey]) + '</strong></span>' +
+                     statusTag +
+                   '</div>';
+      }
+      html += '<div class="bath-card">' +
+                '<div class="bath-step-col"><div class="' + stepClass + '">' + b.num + '</div><div class="bath-line"></div></div>' +
+                '<div class="bath-info">' +
+                  '<div class="bath-name">' + escapeHtml(b.name) + '<span class="bath-romaji">' + escapeHtml(b.romaji) + '</span></div>' +
+                  metaHtml +
+                  '<a class="map-btn" href="' + mapUrl + '" target="_blank" rel="noopener">\uD83D\uDCCD ' + escapeHtml(t.mapBtnLabel) + '</a>' +
+                '</div>' +
+              '</div>';
+    }
+    container.innerHTML = html;
+  }
+
+  function setLang(lang){
+    if(!translations[lang]) lang = "ja";
+    currentLang = lang;
+    var t = translations[lang];
+
+    var htmlLangMap = {ja:"ja", en:"en", "zh-tw":"zh-Hant", "zh-cn":"zh-Hans", ko:"ko"};
+    document.documentElement.lang = htmlLangMap[lang] || "ja";
+
+    var nodes = document.querySelectorAll("[data-i18n]");
+    for(var i=0;i<nodes.length;i++){
+      var key = nodes[i].getAttribute("data-i18n");
+      if(t[key] !== undefined){
+        nodes[i].textContent = t[key];
+      }
+    }
+
+    var btns = document.querySelectorAll(".lang-btn");
+    for(var j=0;j<btns.length;j++){
+      if(btns[j].getAttribute("data-lang") === lang){
+        btns[j].classList.add("active");
+      } else {
+        btns[j].classList.remove("active");
+      }
+    }
+
+    var pointingSection = document.getElementById("pointing");
+    var pointingNav = document.getElementById("navPointingChip");
+    if(lang === "ja"){
+      if(pointingSection) pointingSection.style.display = "none";
+      if(pointingNav) pointingNav.style.display = "none";
+    } else {
+      if(pointingSection) pointingSection.style.display = "block";
+      if(pointingNav) pointingNav.style.display = "inline-block";
+    }
+
+    renderBaths(lang);
+  }
+
+  function detectInitialLang(){
+    var nav = (navigator.language || navigator.userLanguage || "ja").toLowerCase();
+    if(nav.indexOf("zh") === 0){
+      if(nav.indexOf("tw") !== -1 || nav.indexOf("hk") !== -1 || nav.indexOf("mo") !== -1 || nav.indexOf("hant") !== -1){
+        return "zh-tw";
+      }
+      return "zh-cn";
+    }
+    if(nav.indexOf("ko") === 0) return "ko";
+    if(nav.indexOf("en") === 0) return "en";
+    return "ja";
+  }
+
+  function showToast(message){
+    var toast = document.getElementById("copyToast");
+    toast.textContent = message;
+    toast.classList.add("show");
+    clearTimeout(window.__toastTimer);
+    window.__toastTimer = setTimeout(function(){
+      toast.classList.remove("show");
+    }, 1800);
+  }
+
+  function fallbackCopy(text){
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    ta.style.top = "0";
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try{
+      document.execCommand("copy");
+      showToast(translations[currentLang].wifiCopied);
+    }catch(e){
+      /* copy not supported; silently ignore */
+    }
+    document.body.removeChild(ta);
+  }
+
+  document.getElementById("copyBtn").addEventListener("click", function(){
+    var text = "asagiri322921";
+    if(navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(text).then(function(){
+        showToast(translations[currentLang].wifiCopied);
+      }).catch(function(){
+        fallbackCopy(text);
+      });
+    } else {
+      fallbackCopy(text);
+    }
+  });
+
+  var langButtons = document.querySelectorAll(".lang-btn");
+  for(var k=0;k<langButtons.length;k++){
+    langButtons[k].addEventListener("click", function(e){
+      setLang(e.currentTarget.getAttribute("data-lang"));
+    });
+  }
+
+  setLang(detectInitialLang());
+
+})();
+</script>
+</body>
+</html>
