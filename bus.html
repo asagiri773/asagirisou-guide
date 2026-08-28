@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>送迎管理 v3.0</title>
+<title>送迎管理 v3.1</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
@@ -294,6 +294,17 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
       <p class="desc">フロントスタッフ向けの説明書です。デスクトップの <b>送迎システム説明書.html</b> をダブルクリックすると開きます。困ったときはまずこれを見てください。</p>
     </div>
 
+    <div class="panel">
+      <h3>💾 データを手元に書き出す</h3>
+      <p class="desc">保存されている予約と時刻表を、エクセルで開けるCSVファイルとしてパソコンに保存します。<br>
+      <b>万一クラウド側で何かあっても、手元にデータが残ります。</b>月に一度くらい押しておくと安心です。</p>
+      <div class="frow">
+        <button class="btn btn-p" id="csvBtn" onclick="exportRes()">💾 予約データを書き出す</button>
+        <button class="btn btn-g" id="csvBtn2" onclick="exportBase()">🕒 時刻表を書き出す</button>
+      </div>
+      <div id="csvMsg" style="font-size:13px;line-height:1.8"></div>
+    </div>
+
     <div class="panel danger">
       <h3>⚠️ データのリセット</h3>
       <p class="desc">押し間違いを防ぐため、実行するには文字の入力が必要です。<b>消したものは元に戻せません。</b></p>
@@ -520,7 +531,7 @@ function markOffline(){
 }
 function markOnline(){
   online=true; el('netbar').className='netbar';
-  el('foot').innerHTML='最終更新 '+syncLabel()+'　／　'+CONFIG.REFRESH_SEC+'秒ごとに自動更新<br>送迎管理 v3.0';
+  el('foot').innerHTML='最終更新 '+syncLabel()+'　／　'+CONFIG.REFRESH_SEC+'秒ごとに自動更新<br>送迎管理 v3.1';
 }
 
 /* ---------- 起動 ---------- */
@@ -544,8 +555,9 @@ async function boot(){
     await loadPatterns();
     await load();
     buildQR(); buildAbout();
-    setInterval(load, CONFIG.REFRESH_SEC*1000);
-    setInterval(render, 30000);
+    // 画面が裏に回っている間は通信しない（通信量とスマホの電池を節約）
+    setInterval(function(){ if(!document.hidden) load(); }, CONFIG.REFRESH_SEC*1000);
+    setInterval(function(){ if(!document.hidden) render(); }, 30000);
   }catch(e){ el('boot').classList.add('hide'); showFatal(e); }
 }
 function showFatal(e){
@@ -687,7 +699,10 @@ async function wakeOn(){
 }
 function wakeOff(){ try{ if(wl){ wl.release(); wl=null; } }catch(e){} }
 document.addEventListener('visibilitychange',function(){
-  if(document.visibilityState==='visible'&&view==='driver') wakeOn(); });
+  if(document.visibilityState!=='visible') return;
+  if(view==='driver') wakeOn();
+  load();                    // 画面に戻ってきたら、すぐ最新にする
+});
 
 /* ---------- 描画 ---------- */
 function paxHtml(n){
@@ -1171,6 +1186,64 @@ async function runDanger(){
   b.disabled=false; b.innerText='実行する';
 }
 
+/* ---------- CSV書き出し ---------- */
+function toCsv(rows){
+  return rows.map(function(a){
+    return a.map(function(v){ return '"'+String(v==null?'':v).replace(/"/g,'""')+'"'; }).join(',');
+  }).join('\r\n');
+}
+function download(name,csv){
+  // 先頭の ﻿ はエクセルで文字化けさせないための印です
+  var blob=new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8;'});
+  var url=URL.createObjectURL(blob), a=document.createElement('a');
+  a.href=url; a.download=name; a.style.display='none';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(url); },2000);
+}
+async function exportRes(){
+  var b=el('csvBtn'), t=b.innerText; b.disabled=true; b.innerText='書き出し中...';
+  try{
+    var r=await sb.from('flights').select('*, reservations(*)');
+    if(r.error) throw new Error(fmtErr(r.error));
+    var list=(r.data||[]).slice();
+    list.sort(function(x,y){
+      if(x.target_date!==y.target_date) return x.target_date<y.target_date?-1:1;
+      return toMin(x.departure_time)-toMin(y.departure_time);
+    });
+    var rows=[['日付','時刻','出発地','行き先','臨時便','メモ','人数','お名前','部屋番号']], n=0;
+    list.forEach(function(f){
+      var rs=(f.reservations||[]).slice();
+      var base=[f.target_date,hm(f.departure_time),f.origin,f.destination,
+                f.is_temporary?'臨時':'',f.note||''];
+      if(!rs.length){ rows.push(base.concat([0,'',''])); }
+      else rs.forEach(function(x){ n++; rows.push(base.concat([x.passenger_count,x.name||'',x.room_number||''])); });
+    });
+    download('送迎予約_'+todayStr+'.csv', toCsv(rows));
+    el('csvMsg').innerHTML='<span style="color:#0f9d58">✅ '+list.length+'便・予約'+n
+      +'件を書き出しました。ダウンロードフォルダを見てください。</span>';
+  }catch(e){ el('csvMsg').innerHTML='<span style="color:#b32020">失敗しました：'+esc(e.message)+'</span>'; }
+  b.disabled=false; b.innerText=t;
+}
+async function exportBase(){
+  var b=el('csvBtn2'), t=b.innerText; b.disabled=true; b.innerText='書き出し中...';
+  try{
+    var r=await sb.from('base_schedules').select('*');
+    if(r.error) throw new Error(fmtErr(r.error));
+    var list=(r.data||[]).slice();
+    list.sort(function(x,y){
+      var a=x.pattern||'', c=y.pattern||'';
+      if(a!==c) return a<c?-1:1;
+      return toMin(x.departure_time)-toMin(y.departure_time);
+    });
+    var rows=[['パターン','時刻','出発地','行き先','区分']];
+    list.forEach(function(x){ rows.push([x.pattern||CONFIG.DEFAULT_PATTERN,hm(x.departure_time),
+      x.origin,x.destination,CATNAME[x.category]||x.category]); });
+    download('送迎時刻表_'+todayStr+'.csv', toCsv(rows));
+    el('csvMsg').innerHTML='<span style="color:#0f9d58">✅ 時刻表'+list.length+'件を書き出しました。</span>';
+  }catch(e){ el('csvMsg').innerHTML='<span style="color:#b32020">失敗しました：'+esc(e.message)+'</span>'; }
+  b.disabled=false; b.innerText=t;
+}
+
 /* ---------- QR・情報 ---------- */
 function driverUrl(){ return location.href.split('?')[0].split('#')[0]+'?view=driver'; }
 function buildQR(){
@@ -1184,11 +1257,12 @@ function buildQR(){
     el('qrurl').innerHTML+='<br><span style="color:#b32020">※いまはパソコン内のファイルを開いています。この状態のQRコードはスマホからは開けません。</span>';
 }
 function buildAbout(){
-  el('aboutBox').innerHTML='バージョン v3.0<br>'
+  el('aboutBox').innerHTML='バージョン v3.1<br>'
     +'データの保管先：Supabase（クラウド）<br>'
     +'古いデータは'+CONFIG.KEEP_DAYS+'日を過ぎると自動で消えます<br>'
     +'定員の目安：'+CONFIG.CAPACITY+'名（超えても登録できます）<br>'
-    +'画面は'+CONFIG.REFRESH_SEC+'秒ごとに自動で最新になります';
+    +'画面は'+CONFIG.REFRESH_SEC+'秒ごとに自動で最新になります<br>'
+    +'（画面が裏に回っている間は通信しません）';
 }
 
 window.addEventListener('online',function(){ load(); });
