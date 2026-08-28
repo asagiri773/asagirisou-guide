@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>あさぎり荘 館内・外湯ご案内</title>
 <style>
   :root{
@@ -797,9 +797,16 @@
 
   var currentLang = "ja";
 
+  // 見ている端末の時計ではなく、日本時間の「今日」で判定する。
+  // （海外のお客様がスマホを現地時間のままにしていても、日付がずれないようにするため）
+  function nowInJapan(){
+    var d = new Date();
+    return new Date(d.getTime() + (d.getTimezoneOffset() * 60000) + (9 * 3600000));
+  }
+
   function isClosedToday(b){
     if(b.longClosed) return true;
-    var now = new Date();
+    var now = nowInJapan();
     var day = now.getDay();
     var date = now.getDate();
     var weekNum = Math.ceil(date / 7);
