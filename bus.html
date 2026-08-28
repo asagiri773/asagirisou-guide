@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>送迎管理 v3.0</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{
+  --bg:#eef1f5; --card:#fff; --line:#dde2e8;
+  --text:#1c2430; --sub:#6b7684; --faint:#9aa4b0;
+  --blue:#2f6fd0; --blue-d:#245ab0;
+  --green:#0f9d58; --amber:#e8890c; --red:#d93a3a;
+  --shadow:0 1px 3px rgba(16,24,40,.08),0 1px 2px rgba(16,24,40,.04);
+  --radius:12px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  background:var(--bg); color:var(--text); -webkit-text-size-adjust:100%}
+button{font-family:inherit}
+input,select{font-family:inherit}
+
+.topbar{position:sticky; top:0; z-index:50; background:#222c3a; display:flex; gap:6px; padding:8px;
+  justify-content:center; padding-top:calc(8px + env(safe-area-inset-top))}
+.topbar button{flex:1; max-width:230px; padding:12px 8px; font-size:14.5px; font-weight:700;
+  border:none; border-radius:8px; background:#3a4757; color:#c9d3df; cursor:pointer}
+.topbar button.on{background:var(--blue); color:#fff}
+.topbar button.set{max-width:110px}
+
+.wrap{max-width:780px; margin:0 auto; padding:14px 14px 70px}
+
+.netbar{display:none; margin-bottom:12px; padding:10px 12px; border-radius:8px; font-size:13px; font-weight:700; line-height:1.6}
+.netbar.offline{display:block; background:#fff4e0; color:#8a5200; border:1px solid #f0d3a0}
+
+.diag{background:#fff6f6; border:1px solid #f3c9c9; border-radius:var(--radius); padding:14px; margin-bottom:16px}
+.diag h4{margin:0 0 8px; color:#b32020; font-size:15px}
+.diag pre{font-family:ui-monospace,Consolas,monospace; font-size:11.5px; line-height:1.65; background:#fff;
+  border:1px solid #f0d5d5; border-radius:8px; padding:10px; white-space:pre-wrap; word-break:break-all;
+  margin:0 0 10px; user-select:all}
+.diag p{font-size:13px; margin:0 0 10px; line-height:1.7}
+.diag button{width:100%; padding:12px; border-radius:8px; font-weight:700; font-size:15px; cursor:pointer; margin-bottom:8px; border:none}
+.btn-fix{background:var(--red); color:#fff}
+.btn-re{background:#fff; color:#b32020; border:1px solid #d98080 !important}
+
+.datenav{display:flex; gap:8px; align-items:center; margin-bottom:12px}
+.datenav button{padding:11px 14px; border:1px solid var(--line); background:#fff; border-radius:8px;
+  cursor:pointer; font-weight:700; font-size:14px; color:var(--text); white-space:nowrap}
+.datenav .today-label{flex:1; text-align:center; font-size:17px; font-weight:800}
+.datenav .today-label small{display:block; font-size:12px; font-weight:600; color:var(--sub); margin-top:2px}
+.rowline{display:flex; gap:8px; align-items:center; margin-bottom:14px; flex-wrap:wrap}
+input[type=date],input[type=time]{border:1px solid var(--line); background:#fff; padding:10px; border-radius:8px; font-size:14px}
+
+.summary{background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:12px 14px;
+  margin-bottom:14px; box-shadow:var(--shadow); display:flex; gap:18px; flex-wrap:wrap; font-size:14px; align-items:center}
+.summary b{font-size:19px; margin-right:2px}
+.summary .sp{flex:1}
+
+.chips{display:flex; gap:8px; margin-bottom:14px; overflow-x:auto; padding-bottom:2px}
+.chips button{padding:9px 15px; border:1px solid var(--line); background:#fff; border-radius:999px;
+  cursor:pointer; font-size:14px; white-space:nowrap; color:var(--sub); font-weight:600}
+.chips button.on{background:var(--blue); color:#fff; border-color:var(--blue)}
+
+.card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+  padding:14px; margin-bottom:10px; box-shadow:var(--shadow)}
+.card.mark{border-left:5px solid var(--amber)}
+.card.done{opacity:.5}
+.chead{display:flex; justify-content:space-between; align-items:flex-start; gap:10px}
+.tm{font-size:26px; font-weight:800; line-height:1; font-variant-numeric:tabular-nums}
+.rt{font-size:13.5px; color:var(--sub); margin-top:6px}
+.memo{margin-top:8px; background:#fffdf2; border:1px solid #f0e6c0; border-radius:6px;
+  padding:7px 10px; font-size:13px; color:#7a5c00; font-weight:600}
+.tag{display:inline-block; font-size:11px; font-weight:800; padding:2px 7px; border-radius:4px;
+  background:#eef3fb; color:var(--blue); margin-left:8px; vertical-align:3px}
+.pax{text-align:right; white-space:nowrap}
+.pax .n{font-size:22px; font-weight:800; font-variant-numeric:tabular-nums}
+.pax .cap{font-size:12px; color:var(--sub); display:block; margin-top:2px}
+.pax.zero .n{color:var(--faint); font-size:14px; font-weight:700}
+.pax.full .n{color:var(--amber)}
+.pax.over .n{color:var(--red)}
+.badge{display:inline-block; font-size:11px; font-weight:800; padding:2px 6px; border-radius:4px; margin-left:4px}
+.badge.full{background:#fff3e0; color:#a35a00}
+.badge.over{background:#ffe9e9; color:#a01b1b}
+
+.res{list-style:none; margin:12px 0 0; padding:0}
+.res li{display:flex; justify-content:space-between; align-items:center; gap:8px; background:#f6f8fa;
+  border:1px solid #e8ecf1; border-radius:8px; padding:9px 11px; margin-bottom:6px; font-size:14px}
+.res .who{font-weight:600}
+.res .cnt{font-weight:800; white-space:nowrap; margin-right:2px}
+.mini{background:none; border:none; cursor:pointer; font-size:12px; font-weight:700; padding:4px 5px}
+.mini.e{color:var(--blue)} .mini.d{color:var(--red)}
+
+.acts{display:flex; gap:8px; margin-top:12px; padding-top:11px; border-top:1px dashed var(--line); flex-wrap:wrap}
+.acts .grow{flex:1}
+.btn{border:none; border-radius:8px; cursor:pointer; font-weight:700; padding:10px 14px; font-size:14px}
+.btn-p{background:var(--blue); color:#fff}
+.btn-g{background:#fff; color:var(--sub); border:1px solid var(--line)}
+.btn-add-temp{background:#fff; color:var(--blue); border:1px dashed var(--blue); width:100%; padding:13px;
+  border-radius:var(--radius); font-weight:700; font-size:15px; cursor:pointer; margin-bottom:14px}
+
+.next{background:linear-gradient(160deg,#12a860,#0c8149); color:#fff; border-radius:16px; padding:18px;
+  margin-bottom:16px; box-shadow:0 6px 18px rgba(12,129,73,.28)}
+.next.soon{background:linear-gradient(160deg,#e8890c,#c96f00)}
+.next.late{background:linear-gradient(160deg,#d93a3a,#b32020)}
+.next .lab{font-size:13px; font-weight:800; opacity:.92; letter-spacing:.06em}
+.next .big{font-size:52px; font-weight:800; line-height:1.05; margin:6px 0 2px; font-variant-numeric:tabular-nums}
+.next .cd{font-size:16px; font-weight:800}
+.next .rt2{font-size:16px; font-weight:700; margin-top:10px}
+.next .paxbox{margin-top:14px; background:rgba(255,255,255,.18); border-radius:10px; padding:12px}
+.next .paxbox .h{font-size:13px; font-weight:800; margin-bottom:8px}
+.next .res li{background:rgba(255,255,255,.22); border:none; color:#fff}
+.next .none{font-size:17px; font-weight:800}
+.next .memo{background:rgba(255,255,255,.25); border:none; color:#fff}
+.next.fin{background:#5b6672; box-shadow:none}
+.next.fin .big{font-size:24px}
+
+.secttl{font-size:14px; font-weight:800; color:var(--sub); margin:22px 0 10px; padding-bottom:7px; border-bottom:2px solid var(--line)}
+details.past summary{cursor:pointer; font-size:13px; color:var(--sub); font-weight:700; padding:8px}
+.empty{text-align:center; padding:36px 16px; color:var(--sub); font-size:15px; line-height:1.8}
+
+/* ---- 設定画面 ---- */
+.panel{background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:16px; margin-bottom:16px; box-shadow:var(--shadow)}
+.panel h3{margin:0 0 4px; font-size:16px}
+.panel .desc{font-size:13px; color:var(--sub); margin:0 0 14px; line-height:1.75}
+.panel.danger{border-color:#f0c4c4; background:#fffafa}
+.panel.danger h3{color:#b32020}
+.frow{display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:12px}
+.frow label{font-size:13px; font-weight:700; color:var(--sub)}
+select{border:1px solid var(--line); background:#fff; padding:10px; border-radius:8px; font-size:14px; font-weight:600}
+.stable{width:100%; border-collapse:collapse; font-size:14px; margin-bottom:12px}
+.stable th{text-align:left; font-size:12px; color:var(--sub); padding:6px 8px; border-bottom:2px solid var(--line)}
+.stable td{padding:8px; border-bottom:1px solid var(--line)}
+.stable td.t{font-weight:800; font-variant-numeric:tabular-nums; white-space:nowrap}
+.stable td.a{text-align:right; white-space:nowrap}
+.qrbox{text-align:center; padding:10px}
+.qrbox img,.qrbox canvas{margin:0 auto}
+.urlbox{font-family:ui-monospace,Consolas,monospace; font-size:12px; background:#f6f8fa; border:1px solid var(--line);
+  border-radius:6px; padding:9px; word-break:break-all; user-select:all; margin-top:10px}
+
+.mod-note{background:#f6f8fa; border-left:4px solid var(--blue); border-radius:6px; padding:10px 12px;
+  font-size:13px; line-height:1.7; margin-bottom:14px; color:var(--sub)}
+
+.ov{display:none; position:fixed; inset:0; background:rgba(15,22,32,.55); z-index:200;
+  justify-content:center; align-items:center; padding:16px}
+.ov.on{display:flex}
+.mod{background:#fff; border-radius:14px; width:100%; max-width:420px; max-height:90vh; overflow-y:auto; padding:20px}
+.mod h3{margin:0 0 4px; font-size:17px}
+.mod .sub{font-size:13px; color:var(--sub); margin:0 0 16px; line-height:1.6}
+.fg{margin-bottom:13px}
+.fg label{display:block; font-size:13px; font-weight:700; margin-bottom:5px}
+.fg input,.fg select{width:100%; padding:11px; border:1px solid var(--line); border-radius:8px; font-size:16px}
+.fg .hint{font-size:12px; color:var(--faint); margin-top:4px; line-height:1.6}
+.fg2{display:flex; gap:10px}
+.fg2>div{flex:1}
+.confirm{background:#f6f8fa; border:1px solid var(--line); border-radius:10px; padding:14px; margin-bottom:14px; font-size:15px; line-height:2}
+.confirm .k{color:var(--sub); font-size:13px; display:inline-block; min-width:5.5em}
+.warn{background:#fff4e0; border:1px solid #f0d3a0; color:#8a5200; border-radius:8px; padding:11px;
+  font-size:13px; font-weight:700; margin-bottom:14px; line-height:1.7}
+.warn.red{background:#ffecec; border-color:#f3c0c0; color:#a01b1b}
+.mbtn{display:flex; gap:10px; margin-top:6px}
+.mbtn button{flex:1; padding:13px; border-radius:8px; font-weight:800; font-size:15px; cursor:pointer; border:none}
+.bc{background:#e8ecf1; color:var(--text)}
+.bs{background:var(--blue); color:#fff}
+.bd{background:var(--red); color:#fff}
+.bd:disabled{background:#e0a5a5; cursor:not-allowed}
+.hide{display:none !important}
+#boot{text-align:center; padding:50px 20px; color:var(--blue); font-weight:700}
+.foot{text-align:center; font-size:11px; color:var(--faint); margin-top:24px; line-height:1.9}
+
+/* ---- 印刷 ---- */
+#printArea{display:none}
+@media print{
+  .topbar,.wrap,.ov{display:none !important}
+  #printArea{display:block; padding:0}
+  @page{margin:12mm}
+  body{background:#fff}
+  #printArea h1{font-size:18px; margin:0 0 4px}
+  #printArea .pd{font-size:12px; color:#555; margin-bottom:12px}
+  #printArea table{width:100%; border-collapse:collapse; font-size:12px}
+  #printArea th,#printArea td{border:1px solid #999; padding:5px 7px; vertical-align:top}
+  #printArea th{background:#eee; text-align:left}
+  #printArea td.t{font-weight:bold; white-space:nowrap; font-size:13px}
+  #printArea td.c{text-align:center; white-space:nowrap}
+  #printArea .blank{color:#bbb}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <button id="tabF" class="on" onclick="setView('front')">💻 フロント</button>
+  <button id="tabD" onclick="setView('driver')">📱 運転手</button>
+  <button id="tabS" class="set" onclick="setView('settings')">⚙️ 設定</button>
+</div>
+
+<div class="wrap">
+  <div id="netbar" class="netbar"></div>
+
+  <div id="diag" class="diag hide">
+    <h4 id="diagTtl">接続を確認しています</h4>
+    <pre id="diagBox"></pre>
+    <p id="diagHint"></p>
+    <button class="btn-re" onclick="location.reload()">🔄 もう一度確認する</button>
+    <button id="diagFix" class="btn-fix hide" onclick="seedBase()">🔧 基本の時刻表をつくる</button>
+  </div>
+
+  <div id="boot">読み込み中...</div>
+
+  <!-- ================= フロント ================= -->
+  <div id="viewF" class="hide">
+    <div class="datenav">
+      <button onclick="shiftDate(-1)">◀</button>
+      <div class="today-label" id="dlabel"></div>
+      <button onclick="shiftDate(1)">▶</button>
+    </div>
+    <div class="rowline">
+      <input type="date" id="dpick" onchange="pickDate()">
+      <button class="btn btn-g" onclick="goToday()">今日に戻る</button>
+      <button class="btn btn-g" onclick="printDay()">🖨 印刷</button>
+    </div>
+
+    <div class="summary" id="summary"></div>
+    <button class="btn-add-temp" onclick="openTemp()">＋ 臨時便を追加する</button>
+
+    <div class="chips">
+      <button class="on" onclick="setFilter('all',this)">すべて</button>
+      <button onclick="setFilter('morning',this)">朝・駅</button>
+      <button onclick="setFilter('afternoon',this)">昼・外湯</button>
+      <button onclick="setFilter('night',this)">夜・文芸館</button>
+    </div>
+    <div id="listF"></div>
+  </div>
+
+  <!-- ================= 運転手 ================= -->
+  <div id="viewD" class="hide">
+    <div class="datenav" style="margin-bottom:14px">
+      <div class="today-label" id="dlabelD"></div>
+    </div>
+    <div id="nextBox"></div>
+    <div class="secttl">このあとの便</div>
+    <div id="listD"></div>
+    <details class="past" id="pastWrap">
+      <summary>終わった便を見る</summary>
+      <div id="listPast" style="margin-top:10px"></div>
+    </details>
+  </div>
+
+  <!-- ================= 設定 ================= -->
+  <div id="viewS" class="hide">
+
+    <div class="panel">
+      <h3>🕒 時刻表を編集する</h3>
+      <p class="desc">毎日つくられる便の元になる表です。<b>「通常」</b>が普段使う時刻表で、これを変えると明日以降の便に反映されます（今日ぶんは変わりません）。<br>
+      繁忙期など一時的に増やしたいときは、別のパターンを作って下の「期間に適用」で使ってください。</p>
+      <div class="frow">
+        <label>パターン</label>
+        <select id="patSel" onchange="onPatChange()"></select>
+        <button class="btn btn-g" onclick="openNewPat()">＋ 新しいパターン</button>
+        <button class="btn btn-g" onclick="delPattern()">パターンを削除</button>
+      </div>
+      <div id="rowTable"></div>
+      <div class="frow">
+        <button class="btn btn-p" onclick="openRow('')">＋ 1便ずつ追加</button>
+        <button class="btn btn-g" onclick="openBulk()">⏱ まとめて追加（◯分おき）</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>📅 パターンを期間に適用する</h3>
+      <p class="desc">選んだ期間の便を、そのパターンの内容に合わせます。<br>
+      <b>すでに予約が入っている便は消えません。</b>予約ゼロの通常便だけが入れ替わり、足りない便が追加されます。臨時便もそのまま残ります。</p>
+      <div class="frow">
+        <label>パターン</label><select id="apPat"></select>
+      </div>
+      <div class="frow">
+        <label>期間</label>
+        <input type="date" id="apFrom"> 〜 <input type="date" id="apTo">
+      </div>
+      <button class="btn btn-p" id="apBtn" onclick="applyPattern()" style="width:100%;padding:13px">この期間に適用する</button>
+      <div id="apResult" style="font-size:13px;margin-top:10px;line-height:1.8"></div>
+    </div>
+
+    <div class="panel">
+      <h3>📱 運転手用のリンク</h3>
+      <p class="desc">このQRコードを運転手のスマホで読み込むと、運転手画面が直接開きます。印刷して控室に貼っておくと引き継ぎが楽です。<br>
+      ※インターネット上に公開（GitHub Pagesなど）してから使ってください。パソコン内のファイルのままだとスマホからは開けません。</p>
+      <div class="qrbox" id="qrbox"></div>
+      <div class="urlbox" id="qrurl"></div>
+    </div>
+
+    <div class="panel">
+      <h3>📖 使い方・メンテナンスの説明書</h3>
+      <p class="desc">フロントスタッフ向けの説明書です。デスクトップの <b>送迎システム説明書.html</b> をダブルクリックすると開きます。困ったときはまずこれを見てください。</p>
+    </div>
+
+    <div class="panel danger">
+      <h3>⚠️ データのリセット</h3>
+      <p class="desc">押し間違いを防ぐため、実行するには文字の入力が必要です。<b>消したものは元に戻せません。</b></p>
+      <div class="frow">
+        <button class="btn btn-g" onclick="openDanger('rebuild')">この日の便を作り直す</button>
+        <button class="btn btn-g" onclick="openDanger('res')">予約をすべて消す</button>
+        <button class="btn btn-g" onclick="openDanger('all')">全部まっさらにする</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>ℹ️ このシステムについて</h3>
+      <p class="desc" id="aboutBox"></p>
+    </div>
+  </div>
+
+  <div class="foot" id="foot"></div>
+</div>
+
+<!-- 予約の追加・修正 -->
+<div id="mRes" class="ov"><div class="mod">
+  <div id="resStep1">
+    <h3 id="resTtl">予約を追加</h3>
+    <p class="sub" id="resWhich"></p>
+    <div class="fg"><label>人数（必須）</label><input type="number" id="rCount" min="1" inputmode="numeric" placeholder="例）2"></div>
+    <div class="fg"><label>お名前（任意）</label><input type="text" id="rName" placeholder="例）山田"></div>
+    <div class="fg"><label>部屋番号（任意）</label><input type="text" id="rRoom" placeholder="例）302">
+      <div class="hint">名前だけ・部屋番号だけでも登録できます</div></div>
+    <div class="mbtn"><button class="bc" onclick="closeAll()">やめる</button>
+      <button class="bs" onclick="resToConfirm()">確認へ ▶</button></div>
+  </div>
+  <div id="resStep2" class="hide">
+    <h3 id="resTtl2">この内容で登録します</h3>
+    <p class="sub">間違いがなければ下のボタンを押してください</p>
+    <div class="confirm" id="resPreview"></div>
+    <div id="resWarn" class="warn hide"></div>
+    <div class="mbtn"><button class="bc" onclick="resBack()">◀ 戻る</button>
+      <button class="bs" id="resGo" onclick="saveRes()">登録する</button></div>
+  </div>
+</div></div>
+
+<!-- 便の変更 -->
+<div id="mEdit" class="ov"><div class="mod">
+  <h3>便を変更</h3>
+  <p class="sub">この日だけの変更です。明日以降には影響しません。</p>
+  <div class="fg"><label>時刻</label><input type="time" id="eTime"></div>
+  <div class="fg"><label>出発地</label><input type="text" id="eOrigin" list="places"></div>
+  <div class="fg"><label>行き先</label><input type="text" id="eDest" list="places"></div>
+  <div class="mbtn"><button class="bc" onclick="closeAll()">やめる</button>
+    <button class="bs" onclick="saveEdit()">変更する</button></div>
+</div></div>
+
+<!-- 便のメモ -->
+<div id="mNote" class="ov"><div class="mod">
+  <h3>この便のメモ</h3>
+  <p class="sub">運転手の画面にも表示されます。<br>例）ベビーカーあり／車椅子の方／大きい荷物2つ</p>
+  <div class="fg"><input type="text" id="nText" placeholder="メモを入力（空にすると消えます）" maxlength="60"></div>
+  <div class="mbtn"><button class="bc" onclick="closeAll()">やめる</button>
+    <button class="bs" onclick="saveNote()">保存する</button></div>
+</div></div>
+
+<!-- 臨時便 -->
+<div id="mTemp" class="ov"><div class="mod">
+  <div id="tStep1">
+    <h3>臨時便を追加</h3>
+    <p class="sub" id="tempDate"></p>
+    <div class="fg"><label>時刻（必須）</label><input type="time" id="tTime"></div>
+    <div class="fg2">
+      <div><label style="font-size:13px;font-weight:700;display:block;margin-bottom:5px">出発地</label><input type="text" id="tOrigin" list="places" value="あさぎり荘" style="width:100%;padding:11px;border:1px solid #dde2e8;border-radius:8px;font-size:16px"></div>
+      <div><label style="font-size:13px;font-weight:700;display:block;margin-bottom:5px">行き先</label><input type="text" id="tDest" list="places" placeholder="例）文芸館" style="width:100%;padding:11px;border:1px solid #dde2e8;border-radius:8px;font-size:16px"></div>
+    </div>
+    <div class="fg" style="margin-top:13px"><label>人数（任意）</label><input type="number" id="tCount" min="1" inputmode="numeric" placeholder="あとから追加でもOK"></div>
+    <div class="fg"><label>お名前（任意）</label><input type="text" id="tName"></div>
+    <div class="fg"><label>部屋番号（任意）</label><input type="text" id="tRoom"></div>
+    <div class="mbtn"><button class="bc" onclick="closeAll()">やめる</button>
+      <button class="bs" onclick="tempToConfirm()">確認へ ▶</button></div>
+  </div>
+  <div id="tStep2" class="hide">
+    <h3>この内容で追加します</h3>
+    <p class="sub">間違いがなければ「追加する」を押してください</p>
+    <div class="confirm" id="tempPreview"></div>
+    <div class="mbtn"><button class="bc" onclick="tempBack()">◀ 戻る</button>
+      <button class="bs" onclick="saveTemp()">追加する</button></div>
+  </div>
+</div></div>
+
+<!-- 時刻表の1便 -->
+<div id="mRow" class="ov"><div class="mod">
+  <h3 id="rowTtl">時刻表に便を追加</h3>
+  <p class="sub" id="rowPat"></p>
+  <div class="fg"><label>時刻</label><input type="time" id="wTime"></div>
+  <div class="fg"><label>出発地</label><input type="text" id="wOrigin" list="places" value="あさぎり荘"></div>
+  <div class="fg"><label>行き先</label><input type="text" id="wDest" list="places"></div>
+  <div class="fg"><label>区分（画面の絞り込みに使います）</label>
+    <select id="wCat"><option value="morning">朝・駅</option><option value="afternoon">昼・外湯</option><option value="night">夜・文芸館</option></select></div>
+  <div class="mbtn"><button class="bc" onclick="closeAll()">やめる</button>
+    <button class="bs" onclick="saveRow()">保存する</button></div>
+</div></div>
+
+<!-- まとめて追加 -->
+<div id="mBulk" class="ov"><div class="mod">
+  <h3>まとめて追加</h3>
+  <p class="sub" id="bulkPat"></p>
+  <div class="mod-note">例）夜の文芸館行きを 19:00 から 21:00 まで 20分おき にしたいとき →<br>
+  開始 19:00／終了 21:00／間隔 20分／出発地 あさぎり荘／行き先 文芸館</div>
+  <div class="fg2">
+    <div><label style="font-size:13px;font-weight:700;display:block;margin-bottom:5px">開始時刻</label><input type="time" id="bFrom" style="width:100%;padding:11px;border:1px solid #dde2e8;border-radius:8px;font-size:16px"></div>
+    <div><label style="font-size:13px;font-weight:700;display:block;margin-bottom:5px">終了時刻</label><input type="time" id="bTo" style="width:100%;padding:11px;border:1px solid #dde2e8;border-radius:8px;font-size:16px"></div>
+  </div>
+  <div class="fg" style="margin-top:13px"><label>間隔（分）</label><input type="number" id="bStep" value="20" min="5" max="180"></div>
+  <div class="fg"><label>出発地</label><input type="text" id="bOrigin" list="places" value="あさぎり荘"></div>
+  <div class="fg"><label>行き先</label><input type="text" id="bDest" list="places" placeholder="例）文芸館"></div>
+  <div class="fg"><label>区分</label>
+    <select id="bCat"><option value="night">夜・文芸館</option><option value="morning">朝・駅</option><option value="afternoon">昼・外湯</option></select></div>
+  <div id="bulkPrev" class="warn hide"></div>
+  <div class="mbtn"><button class="bc" onclick="closeAll()">やめる</button>
+    <button class="bs" onclick="saveBulk()">この内容で追加</button></div>
+</div></div>
+
+<!-- 新しいパターン -->
+<div id="mPat" class="ov"><div class="mod">
+  <h3>新しいパターンを作る</h3>
+  <p class="sub">名前を付けて、いまのパターンの内容をコピーして始められます。</p>
+  <div class="fg"><label>パターン名</label><input type="text" id="pName" placeholder="例）繁忙期" maxlength="20"></div>
+  <div class="fg"><label>中身</label>
+    <select id="pCopy"><option value="1">いまのパターンをコピーして作る</option><option value="0">空っぽから作る</option></select></div>
+  <div class="mbtn"><button class="bc" onclick="closeAll()">やめる</button>
+    <button class="bs" onclick="saveNewPat()">作成する</button></div>
+</div></div>
+
+<!-- 危険な操作 -->
+<div id="mDanger" class="ov"><div class="mod">
+  <h3 id="dgTtl"></h3>
+  <p class="sub" id="dgDesc"></p>
+  <div class="warn red" id="dgWarn"></div>
+  <div class="fg"><label>実行するには <b id="dgWord"></b> と入力してください</label>
+    <input type="text" id="dgInput" oninput="dgCheck()" autocomplete="off"></div>
+  <div class="mbtn"><button class="bc" onclick="closeAll()">やめる</button>
+    <button class="bd" id="dgGo" disabled onclick="runDanger()">実行する</button></div>
+</div></div>
+
+<datalist id="places">
+  <option value="あさぎり荘"></option><option value="城崎温泉駅"></option>
+  <option value="御所の湯"></option><option value="文芸館"></option>
+</datalist>
+
+<div id="printArea"></div>
+
+<script>
+/* =====================================================================
+   ★★★ 設定はここだけ変えればOKです ★★★
+   ===================================================================== */
+const CONFIG = {
+  URL: 'https://pzxikzejujtwpabikflk.supabase.co',
+  KEY: 'sb_publishable_IV9yZp3BFwOacBmvoc5P_Q_S_WI0WC7',
+  CAPACITY: 9,        // 1便あたりの定員の目安（超えても登録できます）
+  SOON_MIN: 20,       // 運転手画面で「もうすぐ」と色が変わるまでの分数
+  REFRESH_SEC: 15,    // 自動で最新を取りに行く間隔（秒）
+  DAY_START_HOUR: 3,  // 深夜この時刻までは「前日」として扱う
+  KEEP_DAYS: 7,       // 何日前より古いデータを自動で消すか
+  MAX_APPLY_DAYS: 62, // 一度にパターンを適用できる最大日数
+  DEFAULT_PATTERN: '通常',
+  BASE: [
+    {t:'09:30', from:'あさぎり荘', to:'城崎温泉駅', cat:'morning'},
+    {t:'10:10', from:'あさぎり荘', to:'城崎温泉駅', cat:'morning'},
+    {t:'15:30', from:'あさぎり荘', to:'御所の湯',   cat:'afternoon'},
+    {t:'16:00', from:'あさぎり荘', to:'御所の湯',   cat:'afternoon'},
+    {t:'16:30', from:'あさぎり荘', to:'御所の湯',   cat:'afternoon'},
+    {t:'17:00', from:'あさぎり荘', to:'御所の湯',   cat:'afternoon'},
+    {t:'16:40', from:'御所の湯',   to:'あさぎり荘', cat:'afternoon'},
+    {t:'17:10', from:'御所の湯',   to:'あさぎり荘', cat:'afternoon'},
+    {t:'17:40', from:'御所の湯',   to:'あさぎり荘', cat:'afternoon'},
+    {t:'19:00', from:'あさぎり荘', to:'文芸館',     cat:'night'},
+    {t:'19:20', from:'あさぎり荘', to:'文芸館',     cat:'night'},
+    {t:'19:40', from:'あさぎり荘', to:'文芸館',     cat:'night'},
+    {t:'20:00', from:'あさぎり荘', to:'文芸館',     cat:'night'},
+    {t:'20:20', from:'あさぎり荘', to:'文芸館',     cat:'night'},
+    {t:'20:40', from:'あさぎり荘', to:'文芸館',     cat:'night'}
+  ]
+};
+/* ================= ここから下は触らなくて大丈夫です ================= */
+
+const sb = window.supabase.createClient(CONFIG.URL, CONFIG.KEY);
+const WD = ['日','月','火','水','木','金','土'];
+const CATNAME = {morning:'朝・駅', afternoon:'昼・外湯', night:'夜・文芸館'};
+
+let view='front', filter='all';
+let baseDate=new Date(), dateStr='', todayStr='';
+let flightsF=[], flightsD=[];
+let online=true, lastSync=null, wl=null;
+let patterns=[], curPat=CONFIG.DEFAULT_PATTERN, patRows=[];
+let pending={}, danger=null;
+
+/* ---------- 小道具 ---------- */
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function ymd(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function parseYmd(s){var p=String(s).split('-');return new Date(+p[0],+p[1]-1,+p[2]);}
+function label(d){return (d.getMonth()+1)+'月'+d.getDate()+'日（'+WD[d.getDay()]+'）';}
+function hm(t){return String(t==null?'':t).substring(0,5);}
+function toMin(t){var p=hm(t).split(':');return (+p[0])*60+(+p[1]);}
+function minToHm(m){return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');}
+function nowMin(){var n=new Date();return n.getHours()*60+n.getMinutes();}
+function pax(f){return (f.reservations||[]).reduce(function(s,r){return s+(r.passenger_count||0);},0);}
+function catOf(t){var m=toMin(t); if(m<720)return 'morning'; if(m<1080)return 'afternoon'; return 'night';}
+function fmtErr(e){if(!e)return'';var a=[];if(e.code)a.push('['+e.code+']');if(e.message)a.push(e.message);
+  if(e.details)a.push('詳細:'+e.details);if(e.hint)a.push('ヒント:'+e.hint);return a.join(' ');}
+function who(r){var a=[];if(r.name)a.push(r.name);if(r.room_number)a.push(r.room_number+'号室');
+  return a.length?a.join(' / '):'（お名前なし）';}
+function keyOf(f){return hm(f.departure_time)+'|'+f.origin+'|'+f.destination;}
+function el(id){return document.getElementById(id);}
+
+function cacheSave(k,d){try{localStorage.setItem('bus_'+k,JSON.stringify({at:Date.now(),data:d}));}catch(e){}}
+function cacheLoad(k){try{var v=localStorage.getItem('bus_'+k);return v?JSON.parse(v):null;}catch(e){return null;}}
+
+function syncLabel(){if(!lastSync)return'';var d=new Date(lastSync);
+  return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
+function markOffline(){
+  online=false;
+  var b=el('netbar'); b.className='netbar offline';
+  b.innerHTML='⚠️ オフラインです（'+(lastSync?syncLabel()+'時点の内容を表示中':'保存された内容がありません')+'）<br>'
+    +'電波が戻ると自動で最新に更新されます。この間、予約の追加・変更はできません。';
+  render();
+}
+function markOnline(){
+  online=true; el('netbar').className='netbar';
+  el('foot').innerHTML='最終更新 '+syncLabel()+'　／　'+CONFIG.REFRESH_SEC+'秒ごとに自動更新<br>送迎管理 v3.0';
+}
+
+/* ---------- 起動 ---------- */
+async function boot(){
+  try{
+    var n=new Date();
+    if(n.getHours()<CONFIG.DAY_START_HOUR) n.setDate(n.getDate()-1);
+    todayStr=ymd(n);
+    baseDate=parseYmd(todayStr); dateStr=todayStr;
+    paintDate();
+
+    var ok=await checkDb();
+    el('boot').classList.add('hide');
+
+    var wantDriver = location.search.indexOf('view=driver')>=0;
+    setView(wantDriver?'driver':'front');
+    if(!ok) return;
+
+    await cleanupOld();
+    await ensureFlights();
+    await loadPatterns();
+    await load();
+    buildQR(); buildAbout();
+    setInterval(load, CONFIG.REFRESH_SEC*1000);
+    setInterval(render, 30000);
+  }catch(e){ el('boot').classList.add('hide'); showFatal(e); }
+}
+function showFatal(e){
+  el('diag').classList.remove('hide');
+  el('diagTtl').innerText='❌ エラーが発生しました';
+  el('diagBox').textContent=(e&&e.message)||String(e);
+  el('diagHint').innerHTML='上の内容をコピーして相談してください。';
+}
+window.onerror=function(m,u,l){ showFatal(new Error(m+' (行'+l+')')); };
+
+/* ---------- 接続診断 ---------- */
+async function checkDb(){
+  var lines=['接続先: '+CONFIG.URL,'対象日: '+dateStr,'---'], bad=[], baseCount=0;
+  for(var i=0;i<3;i++){
+    var t=['base_schedules','flights','reservations'][i];
+    var r=await sb.from(t).select('*',{count:'exact',head:true});
+    if(r.error){bad.push(t);lines.push('NG '+t+' … '+fmtErr(r.error));}
+    else{lines.push('OK '+t+' … '+r.count+'件'); if(t==='base_schedules')baseCount=r.count;}
+  }
+  var p=await sb.from('flights').insert([{target_date:'1900-01-01',departure_time:'00:00',
+    origin:'接続テスト',destination:'接続テスト',category:'morning'}]).select('id');
+  if(p.error){bad.push('write');lines.push('NG 書き込みテスト … '+fmtErr(p.error));}
+  else{lines.push('OK 書き込みテスト … 成功');
+    if(p.data&&p.data[0]) await sb.from('flights').delete().eq('id',p.data[0].id);}
+
+  el('diagBox').textContent=lines.join('\n');
+  if(bad.length){
+    el('diag').classList.remove('hide');
+    el('diagTtl').innerText='❌ データベースを使える状態になっていません';
+    el('diagHint').innerHTML='上の内容をそのままコピーして相談してください。<br><b>42501</b> と出ている場合はRLS（アクセス権限）が原因です。';
+    el('diagFix').classList.add('hide'); return false;
+  }
+  if(!baseCount){
+    el('diag').classList.remove('hide');
+    el('diagTtl').innerText='⚠️ 基本の時刻表がまだありません';
+    el('diagHint').innerText='接続は正常です。下のボタンで基本の時刻表（'+CONFIG.BASE.length+'便）をつくります。';
+    el('diagFix').classList.remove('hide'); return false;
+  }
+  el('diag').classList.add('hide'); return true;
+}
+async function seedBase(){
+  var b=el('diagFix'); b.disabled=true; b.innerText='作成中...';
+  try{
+    var rows=CONFIG.BASE.map(function(x){return {departure_time:x.t,origin:x.from,destination:x.to,
+      category:x.cat,pattern:CONFIG.DEFAULT_PATTERN};});
+    var r=await sb.from('base_schedules').insert(rows);
+    if(r.error) throw new Error(fmtErr(r.error));
+    location.reload();
+  }catch(e){ b.disabled=false; b.innerText='🔧 基本の時刻表をつくる';
+    el('diagBox').textContent+='\n---\n作成失敗: '+e.message; alert('作成できませんでした。\n\n'+e.message); }
+}
+
+async function cleanupOld(){
+  try{ var c=new Date(); c.setDate(c.getDate()-CONFIG.KEEP_DAYS);
+    await sb.from('flights').delete().lt('target_date',ymd(c)); }catch(e){}
+}
+
+/* ---------- 便の生成 ---------- */
+async function baseRowsOf(p){
+  var r=await sb.from('base_schedules').select('*').eq('pattern',p);
+  if(r.error) throw new Error('時刻表の読み取りに失敗: '+fmtErr(r.error));
+  var d=(r.data||[]).slice();
+  d.sort(function(a,b){return toMin(a.departure_time)-toMin(b.departure_time);});
+  return d;
+}
+async function ensureFlights(day){
+  var d=day||dateStr;
+  var ex=await sb.from('flights').select('id').eq('target_date',d).limit(1);
+  if(ex.error) throw new Error('便の確認に失敗: '+fmtErr(ex.error));
+  if(ex.data&&ex.data.length) return;
+  var rows=await baseRowsOf(CONFIG.DEFAULT_PATTERN);
+  if(!rows.length) return;
+  var ins=await sb.from('flights').insert(rows.map(function(b){
+    return {target_date:d,departure_time:b.departure_time,origin:b.origin,
+            destination:b.destination,category:b.category,is_temporary:false};}));
+  if(ins.error) throw new Error('便の作成に失敗: '+fmtErr(ins.error));
+}
+
+/* ---------- 読み込み ---------- */
+async function fetchDay(d){
+  var r=await sb.from('flights').select('*, reservations(*)')
+        .eq('target_date',d).order('departure_time',{ascending:true});
+  if(r.error) throw new Error(fmtErr(r.error));
+  return r.data||[];
+}
+async function load(){
+  try{
+    flightsF=await fetchDay(dateStr); cacheSave(dateStr,flightsF);
+    if(dateStr===todayStr) flightsD=flightsF;
+    else{ flightsD=await fetchDay(todayStr); cacheSave(todayStr,flightsD); }
+    lastSync=Date.now(); markOnline(); render();
+  }catch(e){
+    var cf=cacheLoad(dateStr), cd=cacheLoad(todayStr);
+    if(cf) flightsF=cf.data;
+    if(cd){ flightsD=cd.data; lastSync=cd.at; }
+    markOffline();
+  }
+}
+
+/* ---------- 日付 ---------- */
+function paintDate(){
+  el('dpick').value=dateStr;
+  el('dlabel').innerHTML=label(baseDate)+'<small>'+(dateStr===todayStr?'今日':'&nbsp;')+'</small>';
+  el('dlabelD').innerHTML=label(parseYmd(todayStr))+'<small>本日の送迎</small>';
+}
+async function shiftDate(n){ baseDate.setDate(baseDate.getDate()+n); dateStr=ymd(baseDate); paintDate(); await reloadDate(); }
+async function pickDate(){ var v=el('dpick').value; if(!v)return; baseDate=parseYmd(v); dateStr=v; paintDate(); await reloadDate(); }
+async function goToday(){ baseDate=parseYmd(todayStr); dateStr=todayStr; paintDate(); await reloadDate(); }
+async function reloadDate(){
+  el('listF').innerHTML='<div class="empty">読み込み中...</div>';
+  try{ await ensureFlights(); }catch(e){}
+  await load();
+}
+
+/* ---------- 画面切り替え ---------- */
+function setView(v){
+  view=v;
+  el('viewF').classList.toggle('hide',v!=='front');
+  el('viewD').classList.toggle('hide',v!=='driver');
+  el('viewS').classList.toggle('hide',v!=='settings');
+  el('tabF').classList.toggle('on',v==='front');
+  el('tabD').classList.toggle('on',v==='driver');
+  el('tabS').classList.toggle('on',v==='settings');
+  if(v==='driver') wakeOn(); else wakeOff();
+  render();
+}
+function setFilter(c,btn){
+  filter=c;
+  var bs=document.querySelectorAll('.chips button');
+  for(var i=0;i<bs.length;i++) bs[i].classList.remove('on');
+  btn.classList.add('on'); render();
+}
+function render(){ paintDate(); renderFront(); renderDriver(); if(view==='settings') renderSettings(); }
+
+/* ---------- 画面スリープ防止 ---------- */
+async function wakeOn(){
+  try{ if('wakeLock' in navigator && !wl){ wl=await navigator.wakeLock.request('screen');
+    wl.addEventListener('release',function(){wl=null;}); } }catch(e){}
+}
+function wakeOff(){ try{ if(wl){ wl.release(); wl=null; } }catch(e){} }
+document.addEventListener('visibilitychange',function(){
+  if(document.visibilityState==='visible'&&view==='driver') wakeOn(); });
+
+/* ---------- 描画 ---------- */
+function paxHtml(n){
+  var cls=n===0?'zero':(n>CONFIG.CAPACITY?'over':(n===CONFIG.CAPACITY?'full':''));
+  var badge=n>CONFIG.CAPACITY?'<span class="badge over">定員超</span>':(n===CONFIG.CAPACITY?'<span class="badge full">満</span>':'');
+  var num=n===0?'予約なし':(n+'<span style="font-size:14px">名</span>');
+  return '<div class="pax '+cls+'"><span class="n">'+num+'</span>'+badge
+    +(n>0?'<span class="cap">定員 '+CONFIG.CAPACITY+'名</span>':'')+'</div>';
+}
+function renderFront(){
+  if(view!=='front') return;
+  var box=el('listF'), total=0, marked=0;
+  for(var i=0;i<flightsF.length;i++){var n=pax(flightsF[i]); total+=n; if(n>0)marked++;}
+  el('summary').innerHTML='<div><b>'+flightsF.length+'</b>便</div><div>予約あり <b>'+marked
+    +'</b>便</div><div>合計 <b>'+total+'</b>名</div>';
+  if(!flightsF.length){ box.innerHTML='<div class="empty">この日の便がまだありません。<br>ページを再読み込みすると自動でつくられます。</div>'; return; }
+
+  var out='';
+  for(var i=0;i<flightsF.length;i++){
+    var f=flightsF[i];
+    if(filter!=='all'&&f.category!==filter) continue;
+    var n=pax(f);
+    out+='<div class="card '+(n>0?'mark':'')+'"><div class="chead"><div>'
+      +'<div class="tm">'+esc(hm(f.departure_time))+(f.is_temporary?'<span class="tag">臨時</span>':'')+'</div>'
+      +'<div class="rt">'+esc(f.origin)+' → '+esc(f.destination)+'</div></div>'+paxHtml(n)+'</div>';
+    if(f.note) out+='<div class="memo">📝 '+esc(f.note)+'</div>';
+    if(n>0){
+      out+='<ul class="res">';
+      for(var j=0;j<f.reservations.length;j++){ var r=f.reservations[j];
+        out+='<li><span class="who">'+esc(who(r))+'</span><span><span class="cnt">'+esc(r.passenger_count)+'名</span>'
+          +'<button class="mini e" onclick="openResEdit(\''+esc(f.id)+'\',\''+esc(r.id)+'\')">修正</button>'
+          +'<button class="mini d" onclick="delRes(\''+esc(r.id)+'\')">削除</button></span></li>';
+      }
+      out+='</ul>';
+    }
+    out+='<div class="acts"><button class="btn btn-g" onclick="openEdit(\''+esc(f.id)+'\')">⚙️ 変更</button>'
+      +'<button class="btn btn-g" onclick="openNote(\''+esc(f.id)+'\')">📝 メモ</button>'
+      +(f.is_temporary?'<button class="btn btn-g" onclick="delFlight(\''+esc(f.id)+'\')">🗑 削除</button>':'')
+      +'<span class="grow"></span>'
+      +'<button class="btn btn-p" onclick="openRes(\''+esc(f.id)+'\')">＋ 予約</button></div></div>';
+  }
+  box.innerHTML=out||'<div class="empty">この区分の便はありません。</div>';
+}
+function renderDriver(){
+  if(view!=='driver') return;
+  var nb=el('nextBox'), lb=el('listD'), pb=el('listPast'), pw=el('pastWrap');
+  if(!flightsD.length){
+    nb.innerHTML='<div class="next fin"><div class="big">本日の予定はまだ準備中です</div></div>';
+    lb.innerHTML=''; pw.classList.add('hide'); return;
+  }
+  var cur=nowMin(), idx=-1;
+  for(var i=0;i<flightsD.length;i++){ if(toMin(flightsD[i].departure_time)>=cur-5){idx=i;break;} }
+
+  if(idx<0){
+    nb.innerHTML='<div class="next fin"><div class="lab">おつかれさまでした</div><div class="big">本日の送迎は終了しました</div></div>';
+  }else{
+    var f=flightsD[idx], n=pax(f), diff=toMin(f.departure_time)-cur;
+    var cls=diff<0?'late':(diff<=CONFIG.SOON_MIN?'soon':'');
+    var cd=diff<0?('出発時刻を'+(-diff)+'分過ぎています'):(diff===0?'まもなく出発':('あと '+diff+' 分'));
+    var h='<div class="next '+cls+'"><div class="lab">次の便</div><div class="big">'+esc(hm(f.departure_time))+'</div>'
+      +'<div class="cd">'+cd+'</div><div class="rt2">'+esc(f.origin)+' → '+esc(f.destination)
+      +(f.is_temporary?'（臨時便）':'')+'</div>';
+    if(f.note) h+='<div class="memo">📝 '+esc(f.note)+'</div>';
+    h+='<div class="paxbox">';
+    if(n>0){
+      h+='<div class="h">お客様 '+n+'名'+(n>CONFIG.CAPACITY?'　⚠️ 定員'+CONFIG.CAPACITY+'名を超えています':'')+'</div><ul class="res">';
+      for(var j=0;j<f.reservations.length;j++){var r=f.reservations[j];
+        h+='<li><span class="who">'+esc(who(r))+'</span><span class="cnt">'+esc(r.passenger_count)+'名</span></li>';}
+      h+='</ul>';
+    }else h+='<div class="none">予約なし</div>';
+    nb.innerHTML=h+'</div></div>';
+  }
+
+  var out='';
+  for(var i=(idx<0?flightsD.length:idx+1);i<flightsD.length;i++){
+    var f=flightsD[i], n=pax(f);
+    out+='<div class="card '+(n>0?'mark':'')+'"><div class="chead"><div>'
+      +'<div class="tm" style="font-size:22px">'+esc(hm(f.departure_time))+(f.is_temporary?'<span class="tag">臨時</span>':'')+'</div>'
+      +'<div class="rt">'+esc(f.origin)+' → '+esc(f.destination)+'</div></div>'+paxHtml(n)+'</div>';
+    if(f.note) out+='<div class="memo">📝 '+esc(f.note)+'</div>';
+    if(n>0){ out+='<ul class="res">';
+      for(var j=0;j<f.reservations.length;j++){var r=f.reservations[j];
+        out+='<li><span class="who">'+esc(who(r))+'</span><span class="cnt">'+esc(r.passenger_count)+'名</span></li>';}
+      out+='</ul>'; }
+    out+='</div>';
+  }
+  lb.innerHTML=out||'<div class="empty">このあとの便はありません。</div>';
+
+  var past='';
+  for(var i=0;i<(idx<0?flightsD.length:idx);i++){
+    var f=flightsD[i], n=pax(f);
+    past+='<div class="card done"><div class="chead"><div><div class="tm" style="font-size:20px">'
+      +esc(hm(f.departure_time))+'</div><div class="rt">'+esc(f.origin)+' → '+esc(f.destination)
+      +'</div></div>'+paxHtml(n)+'</div></div>';
+  }
+  pb.innerHTML=past; pw.classList.toggle('hide',!past);
+}
+
+/* ---------- 印刷 ---------- */
+function printDay(){
+  var rows='';
+  for(var i=0;i<flightsF.length;i++){
+    var f=flightsF[i], n=pax(f), names=[];
+    for(var j=0;j<(f.reservations||[]).length;j++){var r=f.reservations[j];
+      names.push(who(r)+' '+r.passenger_count+'名');}
+    rows+='<tr><td class="t">'+esc(hm(f.departure_time))+(f.is_temporary?'<br><small>臨時</small>':'')+'</td>'
+      +'<td>'+esc(f.origin)+' → '+esc(f.destination)+(f.note?'<br><small>📝 '+esc(f.note)+'</small>':'')+'</td>'
+      +'<td class="c">'+(n>0?n+'名':'<span class="blank">－</span>')+'</td>'
+      +'<td>'+(names.length?esc(names.join('　/　')):'<span class="blank">（空欄）</span>')+'</td>'
+      +'<td style="width:80px"></td></tr>';
+  }
+  el('printArea').innerHTML='<h1>あさぎり荘　送迎表</h1>'
+    +'<div class="pd">'+label(baseDate)+'　／　印刷 '+label(new Date())+' '+syncLabel()
+    +'　／　定員の目安 '+CONFIG.CAPACITY+'名</div>'
+    +'<table><tr><th style="width:60px">時刻</th><th style="width:180px">行き先</th>'
+    +'<th style="width:50px">人数</th><th>お名前・部屋番号</th><th style="width:80px">確認</th></tr>'
+    +rows+'</table>';
+  window.print();
+}
+
+/* ---------- モーダル共通 ---------- */
+function closeAll(){ ['mRes','mEdit','mTemp','mNote','mRow','mBulk','mPat','mDanger'].forEach(function(i){
+  el(i).classList.remove('on');}); }
+function needOnline(){ if(online) return false;
+  alert('オフラインのため操作できません。\n電波の届く場所で、もう一度お試しください。'); return true; }
+function findF(id){for(var i=0;i<flightsF.length;i++) if(flightsF[i].id===id) return flightsF[i]; return null;}
+function findR(f,id){for(var i=0;i<(f.reservations||[]).length;i++) if(f.reservations[i].id===id) return f.reservations[i]; return null;}
+
+/* ---------- 予約 追加／修正 ---------- */
+function openRes(id){
+  if(needOnline()) return;
+  var f=findF(id); if(!f) return;
+  pending={flightId:id,f:f,editId:null};
+  el('resTtl').innerText='予約を追加'; el('resTtl2').innerText='この内容で登録します';
+  el('resGo').innerText='登録する';
+  el('resWhich').innerText=hm(f.departure_time)+'　'+f.origin+' → '+f.destination;
+  el('rCount').value=''; el('rName').value=''; el('rRoom').value='';
+  el('resStep1').classList.remove('hide'); el('resStep2').classList.add('hide');
+  el('mRes').classList.add('on');
+  setTimeout(function(){el('rCount').focus();},80);
+}
+function openResEdit(fid,rid){
+  if(needOnline()) return;
+  var f=findF(fid); if(!f) return; var r=findR(f,rid); if(!r) return;
+  pending={flightId:fid,f:f,editId:rid,before:r.passenger_count};
+  el('resTtl').innerText='予約を修正'; el('resTtl2').innerText='この内容に変更します';
+  el('resGo').innerText='変更する';
+  el('resWhich').innerText=hm(f.departure_time)+'　'+f.origin+' → '+f.destination;
+  el('rCount').value=r.passenger_count; el('rName').value=r.name||''; el('rRoom').value=r.room_number||'';
+  el('resStep1').classList.remove('hide'); el('resStep2').classList.add('hide');
+  el('mRes').classList.add('on');
+}
+function resToConfirm(){
+  var c=parseInt(el('rCount').value,10);
+  if(!c||c<1){ alert('人数を入力してください。'); return; }
+  pending.count=c; pending.name=el('rName').value.trim(); pending.room=el('rRoom').value.trim();
+  var f=pending.f, after=pax(f)-(pending.editId?pending.before:0)+c;
+  el('resPreview').innerHTML='<div><span class="k">便</span><b>'+esc(hm(f.departure_time))+'</b></div>'
+    +'<div><span class="k">行き先</span>'+esc(f.origin)+' → '+esc(f.destination)+'</div>'
+    +'<div><span class="k">人数</span><b>'+c+'名</b></div>'
+    +'<div><span class="k">お名前</span>'+esc(pending.name||'（なし）')+'</div>'
+    +'<div><span class="k">部屋番号</span>'+esc(pending.room||'（なし）')+'</div>';
+  var w=el('resWarn');
+  if(after>CONFIG.CAPACITY){ w.classList.remove('hide');
+    w.innerHTML='⚠️ この便の合計が <b>'+after+'名</b> になり、定員の目安 '+CONFIG.CAPACITY+'名を超えます。<br>'
+      +'登録はできます。2台目を出すかどうかは現場で判断してください。';
+  } else w.classList.add('hide');
+  el('resStep1').classList.add('hide'); el('resStep2').classList.remove('hide');
+}
+function resBack(){ el('resStep2').classList.add('hide'); el('resStep1').classList.remove('hide'); }
+async function saveRes(){
+  var b=el('resGo'), t=b.innerText; b.disabled=true; b.innerText='処理中...';
+  try{
+    var v={passenger_count:pending.count,name:pending.name||null,room_number:pending.room||null};
+    var r = pending.editId
+      ? await sb.from('reservations').update(v).eq('id',pending.editId)
+      : await sb.from('reservations').insert([Object.assign({flight_id:pending.flightId},v)]);
+    if(r.error) throw new Error(fmtErr(r.error));
+    closeAll(); await load();
+  }catch(e){ alert('保存できませんでした。\n\n'+e.message); }
+  b.disabled=false; b.innerText=t;
+}
+async function delRes(id){
+  if(needOnline()) return;
+  if(!confirm('この予約を削除します。よろしいですか？')) return;
+  try{ var r=await sb.from('reservations').delete().eq('id',id);
+    if(r.error) throw new Error(fmtErr(r.error)); await load();
+  }catch(e){ alert('削除できませんでした。\n\n'+e.message); }
+}
+
+/* ---------- 便の変更・メモ・臨時便 ---------- */
+function openEdit(id){
+  if(needOnline()) return;
+  var f=findF(id); if(!f) return; pending={flightId:id};
+  el('eTime').value=hm(f.departure_time); el('eOrigin').value=f.origin; el('eDest').value=f.destination;
+  el('mEdit').classList.add('on');
+}
+async function saveEdit(){
+  var t=el('eTime').value, o=el('eOrigin').value.trim(), d=el('eDest').value.trim();
+  if(!t){alert('時刻を入力してください。');return;}
+  if(!o||!d){alert('出発地と行き先を入力してください。');return;}
+  try{ var r=await sb.from('flights').update({departure_time:t+':00',origin:o,destination:d,category:catOf(t)})
+        .eq('id',pending.flightId);
+    if(r.error) throw new Error(fmtErr(r.error)); closeAll(); await load();
+  }catch(e){ alert('変更できませんでした。\n\n'+e.message); }
+}
+function openNote(id){
+  if(needOnline()) return;
+  var f=findF(id); if(!f) return; pending={flightId:id};
+  el('nText').value=f.note||''; el('mNote').classList.add('on');
+  setTimeout(function(){el('nText').focus();},80);
+}
+async function saveNote(){
+  var v=el('nText').value.trim();
+  try{ var r=await sb.from('flights').update({note:v||null}).eq('id',pending.flightId);
+    if(r.error) throw new Error(fmtErr(r.error)); closeAll(); await load();
+  }catch(e){ alert('保存できませんでした。\n\n'+e.message); }
+}
+function openTemp(){
+  if(needOnline()) return; pending={};
+  el('tempDate').innerText=label(baseDate)+' に追加します';
+  ['tTime','tDest','tCount','tName','tRoom'].forEach(function(i){el(i).value='';});
+  el('tOrigin').value='あさぎり荘';
+  el('tStep1').classList.remove('hide'); el('tStep2').classList.add('hide');
+  el('mTemp').classList.add('on');
+}
+function tempToConfirm(){
+  var t=el('tTime').value, o=el('tOrigin').value.trim(), d=el('tDest').value.trim();
+  if(!t){alert('時刻を入力してください。');return;}
+  if(!o||!d){alert('出発地と行き先を入力してください。');return;}
+  pending={time:t,origin:o,dest:d,count:parseInt(el('tCount').value,10)||0,
+    name:el('tName').value.trim(),room:el('tRoom').value.trim()};
+  el('tempPreview').innerHTML='<div><span class="k">日付</span>'+label(baseDate)+'</div>'
+    +'<div><span class="k">時刻</span><b>'+esc(t)+'</b></div>'
+    +'<div><span class="k">行き先</span>'+esc(o)+' → '+esc(d)+'</div>'
+    +'<div><span class="k">人数</span>'+(pending.count?('<b>'+pending.count+'名</b>'):'（あとで追加）')+'</div>'
+    +(pending.count?'<div><span class="k">お名前</span>'+esc(pending.name||'（なし）')+'</div>'
+      +'<div><span class="k">部屋番号</span>'+esc(pending.room||'（なし）')+'</div>':'');
+  el('tStep1').classList.add('hide'); el('tStep2').classList.remove('hide');
+}
+function tempBack(){ el('tStep2').classList.add('hide'); el('tStep1').classList.remove('hide'); }
+async function saveTemp(){
+  try{
+    var ins=await sb.from('flights').insert([{target_date:dateStr,departure_time:pending.time+':00',
+      origin:pending.origin,destination:pending.dest,category:catOf(pending.time),is_temporary:true}]).select('id');
+    if(ins.error) throw new Error(fmtErr(ins.error));
+    if(pending.count>0&&ins.data&&ins.data[0]){
+      var r2=await sb.from('reservations').insert([{flight_id:ins.data[0].id,passenger_count:pending.count,
+        name:pending.name||null,room_number:pending.room||null}]);
+      if(r2.error) throw new Error(fmtErr(r2.error));
+    }
+    closeAll(); await load();
+  }catch(e){ alert('追加できませんでした。\n\n'+e.message); }
+}
+async function delFlight(id){
+  if(needOnline()) return;
+  if(!confirm('この臨時便を削除します。中の予約も一緒に消えます。よろしいですか？')) return;
+  try{ var r=await sb.from('flights').delete().eq('id',id);
+    if(r.error) throw new Error(fmtErr(r.error)); await load();
+  }catch(e){ alert('削除できませんでした。\n\n'+e.message); }
+}
+
+/* =====================================================================
+   設定画面
+   ===================================================================== */
+async function loadPatterns(){
+  var r=await sb.from('base_schedules').select('pattern');
+  if(r.error) throw new Error(fmtErr(r.error));
+  var s={}; (r.data||[]).forEach(function(x){ s[x.pattern||CONFIG.DEFAULT_PATTERN]=1; });
+  s[CONFIG.DEFAULT_PATTERN]=1;
+  patterns=Object.keys(s).sort(function(a,b){
+    if(a===CONFIG.DEFAULT_PATTERN)return -1; if(b===CONFIG.DEFAULT_PATTERN)return 1; return a.localeCompare(b);});
+  if(patterns.indexOf(curPat)<0) curPat=CONFIG.DEFAULT_PATTERN;
+  patRows=await baseRowsOf(curPat);
+  fillPatSelects();
+}
+function fillPatSelects(){
+  ['patSel','apPat'].forEach(function(id){
+    var s=el(id), keep=(id==='patSel')?curPat:s.value;
+    s.innerHTML=patterns.map(function(p){return '<option value="'+esc(p)+'">'+esc(p)+'</option>';}).join('');
+    if(patterns.indexOf(keep)>=0) s.value=keep;
+  });
+  if(!el('apFrom').value){ el('apFrom').value=todayStr; el('apTo').value=todayStr; }
+}
+async function onPatChange(){
+  curPat=el('patSel').value;
+  patRows=await baseRowsOf(curPat);
+  renderSettings();
+}
+function renderSettings(){
+  var t='<table class="stable"><tr><th>時刻</th><th>区間</th><th>区分</th><th></th></tr>';
+  if(!patRows.length) t+='<tr><td colspan="4" style="color:#9aa4b0;padding:16px 8px">まだ便がありません。下のボタンで追加してください。</td></tr>';
+  for(var i=0;i<patRows.length;i++){ var r=patRows[i];
+    t+='<tr><td class="t">'+esc(hm(r.departure_time))+'</td>'
+      +'<td>'+esc(r.origin)+' → '+esc(r.destination)+'</td>'
+      +'<td style="font-size:12px;color:#6b7684">'+esc(CATNAME[r.category]||r.category)+'</td>'
+      +'<td class="a"><button class="mini e" onclick="openRow(\''+esc(r.id)+'\')">修正</button>'
+      +'<button class="mini d" onclick="delRow(\''+esc(r.id)+'\')">削除</button></td></tr>';
+  }
+  el('rowTable').innerHTML=t+'</table><div style="font-size:12px;color:#9aa4b0">全 '+patRows.length+' 便</div>';
+}
+function openNewPat(){ el('pName').value=''; el('pCopy').value='1'; el('mPat').classList.add('on'); }
+async function saveNewPat(){
+  var name=el('pName').value.trim();
+  if(!name){ alert('パターン名を入力してください。'); return; }
+  if(patterns.indexOf(name)>=0){ alert('同じ名前のパターンがすでにあります。'); return; }
+  try{
+    if(el('pCopy').value==='1'&&patRows.length){
+      var rows=patRows.map(function(r){return {departure_time:r.departure_time,origin:r.origin,
+        destination:r.destination,category:r.category,pattern:name};});
+      var ins=await sb.from('base_schedules').insert(rows);
+      if(ins.error) throw new Error(fmtErr(ins.error));
+    }else{
+      var ins2=await sb.from('base_schedules').insert([{departure_time:'19:00',origin:'あさぎり荘',
+        destination:'文芸館',category:'night',pattern:name}]);
+      if(ins2.error) throw new Error(fmtErr(ins2.error));
+    }
+    curPat=name; closeAll(); await loadPatterns(); renderSettings();
+    alert('パターン「'+name+'」を作りました。\n中身を編集してから、下の「期間に適用」で使ってください。');
+  }catch(e){ alert('作成できませんでした。\n\n'+e.message); }
+}
+async function delPattern(){
+  if(curPat===CONFIG.DEFAULT_PATTERN){ alert('「'+CONFIG.DEFAULT_PATTERN+'」は毎日の基本になるパターンなので削除できません。'); return; }
+  if(!confirm('パターン「'+curPat+'」を削除します。\n（すでに作られた便には影響しません）\n\nよろしいですか？')) return;
+  try{ var r=await sb.from('base_schedules').delete().eq('pattern',curPat);
+    if(r.error) throw new Error(fmtErr(r.error));
+    curPat=CONFIG.DEFAULT_PATTERN; await loadPatterns(); renderSettings();
+  }catch(e){ alert('削除できませんでした。\n\n'+e.message); }
+}
+function openRow(id){
+  pending={rowId:id||null};
+  el('rowPat').innerText='パターン「'+curPat+'」';
+  if(id){ var r=null; for(var i=0;i<patRows.length;i++) if(patRows[i].id===id) r=patRows[i];
+    if(!r) return;
+    el('rowTtl').innerText='時刻表の便を修正';
+    el('wTime').value=hm(r.departure_time); el('wOrigin').value=r.origin;
+    el('wDest').value=r.destination; el('wCat').value=r.category;
+  }else{
+    el('rowTtl').innerText='時刻表に便を追加';
+    el('wTime').value=''; el('wOrigin').value='あさぎり荘'; el('wDest').value=''; el('wCat').value='night';
+  }
+  el('mRow').classList.add('on');
+}
+async function saveRow(){
+  var t=el('wTime').value, o=el('wOrigin').value.trim(), d=el('wDest').value.trim(), c=el('wCat').value;
+  if(!t){alert('時刻を入力してください。');return;}
+  if(!o||!d){alert('出発地と行き先を入力してください。');return;}
+  var v={departure_time:t+':00',origin:o,destination:d,category:c,pattern:curPat};
+  try{
+    var r = pending.rowId ? await sb.from('base_schedules').update(v).eq('id',pending.rowId)
+                          : await sb.from('base_schedules').insert([v]);
+    if(r.error) throw new Error(fmtErr(r.error));
+    closeAll(); patRows=await baseRowsOf(curPat); renderSettings();
+  }catch(e){ alert('保存できませんでした。\n\n'+e.message); }
+}
+async function delRow(id){
+  if(!confirm('この便を時刻表から削除します。よろしいですか？\n（すでに作られた便には影響しません）')) return;
+  try{ var r=await sb.from('base_schedules').delete().eq('id',id);
+    if(r.error) throw new Error(fmtErr(r.error));
+    patRows=await baseRowsOf(curPat); renderSettings();
+  }catch(e){ alert('削除できませんでした。\n\n'+e.message); }
+}
+function openBulk(){
+  el('bulkPat').innerText='パターン「'+curPat+'」に追加します';
+  el('bFrom').value='19:00'; el('bTo').value='21:00'; el('bStep').value='20';
+  el('bOrigin').value='あさぎり荘'; el('bDest').value=''; el('bCat').value='night';
+  el('bulkPrev').classList.add('hide');
+  el('mBulk').classList.add('on');
+}
+function bulkList(){
+  var a=el('bFrom').value, b=el('bTo').value, s=parseInt(el('bStep').value,10);
+  if(!a||!b||!s||s<5) return null;
+  var m1=toMin(a), m2=toMin(b); if(m2<m1) return null;
+  var out=[]; for(var m=m1;m<=m2;m+=s){ out.push(minToHm(m)); if(out.length>60) break; }
+  return out;
+}
+async function saveBulk(){
+  var times=bulkList();
+  var o=el('bOrigin').value.trim(), d=el('bDest').value.trim(), c=el('bCat').value;
+  if(!times||!times.length){ alert('開始・終了時刻と間隔を正しく入力してください。'); return; }
+  if(!o||!d){ alert('出発地と行き先を入力してください。'); return; }
+  var have={}; patRows.forEach(function(r){have[hm(r.departure_time)+'|'+r.origin+'|'+r.destination]=1;});
+  var rows=[];
+  times.forEach(function(t){ if(!have[t+'|'+o+'|'+d])
+    rows.push({departure_time:t+':00',origin:o,destination:d,category:c,pattern:curPat}); });
+  if(!rows.length){ alert('すべて既に登録済みでした。追加するものはありません。'); return; }
+  if(!confirm(rows.length+'便を追加します。\n\n'+rows.map(function(r){return hm(r.departure_time);}).join('  ')+'\n\nよろしいですか？')) return;
+  try{ var r=await sb.from('base_schedules').insert(rows);
+    if(r.error) throw new Error(fmtErr(r.error));
+    closeAll(); patRows=await baseRowsOf(curPat); renderSettings();
+  }catch(e){ alert('追加できませんでした。\n\n'+e.message); }
+}
+
+/* ---------- パターンを期間に適用 ---------- */
+async function applyPattern(){
+  if(needOnline()) return;
+  var p=el('apPat').value, a=el('apFrom').value, b=el('apTo').value;
+  if(!a||!b){ alert('期間を選んでください。'); return; }
+  var d1=parseYmd(a), d2=parseYmd(b);
+  if(d2<d1){ alert('終了日が開始日より前になっています。'); return; }
+  var days=Math.round((d2-d1)/86400000)+1;
+  if(days>CONFIG.MAX_APPLY_DAYS){ alert('一度に適用できるのは'+CONFIG.MAX_APPLY_DAYS+'日までです。'); return; }
+  if(!confirm('パターン「'+p+'」を\n'+label(d1)+' 〜 '+label(d2)+'（'+days+'日間）\nに適用します。\n\n'
+    +'予約が入っている便は消えません。よろしいですか？')) return;
+
+  var btn=el('apBtn'); btn.disabled=true;
+  var added=0, removed=0, err=null;
+  try{
+    var rows=await baseRowsOf(p);
+    if(!rows.length) throw new Error('パターン「'+p+'」に便が1つもありません。');
+    for(var k=0;k<days;k++){
+      var cur=new Date(d1.getFullYear(),d1.getMonth(),d1.getDate()+k), ds=ymd(cur);
+      btn.innerText='適用中... ('+(k+1)+'/'+days+'日)';
+      var day=await fetchDay(ds);
+      var kill=day.filter(function(f){return !f.is_temporary && (f.reservations||[]).length===0;});
+      if(kill.length){
+        var dr=await sb.from('flights').delete().in('id',kill.map(function(f){return f.id;}));
+        if(dr.error) throw new Error(fmtErr(dr.error));
+        removed+=kill.length;
+      }
+      var keep=day.filter(function(f){return kill.indexOf(f)<0;});
+      var have={}; keep.forEach(function(f){have[keyOf(f)]=1;});
+      var add=rows.filter(function(r){return !have[hm(r.departure_time)+'|'+r.origin+'|'+r.destination];})
+        .map(function(r){return {target_date:ds,departure_time:r.departure_time,origin:r.origin,
+          destination:r.destination,category:r.category,is_temporary:false};});
+      if(add.length){
+        var ir=await sb.from('flights').insert(add);
+        if(ir.error) throw new Error(fmtErr(ir.error));
+        added+=add.length;
+      }
+    }
+  }catch(e){ err=e.message; }
+  btn.disabled=false; btn.innerText='この期間に適用する';
+  el('apResult').innerHTML = err
+    ? '<span style="color:#b32020">失敗しました：'+esc(err)+'</span>'
+    : '<span style="color:#0f9d58">✅ '+days+'日間に適用しました（追加 '+added+'便／入れ替え '+removed+'便）</span>';
+  await load();
+}
+
+/* ---------- リセット ---------- */
+const DANGER={
+  rebuild:{ttl:'この日の便を作り直す',word:'つくりなおす',
+    desc:'表示中の日の便を、いったん全部消して「通常」の時刻表から作り直します。',
+    warn:'この日に入っている<b>予約もすべて消えます。</b>臨時便も消えます。'},
+  res:{ttl:'予約をすべて消す',word:'よやくけす',
+    desc:'保存されているすべての日の予約を消します。便そのものは残ります。',
+    warn:'<b>すべての日の予約が消えます。</b>テストのあとの掃除に使ってください。'},
+  all:{ttl:'全部まっさらにする',word:'まっさら',
+    desc:'便と予約をすべて消します。時刻表（パターン）はそのまま残るので、開き直せば今日ぶんが作られます。',
+    warn:'<b>すべての便と予約が消えます。</b>シーズン初めのリセット用です。'}
+};
+function openDanger(kind){
+  if(needOnline()) return;
+  danger=kind; var d=DANGER[kind];
+  el('dgTtl').innerText='⚠️ '+d.ttl;
+  el('dgDesc').innerText=d.desc+(kind==='rebuild'?'（対象日：'+label(baseDate)+'）':'');
+  el('dgWarn').innerHTML=d.warn+'<br>元に戻すことはできません。';
+  el('dgWord').innerText=d.word;
+  el('dgInput').value=''; el('dgGo').disabled=true;
+  el('mDanger').classList.add('on');
+}
+function dgCheck(){ el('dgGo').disabled = el('dgInput').value.trim()!==DANGER[danger].word; }
+async function runDanger(){
+  var b=el('dgGo'); b.disabled=true; b.innerText='実行中...';
+  try{
+    if(danger==='rebuild'){
+      var r=await sb.from('flights').delete().eq('target_date',dateStr);
+      if(r.error) throw new Error(fmtErr(r.error));
+      await ensureFlights(dateStr);
+    }else if(danger==='res'){
+      var r2=await sb.from('reservations').delete().neq('passenger_count',-99999);
+      if(r2.error) throw new Error(fmtErr(r2.error));
+    }else{
+      var r3=await sb.from('flights').delete().neq('target_date','1000-01-01');
+      if(r3.error) throw new Error(fmtErr(r3.error));
+      await ensureFlights(todayStr);
+    }
+    closeAll(); await load();
+    alert('完了しました。');
+  }catch(e){ alert('実行できませんでした。\n\n'+e.message); }
+  b.disabled=false; b.innerText='実行する';
+}
+
+/* ---------- QR・情報 ---------- */
+function driverUrl(){ return location.href.split('?')[0].split('#')[0]+'?view=driver'; }
+function buildQR(){
+  var u=driverUrl();
+  el('qrurl').textContent=u;
+  try{
+    if(window.QRCode){ el('qrbox').innerHTML=''; new QRCode(el('qrbox'),{text:u,width:180,height:180}); }
+    else el('qrbox').innerHTML='<span style="color:#9aa4b0;font-size:13px">QRコードを表示できませんでした（インターネットに接続すると表示されます）</span>';
+  }catch(e){}
+  if(location.protocol==='file:')
+    el('qrurl').innerHTML+='<br><span style="color:#b32020">※いまはパソコン内のファイルを開いています。この状態のQRコードはスマホからは開けません。</span>';
+}
+function buildAbout(){
+  el('aboutBox').innerHTML='バージョン v3.0<br>'
+    +'データの保管先：Supabase（クラウド）<br>'
+    +'古いデータは'+CONFIG.KEEP_DAYS+'日を過ぎると自動で消えます<br>'
+    +'定員の目安：'+CONFIG.CAPACITY+'名（超えても登録できます）<br>'
+    +'画面は'+CONFIG.REFRESH_SEC+'秒ごとに自動で最新になります';
+}
+
+window.addEventListener('online',function(){ load(); });
+window.addEventListener('offline',function(){ markOffline(); });
+window.onload=boot;
+</script>
+</body>
+</html>
