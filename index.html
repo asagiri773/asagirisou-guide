@@ -64,6 +64,19 @@
     letter-spacing:.01em;
   }
 
+  /* ---------- Notice Banner ---------- */
+  .notice-banner{
+    background:#FFF6E3;
+    color:#7A5A12;
+    padding:13px 18px;
+    font-weight:700;
+    font-size:.9rem;
+    text-align:center;
+    border-bottom:1px solid var(--gold);
+    line-height:1.7;
+    white-space:pre-wrap;
+  }
+
   /* ---------- Hero ---------- */
   .hero{
     background:linear-gradient(165deg,var(--green-deep),var(--green-mid) 78%);
@@ -376,6 +389,8 @@
 
   <div class="alert-banner">⚠️ 鴻の湯・さとの湯は現在【長期休業中】です</div>
 
+  <div class="notice-banner" id="noticeBanner" style="display:none"></div>
+
   <header class="hero">
     <span class="icon">♨</span>
     <h1 data-i18n="appTitle">あさぎり荘 ご案内</h1>
@@ -425,15 +440,15 @@
     <section id="info">
       <h2 class="section-title" data-i18n="sectionInfo">ご滞在・館内設備</h2>
       <div class="card">
-        <div class="subcard">
+        <div class="subcard" data-block="co">
           <h3 data-i18n="coTitle">⏰ チェックアウト・門限</h3>
           <p data-i18n="coText">チェックアウトは 午前10:00 です。お出かけの際の門限は 24:00 となっております。※お昼頃までお車やお荷物のお預かりも承っております。</p>
         </div>
-        <div class="subcard">
+        <div class="subcard" data-block="amenity">
           <h3 data-i18n="amenityTitle">♨️ 館内大浴場</h3>
           <p data-i18n="amenityText">ご利用時間：15:00～24:00 ／ 翌朝 6:00～9:30（男女入替制）。天然温泉の「玄武の湯」「円山の湯」をお楽しみください。</p>
         </div>
-        <div class="subcard">
+        <div class="subcard" data-block="facility">
           <h3 data-i18n="facilityTitle">🚬 喫煙所・売店・設備</h3>
           <p data-i18n="facilityText">当館は全室禁煙です。喫煙所は1階ロビー、2階通路奥にございます。／売店営業時間：7:30～10:00、15:00～20:00。／自動販売機は館内にございます。フロントへのお問い合わせは内線「9番」へ。</p>
         </div>
@@ -444,15 +459,15 @@
     <section id="meals">
       <h2 class="section-title" data-i18n="sectionMeals">お食事のご案内</h2>
       <div class="card">
-        <div class="subcard">
+        <div class="subcard" data-block="breakfast">
           <h3 data-i18n="breakfastTitle">ご朝食</h3>
           <p data-i18n="breakfastText">1階「清流の間」にて 7:00より バイキング形式でご用意しております。入場の際に朝食券をお持ちください。</p>
         </div>
-        <div class="subcard">
+        <div class="subcard" data-block="dinner">
           <h3 data-i18n="dinnerTitle">ご夕食</h3>
           <p data-i18n="dinnerText">夕食付きプランのお客様は、チェックイン時にお伺いしたお時間に、お部屋またはお食事処へご用意いたします。</p>
         </div>
-        <div class="subcard">
+        <div class="subcard" data-block="drinks">
           <h3 data-i18n="drinksTitle">フリードリンク</h3>
           <p data-i18n="drinksText">ロビーのコーヒーはいつでも無料です。売店営業時間（15:00〜20:00）にはヤクルトも無料でご提供しております。</p>
         </div>
@@ -463,19 +478,19 @@
     <section id="yukata">
       <h2 class="section-title" data-i18n="sectionYukata">浴衣・下駄のご案内</h2>
       <div class="card">
-        <div class="subcard">
+        <div class="subcard" data-block="yukataW">
           <p data-i18n="yukataWomen">女性用色浴衣：ロビーに様々な色柄をご用意しております。お好みの柄をお選びください。</p>
         </div>
-        <div class="subcard">
+        <div class="subcard" data-block="yukataM">
           <p data-i18n="yukataMenText">男性用浴衣：各階エレベーターを出てすぐ左手にご用意しております。</p>
         </div>
-        <div class="subcard">
+        <div class="subcard" data-block="geta">
           <p data-i18n="getaText">下駄：玄関にございますので、自由にお使いください。</p>
         </div>
       </div>
 
-      <h2 class="section-title" data-i18n="sectionEssentials" style="margin-top:26px;">外湯めぐりの持ち物</h2>
-      <div class="card">
+      <h2 class="section-title" data-block="essentials" data-i18n="sectionEssentials" style="margin-top:26px;">外湯めぐりの持ち物</h2>
+      <div class="card" data-block="essentials">
         <ol class="essentials-list">
           <li><span class="essentials-num">1</span><span data-i18n="essential1">外湯QRチケット（ロビーのかごよりお取りください）</span></li>
           <li><span class="essentials-num">2</span><span data-i18n="essential2">お部屋のバスタオル・フェイスタオル</span></li>
@@ -488,7 +503,7 @@
     <!-- 外湯 -->
     <section id="baths">
       <h2 class="section-title" data-i18n="sectionBaths">外湯一覧（あさぎり荘からの距離順）</h2>
-      <div class="tattoo-note" data-i18n="tattooNote">✨ タトゥー（刺青）は7つの外湯すべてでご利用いただけます。</div>
+      <div class="tattoo-note" data-block="tattoo" data-i18n="tattooNote">✨ タトゥー（刺青）は7つの外湯すべてでご利用いただけます。</div>
 
       <a href="https://share.google/Lt2GepFM2XT4RbMmz" target="_blank" rel="noopener" class="live-btn">
         <span class="live-dot"></span>
@@ -559,7 +574,7 @@
   </main>
 
   <!-- クチコミ -->
-  <div class="review-banner">
+  <div class="review-banner" data-block="review">
     <div class="review-icon">💬</div>
     <h3 class="review-title" data-i18n="revTitle">お客様の声をお聞かせください</h3>
     <p class="review-text" data-i18n="revText">皆様からの温かいお声がスタッフ一同の励みとなっております。よろしければ、Googleにてご滞在の感想をお聞かせください。</p>
@@ -593,6 +608,13 @@
   var SB_KEY = "sb_publishable_IV9yZp3BFwOacBmvoc5P_Q_S_WI0WC7";
 
   var SETTINGS = {
+
+    /* --- 文章の上書き・表示設定・お知らせ ---------------------------
+       ふだんは空のままでOKです。フロントの設定画面で編集すると、
+       その内容がここより優先して表示されます。            */
+    textOverrides: {},   // 例）{ drinksText:{ja:"…", en:"…"} }
+    visible: {},         // 例）{ drinks:false } で「フリードリンク」を非表示
+    notice: {},          // 例）{ ja:"本日は臨時休業です" }
 
     /* --- Wi-Fi --------------------------------------------------- */
     wifiSSID: "asagirisou",
@@ -966,8 +988,10 @@
     var nodes = document.querySelectorAll("[data-i18n]");
     for(var i=0;i<nodes.length;i++){
       var key = nodes[i].getAttribute("data-i18n");
-      if(t[key] !== undefined){
-        nodes[i].textContent = fill(t[key]);
+      var ov = SETTINGS.textOverrides && SETTINGS.textOverrides[key];
+      var val = (ov && (ov[lang] || ov.ja)) || t[key];   // その言語が空なら日本語、それも無ければ元の文
+      if(val !== undefined){
+        nodes[i].textContent = fill(val);
       }
     }
 
@@ -992,6 +1016,47 @@
 
     renderAlert(lang);
     renderBaths(lang);
+    renderNotice(lang);
+    applyVisibility();
+  }
+
+  // フロントで「表示しない」にした項目を隠す
+  function applyVisibility(){
+    var v = SETTINGS.visible || {};
+    var sections = ["wifi","info","meals","yukata","baths","places","shuttle"];
+    for(var i=0;i<sections.length;i++){
+      var sec = document.getElementById(sections[i]);
+      if(!sec) continue;
+      var on = (v[sections[i]] !== false);
+      sec.style.display = on ? "" : "none";
+      var chip = document.querySelector('.chip-nav a[href="#' + sections[i] + '"]');
+      if(chip) chip.style.display = on ? "" : "none";
+    }
+    var blocks = document.querySelectorAll("[data-block]");
+    for(var j=0;j<blocks.length;j++){
+      var id = blocks[j].getAttribute("data-block");
+      blocks[j].style.display = (v[id] !== false) ? "" : "none";
+    }
+    // 中身が全部消えたカードは、カードごと隠す
+    var cards = document.querySelectorAll(".card");
+    for(var k=0;k<cards.length;k++){
+      var inner = cards[k].querySelectorAll("[data-block]");
+      if(!inner.length) continue;
+      var anyOn = false;
+      for(var m=0;m<inner.length;m++){ if(inner[m].style.display !== "none") anyOn = true; }
+      cards[k].style.display = anyOn ? "" : "none";
+    }
+  }
+
+  // フロントで入力したお知らせを、いちばん上に出す
+  function renderNotice(lang){
+    var el = document.getElementById("noticeBanner");
+    if(!el) return;
+    var n = SETTINGS.notice || {};
+    var txt = n[lang] || n.ja || "";
+    if(!txt){ el.style.display = "none"; return; }
+    el.style.display = "block";
+    el.textContent = txt;
   }
 
   function detectInitialLang(){
@@ -1078,6 +1143,11 @@
             try{
               var arr = JSON.parse(row.value);
               if(arr && arr.length) SETTINGS.baths = arr;
+            }catch(e){}
+          } else if(row.key === "textOverrides" || row.key === "visible" || row.key === "notice"){
+            try{
+              var obj = JSON.parse(row.value);
+              if(obj) SETTINGS[row.key] = obj;
             }catch(e){}
           } else if(SETTINGS[row.key] !== undefined){
             SETTINGS[row.key] = row.value;

@@ -150,6 +150,17 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
 .gtable select{padding:7px 6px; border-radius:6px; font-size:13px}
 .gtable input[type=checkbox]{width:19px; height:19px}
 .gwrap{overflow-x:auto}
+.vgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:6px 12px; margin-bottom:6px}
+.vgrid label{display:flex; align-items:center; gap:8px; font-size:13.5px; padding:5px 2px; cursor:pointer}
+.vgrid input{width:18px; height:18px; flex:0 0 auto}
+.vhead{font-size:12px; font-weight:800; color:var(--sub); margin:14px 0 5px}
+.trow{display:flex; align-items:center; gap:10px; padding:8px 2px; border-bottom:1px solid #eef1f4; font-size:13.5px}
+.trow:last-child{border-bottom:none}
+.trow .nm{flex:1; font-weight:600}
+.trow .st{font-size:11px; font-weight:800; padding:2px 7px; border-radius:4px; background:#eef3fb; color:var(--blue)}
+.trow .st.def{background:#f1f3f5; color:var(--faint)}
+.mod textarea{width:100%; padding:10px; border:1px solid var(--line); border-radius:8px; font-size:14px;
+  font-family:inherit; line-height:1.7; resize:vertical; min-height:62px}
 .mod-note{background:#f6f8fa; border-left:4px solid var(--blue); border-radius:6px; padding:10px 12px;
   font-size:13px; line-height:1.7; margin-bottom:14px; color:var(--sub)}
 
@@ -328,6 +339,38 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
       <div id="guideMsg" style="font-size:13px;margin-top:10px;line-height:1.8"></div>
     </div>
 
+    <div class="panel">
+      <h3>👁 案内ページに表示する項目</h3>
+      <p class="desc">チェックを外した項目は、お客様の画面から消えます。<br>
+      <b>サービスが変わって内容が合わなくなったときは、間違った案内を出し続けるより消してしまうほうが安全です。</b></p>
+      <div class="vhead">大きなまとまり</div>
+      <div class="vgrid" id="visSect"></div>
+      <div class="vhead">その中の項目</div>
+      <div class="vgrid" id="visBlock"></div>
+      <button class="btn btn-p" id="visSave" onclick="saveVisibility()" style="width:100%;padding:13px;margin-top:10px">表示の設定を保存する</button>
+      <div id="visMsg" style="font-size:13px;margin-top:10px"></div>
+    </div>
+
+    <div class="panel">
+      <h3>📝 案内ページの文章を書き換える</h3>
+      <p class="desc">サービスの内容が変わったときは、ここから文章そのものを直せます。<br>
+      <b>日本語だけ入れればOKです。</b>他の言語を空欄にした場合は、その言語でも日本語が表示されます（古い外国語が残るより安全なため）。<br>
+      何も入れていない項目は、もとの文章がそのまま表示されます。</p>
+      <div id="textList"></div>
+    </div>
+
+    <div class="panel">
+      <h3>📢 お知らせ（一時的なご案内）</h3>
+      <p class="desc">案内ページのいちばん上に、黄色い帯でお知らせを出します。「本日は臨時休業です」など、その日限りのことに使ってください。<br>
+      <b>空にすれば消えます。</b>日本語だけでも構いません。</p>
+      <div id="noticeForm"></div>
+      <div class="frow" style="margin-top:10px">
+        <button class="btn btn-p" id="noticeSave" onclick="saveNotice()" style="flex:1;padding:13px">お知らせを保存する</button>
+        <button class="btn btn-g" onclick="clearNotice()" style="padding:13px">お知らせを消す</button>
+      </div>
+      <div id="noticeMsg" style="font-size:13px;margin-top:10px"></div>
+    </div>
+
     <div class="panel danger">
       <h3>⚠️ データのリセット</h3>
       <p class="desc">押し間違いを防ぐため、実行するには文字の入力が必要です。<b>消したものは元に戻せません。</b></p>
@@ -456,6 +499,17 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
     <select id="pCopy"><option value="1">いまのパターンをコピーして作る</option><option value="0">空っぽから作る</option></select></div>
   <div class="mbtn"><button class="bc" onclick="closeAll()">やめる</button>
     <button class="bs" onclick="saveNewPat()">作成する</button></div>
+</div></div>
+
+<!-- 文章の編集 -->
+<div id="mText" class="ov"><div class="mod">
+  <h3 id="txTtl">文章を書き換える</h3>
+  <p class="sub">日本語だけでも構いません。空欄の言語は日本語が表示されます。</p>
+  <div class="mod-note" id="txOrig"></div>
+  <div id="txFields"></div>
+  <div class="mbtn"><button class="bc" onclick="closeAll()">やめる</button>
+    <button class="bs" id="txSave" onclick="saveText()">保存する</button></div>
+  <button class="btn btn-g" onclick="resetText()" style="width:100%;margin-top:10px;padding:11px">もとの文章に戻す</button>
 </div></div>
 
 <!-- 危険な操作 -->
@@ -848,7 +902,7 @@ function printDay(){
 }
 
 /* ---------- モーダル共通 ---------- */
-function closeAll(){ ['mRes','mEdit','mTemp','mNote','mRow','mBulk','mPat','mDanger'].forEach(function(i){
+function closeAll(){ ['mRes','mEdit','mTemp','mNote','mRow','mBulk','mPat','mDanger','mText'].forEach(function(i){
   el(i).classList.remove('on');}); }
 function needOnline(){ if(online) return false;
   alert('オフラインのため操作できません。\n電波の届く場所で、もう一度お試しください。'); return true; }
@@ -1233,6 +1287,7 @@ const GUIDE_DEFAULTS = {
   checkout:'10:00', curfew:'24:00', frontExt:'9',
   bigBathPM:'15:00～24:00', bigBathAM:'6:00～9:30',
   breakfastFrom:'7:00', shopAM:'7:30～10:00', shopPM:'15:00～20:00',
+  textOverrides:{}, visible:{}, notice:{},
   baths:[
     {name:'地蔵湯',           romaji:'Jizo-yu',    hours:'7:00–23:00',  walk:'6〜8',   closedDay:5, closedNth:null,  open:true },
     {name:'柳湯',             romaji:'Yanagi-yu',  hours:'15:00–23:00', walk:'8〜10',  closedDay:4, closedNth:null,  open:true },
@@ -1253,7 +1308,9 @@ async function loadGuide(){
   (r.data||[]).forEach(function(row){
     if(row.key==='baths'){
       try{ var a=JSON.parse(row.value); if(a&&a.length) guide.baths=a; }catch(e){}
-    } else if(guide[row.key]!==undefined){ guide[row.key]=row.value; }
+    } else if(row.key==='textOverrides'||row.key==='visible'||row.key==='notice'){
+      try{ var o=JSON.parse(row.value); if(o) guide[row.key]=o; }catch(e){}
+    } else if(typeof guide[row.key]==='string'){ guide[row.key]=row.value; }
   });
   renderGuide();
 }
@@ -1282,6 +1339,7 @@ function renderGuide(){
       +'<td><input type="text" id="gb_walk_'+i+'" value="'+esc(x.walk)+'" style="min-width:64px"></td></tr>';
   });
   el('guideBaths').innerHTML=t+'</table>';
+  renderVisibility(); renderTexts(); renderNoticeForm();
 }
 async function saveGuide(){
   if(needOnline()) return;
@@ -1305,6 +1363,147 @@ async function saveGuide(){
       + (closed.length ? '（休業中のお知らせ：'+closed.join('・')+'）' : '（休業中の外湯はありません。お知らせは表示されません）'));
   }catch(e){ guideMsg('保存できませんでした：'+e.message, true); }
   btn.disabled=false; btn.innerText='この内容で保存する';
+}
+
+
+/* ---------- 案内ページ：表示のON/OFF・文章・お知らせ ---------- */
+const LANGS = [
+  {k:'ja',    l:'日本語（これだけでOK）'},
+  {k:'en',    l:'English'},
+  {k:'zh-tw', l:'繁體中文'},
+  {k:'zh-cn', l:'简体中文'},
+  {k:'ko',    l:'한국어'}
+];
+const GUIDE_SECTIONS = [
+  {id:'wifi',   l:'Wi-Fi接続'},      {id:'info',   l:'ご滞在・館内設備'},
+  {id:'meals',  l:'お食事'},         {id:'yukata', l:'浴衣・下駄／持ち物'},
+  {id:'baths',  l:'外湯めぐり'},     {id:'places', l:'周辺・観光'},
+  {id:'shuttle',l:'送迎バス'}
+];
+const GUIDE_BLOCKS = [
+  {id:'co',        l:'チェックアウト・門限'}, {id:'amenity',  l:'館内大浴場'},
+  {id:'facility',  l:'喫煙所・売店・設備'},   {id:'breakfast',l:'ご朝食'},
+  {id:'dinner',    l:'ご夕食'},               {id:'drinks',   l:'フリードリンク'},
+  {id:'yukataW',   l:'女性用浴衣'},           {id:'yukataM',  l:'男性用浴衣'},
+  {id:'geta',      l:'下駄'},                 {id:'essentials',l:'外湯めぐりの持ち物'},
+  {id:'tattoo',    l:'タトゥーについて'},     {id:'review',   l:'クチコミのお願い'}
+];
+// 書き換えできる文章と、いまの元の文（参考表示用）
+const GUIDE_TEXTS = [
+  {k:'coText',        l:'チェックアウト・門限', o:'チェックアウトは 午前{checkout} です。お出かけの際の門限は {curfew} となっております。※お昼頃までお車やお荷物のお預かりも承っております。'},
+  {k:'amenityText',   l:'館内大浴場',           o:'ご利用時間：{bigBathPM} ／ 翌朝 {bigBathAM}（男女入替制）。天然温泉の「玄武の湯」「円山の湯」をお楽しみください。'},
+  {k:'facilityText',  l:'喫煙所・売店・設備',   o:'当館は全室禁煙です。喫煙所は1階ロビー、2階通路奥にございます。／売店営業時間：{shopAM}、{shopPM}。／自動販売機は館内にございます。フロントへのお問い合わせは内線「{frontExt}番」へ。'},
+  {k:'breakfastText', l:'ご朝食',               o:'1階「清流の間」にて {breakfastFrom}より バイキング形式でご用意しております。入場の際に朝食券をお持ちください。'},
+  {k:'dinnerText',    l:'ご夕食',               o:'夕食付きプランのお客様は、チェックイン時にお伺いしたお時間に、お部屋またはお食事処へご用意いたします。'},
+  {k:'drinksText',    l:'フリードリンク',       o:'ロビーのコーヒーはいつでも無料です。売店営業時間（{shopPM}）にはヤクルトも無料でご提供しております。'},
+  {k:'yukataWomen',   l:'女性用浴衣',           o:'女性用色浴衣：ロビーに様々な色柄をご用意しております。お好みの柄をお選びください。'},
+  {k:'yukataMenText', l:'男性用浴衣',           o:'男性用浴衣：各階エレベーターを出てすぐ左手にご用意しております。'},
+  {k:'getaText',      l:'下駄',                 o:'下駄：玄関にございますので、自由にお使いください。'},
+  {k:'essential1',    l:'持ち物 ①',             o:'外湯QRチケット（ロビーのかごよりお取りください）'},
+  {k:'essential2',    l:'持ち物 ②',             o:'お部屋のバスタオル・フェイスタオル'},
+  {k:'essential3',    l:'持ち物 ③',             o:'ロビーの湯かご'},
+  {k:'essentialsNote',l:'持ち物の補足',         o:'使用後のQRチケットは、フロントへご返却いただくか、お部屋に置いていただいても構いません。'},
+  {k:'tattooNote',    l:'タトゥーについて',     o:'✨ タトゥー（刺青）は7つの外湯すべてでご利用いただけます。'},
+  {k:'shuttleText',   l:'送迎バスの案内文',     o:'当館から外湯方面への送迎バスを運行しております。ご予約はフロント、またはお部屋の内線「{frontExt}番」までお申し付けください。'},
+  {k:'revText',       l:'クチコミのお願い',     o:'皆様からの温かいお声がスタッフ一同の励みとなっております。よろしければ、Googleにてご滞在の感想をお聞かせください。'}
+];
+
+function renderVisibility(){
+  var v = guide.visible || {};
+  el('visSect').innerHTML = GUIDE_SECTIONS.map(function(s){
+    return '<label><input type="checkbox" id="vs_'+s.id+'"'+(v[s.id]!==false?' checked':'')+'>'+esc(s.l)+'</label>';
+  }).join('');
+  el('visBlock').innerHTML = GUIDE_BLOCKS.map(function(s){
+    return '<label><input type="checkbox" id="vs_'+s.id+'"'+(v[s.id]!==false?' checked':'')+'>'+esc(s.l)+'</label>';
+  }).join('');
+}
+async function saveVisibility(){
+  if(needOnline()) return;
+  var b=el('visSave'); b.disabled=true; b.innerText='保存中...';
+  try{
+    var v={};
+    GUIDE_SECTIONS.concat(GUIDE_BLOCKS).forEach(function(s){ v[s.id]=el('vs_'+s.id).checked; });
+    guide.visible=v;
+    var r=await sb.from('app_settings').upsert([{key:'visible',value:JSON.stringify(v)}],{onConflict:'key'});
+    if(r.error) throw new Error(fmtErr(r.error));
+    var off=GUIDE_SECTIONS.concat(GUIDE_BLOCKS).filter(function(s){return !v[s.id];}).map(function(s){return s.l;});
+    el('visMsg').innerHTML='<span style="color:#0f9d58">✅ 保存しました。'
+      +(off.length?'非表示：'+esc(off.join('、')):'すべて表示されています')+'</span>';
+  }catch(e){ el('visMsg').innerHTML='<span style="color:#b32020">保存できませんでした：'+esc(e.message)+'</span>'; }
+  b.disabled=false; b.innerText='表示の設定を保存する';
+}
+
+function renderTexts(){
+  var ov = guide.textOverrides || {};
+  el('textList').innerHTML = GUIDE_TEXTS.map(function(t){
+    var has = ov[t.k] && (ov[t.k].ja || ov[t.k].en);
+    return '<div class="trow"><span class="nm">'+esc(t.l)+'</span>'
+      +'<span class="st'+(has?'':' def')+'">'+(has?'書き換え済み':'もとの文')+'</span>'
+      +'<button class="btn btn-g" onclick="openText(\''+t.k+'\')">✏️ 編集</button></div>';
+  }).join('');
+}
+function openText(key){
+  if(needOnline()) return;
+  var t=null; GUIDE_TEXTS.forEach(function(x){ if(x.k===key) t=x; });
+  if(!t) return;
+  pending={textKey:key};
+  el('txTtl').innerText='「'+t.l+'」の文章';
+  el('txOrig').innerHTML='<b>もとの文章：</b><br>'+esc(t.o);
+  var ov=(guide.textOverrides&&guide.textOverrides[key])||{};
+  el('txFields').innerHTML = LANGS.map(function(L){
+    return '<div class="fg"><label>'+esc(L.l)+'</label>'
+      +'<textarea id="tx_'+L.k+'" placeholder="'+(L.k==='ja'?'空欄ならもとの文章のまま':'空欄なら日本語が表示されます')+'">'
+      +esc(ov[L.k]||'')+'</textarea></div>';
+  }).join('');
+  el('mText').classList.add('on');
+}
+async function saveText(){
+  var b=el('txSave'); b.disabled=true; b.innerText='保存中...';
+  try{
+    var o={}; LANGS.forEach(function(L){ var v=el('tx_'+L.k).value.trim(); if(v) o[L.k]=v; });
+    guide.textOverrides = guide.textOverrides || {};
+    if(Object.keys(o).length) guide.textOverrides[pending.textKey]=o;
+    else delete guide.textOverrides[pending.textKey];
+    var r=await sb.from('app_settings')
+      .upsert([{key:'textOverrides',value:JSON.stringify(guide.textOverrides)}],{onConflict:'key'});
+    if(r.error) throw new Error(fmtErr(r.error));
+    closeAll(); renderTexts();
+  }catch(e){ alert('保存できませんでした。\n\n'+e.message); }
+  b.disabled=false; b.innerText='保存する';
+}
+async function resetText(){
+  if(!confirm('この項目をもとの文章に戻します。よろしいですか？')) return;
+  LANGS.forEach(function(L){ el('tx_'+L.k).value=''; });
+  await saveText();
+}
+
+function renderNoticeForm(){
+  var n = guide.notice || {};
+  el('noticeForm').innerHTML = LANGS.map(function(L){
+    return '<div class="fg"><label>'+esc(L.l)+'</label>'
+      +'<textarea id="nt_'+L.k+'" style="width:100%;padding:10px;border:1px solid #dde2e8;border-radius:8px;'
+      +'font-size:14px;font-family:inherit;line-height:1.7;min-height:56px" '
+      +'placeholder="'+(L.k==='ja'?'例）本日は臨時休業です':'空欄なら日本語が表示されます')+'">'
+      +esc(n[L.k]||'')+'</textarea></div>';
+  }).join('');
+}
+async function saveNotice(){
+  if(needOnline()) return;
+  var b=el('noticeSave'); b.disabled=true; b.innerText='保存中...';
+  try{
+    var n={}; LANGS.forEach(function(L){ var v=el('nt_'+L.k).value.trim(); if(v) n[L.k]=v; });
+    guide.notice=n;
+    var r=await sb.from('app_settings').upsert([{key:'notice',value:JSON.stringify(n)}],{onConflict:'key'});
+    if(r.error) throw new Error(fmtErr(r.error));
+    el('noticeMsg').innerHTML='<span style="color:#0f9d58">✅ '
+      +(n.ja||Object.keys(n).length ? '保存しました。案内ページの上に表示されます。' : 'お知らせを消しました。')+'</span>';
+  }catch(e){ el('noticeMsg').innerHTML='<span style="color:#b32020">保存できませんでした：'+esc(e.message)+'</span>'; }
+  b.disabled=false; b.innerText='お知らせを保存する';
+}
+async function clearNotice(){
+  if(!confirm('お知らせを消します。よろしいですか？')) return;
+  LANGS.forEach(function(L){ el('nt_'+L.k).value=''; });
+  await saveNotice();
 }
 
 /* ---------- CSV書き出し ---------- */
