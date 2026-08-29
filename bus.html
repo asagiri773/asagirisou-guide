@@ -3,7 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>送迎管理 v3.1</title>
+<title>送迎管理 v3.2</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#12281F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="送迎">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAAA9zQYyAAAFm0lEQVR4nO3cP24bRxiG8Y+CDxDEZQobcBMXPoEbdzlOzpLjuEvjE7iIGgNRkTJCDhDAKQIalLy7nP/zzsvnV9ohObP76POIingKAT/+/Orr7DWgjcf7h9PM15/y4gR8O0YHPuzFiBgj4u76AkSMPb3i7vKkhIxUrcO+a/lkEcSMPK17afbVQcio1WJaN5nQxIwWWnRU9RVByOildFoXT2hiRk+lfRUFTcwYoaSz7KCJGSPl9pYVNDFjhpzukoMmZsyU2l9S0MQMBSkdXg2amKHkWo/Nf/QNzHQYNNMZio663A2amKFsr0+OHLCyGTTTGSvY6vS7oIkZK3neK0cOWHkSNNMZK7rslgkNKwQNK9+C5riBlZ37ZULDCkHDyimC4wZ8MKFhhaBhhaBh5Y7zM5wwoWGFoGGFoGGFoGGFoGGFoGGFoGGFoGGFoGGFoGGFoGGFoGGFoGGFoGGFoGGFoGGFoGGFoGGFoGGFoGHlxewFlPj7jz9nL+FmvHz7evYSspxW+a1vIp5vhbjlgyZkPcphS5+hiVmT8n2RnNDKFwxPqU1ruQlNzGtRu19yQQM1pIJW+2pHGqX7JhO00kVBPpX7t9wPVpS+CSm5iSXrT32d0mvT+/lHkpjQq17Q3PWUrj/lcTXXpvfzjyQRdArVC5q6rtr1Hz2+xbXp/fyjLBG0+gVVX98tmR60yjcT8DA9aKAlgoYVgoYVgoYVgoYVgoYVgoYVgoYVgoYVgoYVgoYVgoYVgoYVgoYVgoYVgoaVJYJW/yUA9fXdkiWCjtCNJnVdtes/enyLa9P7+UdZJugIvQubu57S9ac8ruba9H7+kaZ/WOMqFwrpZv7S8FITGriGoGGFoGGFoGGFoGGFoGGFoGGFoGGFoGFl+if4f/ztw+wloKFffv196uszoWGFoGGFoGGFoGGFoGGFoGGFoGFl+vvQs9+3hBcmNKwQNKwQNKwQNKwQNKwQNKwQNKwQNKxMD3rmx0ahvdn3c/pPCnt78+797t99+fxp4ErG2tu3854jBD6sMaL9BzYeRbzH4Ubn7rvHnmdP6OlHjoi2F6Ek5prHqShZf+s9z445QmRCR9RP6ZY3Z6Vp3WrfLfasELTEhI6ouxitJ80q07rlOmufSyHmCKGgI3QuCvIo3TepoEv0mqbqU7rH+tT3nELmDH0p9TydegO2zoc1j52tdO099qw0nSNE34c+X6QWb+ft3Zwvnz9ZTKQtR3uOaDOJ1UI+kz5y1F60a5NGcfrWStlT7b5VY44QDzri/4u3dQFHTVe1KT5iPXuvsXcvlMgHfXa+mKkXNHUKOU3pnL2k/re51302yTP0NS/fvo4fXvw09PVUjNq30p5zLDOhgRQEDSu2Qad+86T2TV+NnL047fvSskH/8+9fVq+TasR61PacY9mgU1ybQo5TKmVPjvs+sw46Yv/mOd/UN+/eb+5v78+dSP6/HDl6vo2l/E9vr30r7znF8hO61w1Qv7E91qe+5xTLBw1csgi69WRZZVK1XOcqe75m+TP0czVny5Vvaum+V97zFosJfan0Bq1+Y0vWv/qet9hN6OeOJpfjDT3b27fzniNuIGjcFrsjB24bQcMKQcMKQcMKQcMKQcPK3eP9w2n2IoBWmNCwQtCwQtCwchcRwTkaDh7vH05MaFghaFj5FjTHDqzs3C8TGlYIGlaeBM2xAyu67JYJDSvfBc2Uxkqe97o5oYkaK9jqlCMHrOwGzZSGsr0+Dyc0UUPRUZccOWDlatBMaSi51mPShCZqKEjpMPnIQdSYKbW/rDM0UWOGnO6yvykkaoyU21vRuxxEjRFKOit+246o0VNpX02i5DOm0UrtoGzygxWmNVpo0VHzEJnWyNVyIDb/0TfTGjla99I1PqY19vQafMOmKXFjxL/eU44HxH07Rh9B/wObNMsCn78N9AAAAABJRU5ErkJggg==">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
@@ -150,6 +156,26 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
 .gtable select{padding:7px 6px; border-radius:6px; font-size:13px}
 .gtable input[type=checkbox]{width:19px; height:19px}
 .gwrap{overflow-x:auto}
+.albar{display:flex; align-items:center; gap:10px; background:#fff; border:1px solid var(--line);
+  border-radius:10px; padding:11px 13px; margin-bottom:12px; box-shadow:var(--shadow); font-size:13.5px}
+.albar .txt{flex:1; line-height:1.55}
+.albar .txt b{font-size:14px}
+.albar button{border:none; border-radius:8px; padding:9px 14px; font-weight:800; font-size:13.5px; cursor:pointer; white-space:nowrap}
+.albar .on{background:var(--green); color:#fff}
+.albar .off{background:#e8ecf1; color:var(--sub)}
+.albar.warn2{background:#fff8ec; border-color:#f0d9ae}
+.alov{display:none; position:fixed; inset:0; background:#d93a3a; z-index:900;
+  flex-direction:column; justify-content:center; align-items:center; color:#fff; text-align:center; padding:24px}
+.alov.on{display:flex; animation:alpulse 1s infinite alternate}
+@keyframes alpulse{from{background:#d93a3a} to{background:#a81c1c}}
+.alov .lab{font-size:17px; font-weight:800; letter-spacing:.08em}
+.alov .tm2{font-size:76px; font-weight:800; line-height:1.05; margin:8px 0; font-variant-numeric:tabular-nums}
+.alov .rt3{font-size:20px; font-weight:700}
+.alov .px{font-size:26px; font-weight:800; margin-top:14px; background:rgba(255,255,255,.2);
+  border-radius:12px; padding:12px 20px}
+.alov .memo2{margin-top:12px; font-size:15px; background:rgba(255,255,255,.2); border-radius:10px; padding:10px 14px}
+.alov button{margin-top:26px; background:#fff; color:#b32020; border:none; border-radius:12px;
+  padding:16px 40px; font-size:19px; font-weight:800; cursor:pointer}
 .vgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:6px 12px; margin-bottom:6px}
 .vgrid label{display:flex; align-items:center; gap:8px; font-size:13.5px; padding:5px 2px; cursor:pointer}
 .vgrid input{width:18px; height:18px; flex:0 0 auto}
@@ -187,6 +213,40 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
 .bs{background:var(--blue); color:#fff}
 .bd{background:var(--red); color:#fff}
 .bd:disabled{background:#e0a5a5; cursor:not-allowed}
+/* 文字サイズ（大きい） */
+body.big{font-size:17px}
+body.big .tm{font-size:30px} body.big .rt{font-size:15px}
+body.big .pax .n{font-size:25px} body.big .res li{font-size:16px}
+body.big .btn{font-size:16px; padding:12px 16px} body.big .topbar button{font-size:16px}
+body.big .next .big{font-size:60px} body.big .next .rt2{font-size:18px} body.big .next .cd{font-size:19px}
+body.big .fg input,body.big .fg select{font-size:17px}
+body.big .chips button{font-size:15px; padding:10px 17px}
+
+/* 上部バー（次の便・現在時刻） */
+.topinfo{display:flex; align-items:center; gap:10px; background:#fff; border:1px solid var(--line);
+  border-radius:10px; padding:10px 13px; margin-bottom:12px; box-shadow:var(--shadow); font-size:13.5px}
+.topinfo .clock{font-size:20px; font-weight:800; font-variant-numeric:tabular-nums; letter-spacing:.02em}
+.topinfo .mid{flex:1; line-height:1.5}
+.topinfo .mid b{font-size:15px}
+.topinfo button{border:1px solid var(--line); background:#fff; color:var(--sub); border-radius:8px;
+  padding:8px 12px; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap}
+.topinfo.soon{background:#fff6e8; border-color:#f0d3a0}
+.topinfo.late{background:#ffecec; border-color:#f3c0c0}
+
+/* 人数クイックボタン */
+.quick{display:flex; gap:6px; flex-wrap:wrap; margin-top:7px}
+.quick button{flex:1; min-width:44px; padding:11px 0; border:1px solid var(--line); background:#fff;
+  border-radius:8px; font-size:16px; font-weight:800; cursor:pointer; color:var(--text)}
+.quick button.sel{background:var(--blue); color:#fff; border-color:var(--blue)}
+
+/* さがす */
+.searchbar{display:flex; gap:8px; align-items:center; margin-bottom:12px}
+.searchbar input{flex:1; padding:11px 13px; border:1px solid var(--line); border-radius:9px; font-size:15px}
+.searchbar button{border:1px solid var(--line); background:#fff; color:var(--sub); border-radius:9px;
+  padding:11px 13px; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap}
+.hit{background:#fff3cd !important; border-color:#e6c65c !important}
+.card.dim{opacity:.35}
+
 .hide{display:none !important}
 #boot{text-align:center; padding:50px 20px; color:var(--blue); font-weight:700}
 .foot{text-align:center; font-size:11px; color:var(--faint); margin-top:24px; line-height:1.9}
@@ -215,6 +275,7 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
   <button id="tabF" class="on" onclick="setView('front')">💻 フロント</button>
   <button id="tabD" onclick="setView('driver')">📱 運転手</button>
   <button id="tabS" class="set" onclick="setView('settings')">⚙️ 設定</button>
+  <button id="tabBig" class="set" style="max-width:64px" onclick="toggleBig()" title="文字の大きさ">🔍 大</button>
 </div>
 
 <div class="wrap">
@@ -243,7 +304,13 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
       <button class="btn btn-g" onclick="printDay()">🖨 印刷</button>
     </div>
 
+    <div id="topInfoF"></div>
     <div class="summary" id="summary"></div>
+    <div class="searchbar">
+      <input type="text" id="q" placeholder="部屋番号やお名前でさがす（例）302" oninput="doSearch()">
+      <button onclick="clearSearch()">クリア</button>
+    </div>
+    <div id="qMsg" style="font-size:13px;margin:-6px 0 12px 2px;font-weight:700"></div>
     <button class="btn-add-temp" onclick="openTemp()">＋ 臨時便を追加する</button>
 
     <div class="chips">
@@ -260,6 +327,8 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
     <div class="datenav" style="margin-bottom:14px">
       <div class="today-label" id="dlabelD"></div>
     </div>
+    <div id="topInfoD"></div>
+    <div id="alBar"></div>
     <div id="nextBox"></div>
     <div class="secttl">このあとの便</div>
     <div id="listD"></div>
@@ -305,6 +374,18 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
     </div>
 
     <div class="panel">
+      <h3>📲 スマホのホーム画面に追加する（おすすめ）</h3>
+      <p class="desc">運転手のスマホでこのページを開いたあと、下の手順で<b>ホーム画面にアイコンとして追加</b>できます。<br>
+      アプリのように<b>1タップで開けて、ブラウザの余計な枠が消えて画面が広く使えます。</b>毎回URLを開く手間もなくなります。</p>
+      <table class="stable">
+        <tr><th style="width:110px">iPhone</th><td>Safariで開く → 下の <b>共有ボタン（□に↑）</b> → <b>「ホーム画面に追加」</b></td></tr>
+        <tr><th>Android</th><td>Chromeで開く → 右上の <b>⋮</b> → <b>「ホーム画面に追加」</b>／「アプリをインストール」</td></tr>
+      </table>
+      <div class="mod-note">追加したアイコンをタップすると、<b>運転手画面が直接開きます。</b>フロントのパソコンではこの操作は不要です。<br>
+      ※アプリのように見えますが中身はこのページです。<b>閉じている間はアラームは鳴りません。</b></div>
+    </div>
+
+    <div class="panel">
       <h3>📱 運転手用のリンク</h3>
       <p class="desc">このQRコードを運転手のスマホで読み込むと、運転手画面が直接開きます。印刷して控室に貼っておくと引き継ぎが楽です。<br>
       ※インターネット上に公開（GitHub Pagesなど）してから使ってください。パソコン内のファイルのままだとスマホからは開けません。</p>
@@ -326,6 +407,27 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
         <button class="btn btn-g" id="csvBtn2" onclick="exportBase()">🕒 時刻表を書き出す</button>
       </div>
       <div id="csvMsg" style="font-size:13px;line-height:1.8"></div>
+    </div>
+
+    <div class="panel">
+      <h3>🔔 出発アラーム</h3>
+      <p class="desc">運転手の画面で、出発時刻が近づいたら<b>音とバイブレーションでお知らせ</b>します。<br>
+      画面いっぱいに赤い表示が出るので、スマホを置いていても気づけます。</p>
+      <div class="gfield"><label>アラームを使う</label>
+        <select id="al_on" style="flex:1;padding:9px;border:1px solid #dde2e8;border-radius:7px">
+          <option value="1">使う</option><option value="0">使わない</option></select></div>
+      <div class="gfield"><label>何分前に鳴らすか</label>
+        <input type="text" id="al_before" inputmode="numeric" style="max-width:100px"><span style="font-size:13px;color:#6b7684">分前</span></div>
+      <div class="gfield"><label>鳴らす対象</label>
+        <select id="al_only" style="flex:1;padding:9px;border:1px solid #dde2e8;border-radius:7px">
+          <option value="1">予約が入っている便だけ</option><option value="0">すべての便</option></select></div>
+      <button class="btn btn-p" id="alSave" onclick="saveAlarm()" style="width:100%;padding:13px;margin-top:10px">アラームの設定を保存する</button>
+      <div id="alMsg" style="font-size:13px;margin-top:10px;line-height:1.8"></div>
+      <div class="mod-note" style="margin-top:12px">
+        <b>アラームが鳴る条件：</b>運転手の画面を開いたままにしていることと、最初に一度「🔔 音をONにする」を押しておくことです。
+        ブラウザの決まりで、一度も画面を触っていないと音が出せないためです。<br>
+        <b>アプリを閉じている間や、他のアプリを使っている間は鳴りません。</b>
+      </div>
     </div>
 
     <div class="panel">
@@ -395,7 +497,8 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
   <div id="resStep1">
     <h3 id="resTtl">予約を追加</h3>
     <p class="sub" id="resWhich"></p>
-    <div class="fg"><label>人数（必須）</label><input type="number" id="rCount" min="1" inputmode="numeric" placeholder="例）2"></div>
+    <div class="fg"><label>人数（必須）</label><input type="number" id="rCount" min="1" inputmode="numeric" placeholder="例）2">
+      <div class="quick" id="rQuick"></div></div>
     <div class="fg"><label>お名前（任意）</label><input type="text" id="rName" placeholder="例）山田"></div>
     <div class="fg"><label>部屋番号（任意）</label><input type="text" id="rRoom" placeholder="例）302">
       <div class="hint">名前だけ・部屋番号だけでも登録できます</div></div>
@@ -528,6 +631,15 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
   <option value="御所の湯"></option><option value="文芸館"></option>
 </datalist>
 
+<div id="alarmOv" class="alov">
+  <div class="lab">まもなく出発</div>
+  <div class="tm2" id="alTime"></div>
+  <div class="rt3" id="alRoute"></div>
+  <div class="px" id="alPax"></div>
+  <div class="memo2 hide" id="alMemo"></div>
+  <button onclick="stopAlarm()">確認しました</button>
+</div>
+
 <div id="printArea"></div>
 
 <script>
@@ -608,7 +720,7 @@ function markOffline(){
 }
 function markOnline(){
   online=true; el('netbar').className='netbar';
-  el('foot').innerHTML='最終更新 '+syncLabel()+'　／　'+CONFIG.REFRESH_SEC+'秒ごとに自動更新<br>送迎管理 v3.1';
+  el('foot').innerHTML='最終更新 '+syncLabel()+'　／　'+CONFIG.REFRESH_SEC+'秒ごとに自動更新<br>送迎管理 v3.2';
 }
 
 /* ---------- 起動 ---------- */
@@ -620,6 +732,7 @@ async function boot(){
     baseDate=parseYmd(todayStr); dateStr=todayStr;
     paintDate();
 
+    initBig();
     var ok=await checkDb();
     el('boot').classList.add('hide');
 
@@ -636,6 +749,8 @@ async function boot(){
     // 画面が裏に回っている間は通信しない（通信量とスマホの電池を節約）
     setInterval(function(){ if(!document.hidden) load(); }, CONFIG.REFRESH_SEC*1000);
     setInterval(function(){ if(!document.hidden) render(); }, 30000);
+    setInterval(checkAlarm, 5000);   // 出発アラームの見張り
+    setInterval(function(){ if(!document.hidden) renderTopInfo(); }, 10000);  // 時計
   }catch(e){ el('boot').classList.add('hide'); showFatal(e); }
 }
 function showFatal(e){
@@ -768,7 +883,7 @@ function setFilter(c,btn){
   for(var i=0;i<bs.length;i++) bs[i].classList.remove('on');
   btn.classList.add('on'); render();
 }
-function render(){ paintDate(); renderFront(); renderDriver(); if(view==='settings') renderSettings(); }
+function render(){ paintDate(); renderTopInfo(); renderFront(); renderDriver(); if(view==='settings') renderSettings(); }
 
 /* ---------- 画面スリープ防止 ---------- */
 async function wakeOn(){
@@ -823,19 +938,21 @@ function renderFront(){
       +'<button class="btn btn-p" onclick="openRes(\''+esc(f.id)+'\')">＋ 予約</button></div></div>';
   }
   box.innerHTML=out||'<div class="empty">この区分の便はありません。</div>';
+  doSearch(false);   // さがす条件が入っていれば絞り込みを維持（自動更新では画面は動かさない）
 }
 function renderDriver(){
   if(view!=='driver') return;
   var nb=el('nextBox'), lb=el('listD'), pb=el('listPast'), pw=el('pastWrap');
   if(!flightsD.length){
     nb.innerHTML='<div class="next fin"><div class="big">本日の予定はまだ準備中です</div></div>';
-    lb.innerHTML=''; pw.classList.add('hide'); return;
+    lb.innerHTML=''; pw.classList.add('hide'); renderAlarmBar(); return;
   }
   var cur=nowMin(), idx=-1;
   for(var i=0;i<flightsD.length;i++){ if(toMin(flightsD[i].departure_time)>=cur-5){idx=i;break;} }
 
   if(idx<0){
     nb.innerHTML='<div class="next fin"><div class="lab">おつかれさまでした</div><div class="big">本日の送迎は終了しました</div></div>';
+    renderAlarmBar();
   }else{
     var f=flightsD[idx], n=pax(f), diff=toMin(f.departure_time)-cur;
     var cls=diff<0?'late':(diff<=CONFIG.SOON_MIN?'soon':'');
@@ -868,6 +985,7 @@ function renderDriver(){
     out+='</div>';
   }
   lb.innerHTML=out||'<div class="empty">このあとの便はありません。</div>';
+  renderAlarmBar();
 
   var past='';
   for(var i=0;i<(idx<0?flightsD.length:idx);i++){
@@ -919,6 +1037,7 @@ function openRes(id){
   el('resWhich').innerText=hm(f.departure_time)+'　'+f.origin+' → '+f.destination;
   el('rCount').value=''; el('rName').value=''; el('rRoom').value='';
   el('resStep1').classList.remove('hide'); el('resStep2').classList.add('hide');
+  renderQuick();
   el('mRes').classList.add('on');
   setTimeout(function(){el('rCount').focus();},80);
 }
@@ -930,6 +1049,7 @@ function openResEdit(fid,rid){
   el('resGo').innerText='変更する';
   el('resWhich').innerText=hm(f.departure_time)+'　'+f.origin+' → '+f.destination;
   el('rCount').value=r.passenger_count; el('rName').value=r.name||''; el('rRoom').value=r.room_number||'';
+  renderQuick();
   el('resStep1').classList.remove('hide'); el('resStep2').classList.add('hide');
   el('mRes').classList.add('on');
 }
@@ -1303,11 +1423,14 @@ let guide = null;
 
 async function loadGuide(){
   guide = JSON.parse(JSON.stringify(GUIDE_DEFAULTS));
+  alarmCfg = Object.assign({}, ALARM_DEFAULTS);
   var r = await sb.from('app_settings').select('key,value');
   if(r.error){ guideMsg('設定の読み込みに失敗しました：'+fmtErr(r.error), true); renderGuide(); return; }
   (r.data||[]).forEach(function(row){
     if(row.key==='baths'){
       try{ var a=JSON.parse(row.value); if(a&&a.length) guide.baths=a; }catch(e){}
+    } else if(row.key==='alarmOn'||row.key==='alarmBefore'||row.key==='alarmOnly'){
+      alarmCfg[row.key]=row.value;
     } else if(row.key==='textOverrides'||row.key==='visible'||row.key==='notice'){
       try{ var o=JSON.parse(row.value); if(o) guide[row.key]=o; }catch(e){}
     } else if(typeof guide[row.key]==='string'){ guide[row.key]=row.value; }
@@ -1339,7 +1462,7 @@ function renderGuide(){
       +'<td><input type="text" id="gb_walk_'+i+'" value="'+esc(x.walk)+'" style="min-width:64px"></td></tr>';
   });
   el('guideBaths').innerHTML=t+'</table>';
-  renderVisibility(); renderTexts(); renderNoticeForm();
+  renderVisibility(); renderTexts(); renderNoticeForm(); renderAlarmForm();
 }
 async function saveGuide(){
   if(needOnline()) return;
@@ -1366,13 +1489,249 @@ async function saveGuide(){
 }
 
 
+
+/* ---------- 使いやすさの小物 ---------- */
+// 文字サイズ（大きく / もどす）。この端末だけの設定として覚えます。
+function toggleBig(){
+  var on = !document.body.classList.contains('big');
+  document.body.classList.toggle('big', on);
+  el('tabBig').innerText = on ? '\u{1F50D} 標準' : '\u{1F50D} 大';
+  try{ localStorage.setItem('bus_big', on ? '1' : '0'); }catch(e){}
+}
+function initBig(){
+  var on=false;
+  try{ on = localStorage.getItem('bus_big') === '1'; }catch(e){}
+  document.body.classList.toggle('big', on);
+  el('tabBig').innerText = on ? '\u{1F50D} 標準' : '\u{1F50D} 大';
+}
+
+// 上部の「現在時刻・次の便」バー
+function nextOf(list){
+  var cur = nowMin();
+  for(var i=0;i<list.length;i++){ if(toMin(list[i].departure_time) >= cur) return list[i]; }
+  return null;
+}
+function renderTopInfo(){
+  var n = new Date();
+  var clock = String(n.getHours()).padStart(2,'0') + ':' + String(n.getMinutes()).padStart(2,'0');
+  if(view === 'front'){
+    var box = el('topInfoF'); if(!box) return;
+    if(dateStr !== todayStr){
+      box.innerHTML = '<div class="topinfo"><span class="clock">'+clock+'</span>'
+        + '<span class="mid">今日以外の日を見ています</span>'
+        + '<button onclick="goToday()">今日に戻る</button></div>';
+      return;
+    }
+    var f = nextOf(flightsF), cls='', mid;
+    if(f){
+      var diff = toMin(f.departure_time) - nowMin();
+      cls = diff < 0 ? ' late' : (diff <= CONFIG.SOON_MIN ? ' soon' : '');
+      mid = '次の便 <b>'+esc(hm(f.departure_time))+'</b> '+esc(f.destination)+'\u3000'
+          + (diff < 0 ? '<b>出発時刻を過ぎています</b>' : 'あと <b>'+diff+'</b> 分')
+          + '\u3000/\u3000'+pax(f)+'名';
+    } else mid = '本日の便は終了しました';
+    box.innerHTML = '<div class="topinfo'+cls+'"><span class="clock">'+clock+'</span>'
+      + '<span class="mid">'+mid+'</span>'
+      + '<button onclick="manualReload()">\u{1F504} 更新</button></div>';
+  } else if(view === 'driver'){
+    var box2 = el('topInfoD'); if(!box2) return;
+    box2.innerHTML = '<div class="topinfo"><span class="clock">'+clock+'</span>'
+      + '<span class="mid">最終更新 '+esc(syncLabel())+'</span>'
+      + '<button onclick="manualReload()">\u{1F504} 今すぐ更新</button></div>';
+  }
+}
+async function manualReload(){
+  var bs = document.querySelectorAll('.topinfo button');
+  for(var i=0;i<bs.length;i++){ bs[i].innerText='更新中...'; bs[i].disabled=true; }
+  await load();
+}
+
+// 人数のクイックボタン
+function renderQuick(){
+  var q = el('rQuick'); if(!q) return;
+  var cur = parseInt(el('rCount').value,10);
+  q.innerHTML = [1,2,3,4,5,6].map(function(n){
+    return '<button type="button" class="'+(cur===n?'sel':'')+'" onclick="setCount('+n+')">'+n+'</button>';
+  }).join('');
+}
+function setCount(n){ el('rCount').value = n; renderQuick(); }
+
+// 部屋番号・名前でさがす
+function doSearch(scroll){
+  var qEl = el('q'); if(!qEl) return;
+  var q = (qEl.value || '').trim().toLowerCase();
+  var cards = document.querySelectorAll('#listF .card');
+  var found = 0, first = null;
+  for(var i=0;i<cards.length;i++){
+    var c = cards[i];
+    c.classList.remove('dim');
+    var items = c.querySelectorAll('.res li');
+    var hitAny = false;
+    for(var j=0;j<items.length;j++){
+      var t = items[j].textContent.toLowerCase();
+      var hit = q && t.indexOf(q) >= 0;
+      items[j].classList.toggle('hit', !!hit);
+      if(hit){ hitAny = true; found++; if(!first) first = c; }
+    }
+    if(q) c.classList.toggle('dim', !hitAny);
+  }
+  var msg = el('qMsg');
+  if(msg) msg.innerHTML = !q ? ''
+    : (found ? '<span style="color:#0f9d58">'+found+'件 見つかりました</span>'
+             : '<span style="color:#b32020">見つかりませんでした</span>');
+  // 見つかった便まで自動で画面を動かす（下のほうにあっても探さなくて済むように）
+  if(first && scroll !== false) first.scrollIntoView({behavior:'smooth', block:'center'});
+}
+function clearSearch(){ el('q').value=''; doSearch(false); }
+
+/* =====================================================================
+   出発アラーム
+   運転手の画面で、出発の少し前に音・バイブ・全画面表示で知らせます。
+   ブラウザの決まりで、一度画面を触って音を許可しないと鳴らせないため、
+   運転手画面に「🔔 音をONにする」ボタンを出しています。
+   ===================================================================== */
+const ALARM_DEFAULTS = {alarmOn:'1', alarmBefore:'5', alarmOnly:'1'};
+let alarmCfg  = Object.assign({}, ALARM_DEFAULTS);
+let audioCtx  = null;
+let audioReady = false;
+let firedIds  = {};
+let ringTimer = null;
+
+function beep(){
+  try{
+    if(!audioCtx) return;
+    var t = audioCtx.currentTime;
+    [0, 0.28, 0.56].forEach(function(off){
+      var o = audioCtx.createOscillator(), g = audioCtx.createGain();
+      o.type = 'sine';
+      o.frequency.setValueAtTime(988, t + off);
+      o.frequency.setValueAtTime(1319, t + off + 0.11);
+      g.gain.setValueAtTime(0.0001, t + off);
+      g.gain.exponentialRampToValueAtTime(0.45, t + off + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + off + 0.22);
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start(t + off); o.stop(t + off + 0.24);
+    });
+  }catch(e){}
+}
+async function enableAudio(){
+  try{
+    if(!audioCtx){
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if(!AC){ alert('このブラウザでは音を出せません。画面の表示だけでお知らせします。'); audioReady=true; render(); return; }
+      audioCtx = new AC();
+    }
+    await audioCtx.resume();
+    audioReady = true;
+    beep();
+    if(navigator.vibrate) navigator.vibrate(120);
+    render();
+  }catch(e){ alert('音をONにできませんでした。\n\n'+e.message); }
+}
+function alarmMin(){ var n=parseInt(alarmCfg.alarmBefore,10); return (isNaN(n)||n<0||n>120) ? 5 : n; }
+
+function renderAlarmBar(){
+  var box = el('alBar');
+  if(!box) return;
+  if(alarmCfg.alarmOn !== '1'){
+    box.innerHTML = '<div class="albar"><span class="txt">アラームは使わない設定です</span></div>';
+    return;
+  }
+  if(!audioReady){
+    box.innerHTML = '<div class="albar warn2"><span class="txt"><b>アラームを使うには、最初に一度押してください</b><br>'
+      + 'ブラウザの決まりで、画面を触るまで音を出せません</span>'
+      + '<button class="on" onclick="enableAudio()">🔔 音をONにする</button></div>';
+    return;
+  }
+  var next = null, cur = nowMin();
+  for(var i=0;i<flightsD.length;i++){
+    var f = flightsD[i];
+    if(toMin(f.departure_time) < cur) continue;
+    if(alarmCfg.alarmOnly === '1' && pax(f) === 0) continue;
+    next = f; break;
+  }
+  box.innerHTML = '<div class="albar"><span class="txt">🔔 <b>アラーム ON</b>（出発 '+alarmMin()+' 分前）<br>'
+    + (next ? '次のお知らせ：<b>'+esc(hm(next.departure_time))+'</b> の便'
+            : (alarmCfg.alarmOnly==='1' ? 'このあと予約の入った便はありません' : 'このあとの便はありません'))
+    + '</span><button class="off" onclick="testAlarm()">音を確認</button></div>';
+}
+function testAlarm(){ beep(); if(navigator.vibrate) navigator.vibrate([200,100,200]); }
+
+function checkAlarm(){
+  if(view !== 'driver' || alarmCfg.alarmOn !== '1' || !audioReady) return;
+  var cur = nowMin(), lead = alarmMin();
+  for(var i=0;i<flightsD.length;i++){
+    var f = flightsD[i];
+    if(firedIds[f.id]) continue;
+    var n = pax(f);
+    if(alarmCfg.alarmOnly === '1' && n === 0) continue;
+    var diff = toMin(f.departure_time) - cur;
+    if(diff <= lead && diff >= 0){ firedIds[f.id] = 1; ringAlarm(f, n); return; }
+  }
+}
+function ringAlarm(f, n){
+  el('alTime').innerText  = hm(f.departure_time);
+  el('alRoute').innerText = f.origin + ' → ' + f.destination + (f.is_temporary ? '（臨時便）' : '');
+  el('alPax').innerText   = n > 0 ? ('お客様 ' + n + ' 名') : '予約なし';
+  var m = el('alMemo');
+  if(f.note){ m.innerText = '📝 ' + f.note; m.classList.remove('hide'); }
+  else m.classList.add('hide');
+  el('alarmOv').classList.add('on');
+
+  beep();
+  if(navigator.vibrate) navigator.vibrate([500,250,500,250,500]);
+  clearInterval(ringTimer);
+  var count = 0;
+  ringTimer = setInterval(function(){
+    count++;
+    if(count > 20){ stopAlarm(); return; }   // 1分ほどで自動的に止める
+    beep();
+    if(navigator.vibrate) navigator.vibrate([500,250,500]);
+  }, 3000);
+}
+function stopAlarm(){
+  clearInterval(ringTimer); ringTimer = null;
+  el('alarmOv').classList.remove('on');
+  if(navigator.vibrate) navigator.vibrate(0);
+}
+function renderAlarmForm(){
+  el('al_on').value     = alarmCfg.alarmOn;
+  el('al_before').value = alarmCfg.alarmBefore;
+  el('al_only').value   = alarmCfg.alarmOnly;
+}
+async function saveAlarm(){
+  if(needOnline()) return;
+  var b = el('alSave'); b.disabled = true; b.innerText = '保存中...';
+  try{
+    var n = parseInt(el('al_before').value, 10);
+    if(isNaN(n) || n < 0 || n > 120) throw new Error('「何分前」は0〜120の数字で入れてください。');
+    alarmCfg.alarmOn = el('al_on').value;
+    alarmCfg.alarmBefore = String(n);
+    alarmCfg.alarmOnly = el('al_only').value;
+    var r = await sb.from('app_settings').upsert([
+      {key:'alarmOn', value:alarmCfg.alarmOn},
+      {key:'alarmBefore', value:alarmCfg.alarmBefore},
+      {key:'alarmOnly', value:alarmCfg.alarmOnly}
+    ], {onConflict:'key'});
+    if(r.error) throw new Error(fmtErr(r.error));
+    firedIds = {};
+    el('alMsg').innerHTML = '<span style="color:#0f9d58">✅ 保存しました。'
+      + (alarmCfg.alarmOn==='1'
+          ? '出発の'+n+'分前に、'+(alarmCfg.alarmOnly==='1'?'予約の入った便':'すべての便')+'でお知らせします。'
+          : 'アラームは鳴りません。') + '</span>';
+    render();
+  }catch(e){ el('alMsg').innerHTML = '<span style="color:#b32020">'+esc(e.message)+'</span>'; }
+  b.disabled = false; b.innerText = 'アラームの設定を保存する';
+}
+
 /* ---------- 案内ページ：表示のON/OFF・文章・お知らせ ---------- */
 const LANGS = [
   {k:'ja',    l:'日本語（これだけでOK）'},
   {k:'en',    l:'English'},
   {k:'zh-tw', l:'繁體中文'},
   {k:'zh-cn', l:'简体中文'},
-  {k:'ko',    l:'한국어'}
+  {k:'ko',    l:'한국어'},
+  {k:'es',    l:'Español'}
 ];
 const GUIDE_SECTIONS = [
   {id:'wifi',   l:'Wi-Fi接続'},      {id:'info',   l:'ご滞在・館内設備'},
@@ -1395,7 +1754,7 @@ const GUIDE_TEXTS = [
   {k:'facilityText',  l:'喫煙所・売店・設備',   o:'当館は全室禁煙です。喫煙所は1階ロビー、2階通路奥にございます。／売店営業時間：{shopAM}、{shopPM}。／自動販売機は館内にございます。フロントへのお問い合わせは内線「{frontExt}番」へ。'},
   {k:'breakfastText', l:'ご朝食',               o:'1階「清流の間」にて {breakfastFrom}より バイキング形式でご用意しております。入場の際に朝食券をお持ちください。'},
   {k:'dinnerText',    l:'ご夕食',               o:'夕食付きプランのお客様は、チェックイン時にお伺いしたお時間に、お部屋またはお食事処へご用意いたします。'},
-  {k:'drinksText',    l:'フリードリンク',       o:'ロビーのコーヒーはいつでも無料です。売店営業時間（{shopPM}）にはヤクルトも無料でご提供しております。'},
+  {k:'drinksText',    l:'フリードリンク',       o:'ロビーのコーヒーはいつでも無料です。売店営業時間（{shopAM}、{shopPM}）にはヤクルトも無料でご提供しております。'},
   {k:'yukataWomen',   l:'女性用浴衣',           o:'女性用色浴衣：ロビーに様々な色柄をご用意しております。お好みの柄をお選びください。'},
   {k:'yukataMenText', l:'男性用浴衣',           o:'男性用浴衣：各階エレベーターを出てすぐ左手にご用意しております。'},
   {k:'getaText',      l:'下駄',                 o:'下駄：玄関にございますので、自由にお使いください。'},
@@ -1577,7 +1936,7 @@ function buildQR(){
     el('qrurl').innerHTML+='<br><span style="color:#b32020">※いまはパソコン内のファイルを開いています。この状態のQRコードはスマホからは開けません。</span>';
 }
 function buildAbout(){
-  el('aboutBox').innerHTML='バージョン v3.1<br>'
+  el('aboutBox').innerHTML='バージョン v3.2<br>'
     +'データの保管先：Supabase（クラウド）<br>'
     +'古いデータは'+CONFIG.KEEP_DAYS+'日を過ぎると自動で消えます<br>'
     +'定員の目安：'+CONFIG.CAPACITY+'名（超えても登録できます）<br>'
