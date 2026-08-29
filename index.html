@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>あさぎり荘 館内・外湯ご案内</title>
+<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root{
     --green-deep:#12281F;
@@ -573,19 +574,23 @@
 (function(){
 
 /* ======================================================================
-   ★★★★★  変更するのはこの「設定」だけでOKです  ★★★★★
+   ★★★★★  ここは「予備の値」です  ★★★★★
 
-   お店の時間が変わったとき、Wi-Fiのパスワードが変わったとき、
-   外湯が休業／再開したときは、下の値を書き換えて保存してください。
-   5つの言語（日本語・英語・繁体字・簡体字・韓国語）すべてに
-   自動で反映されます。翻訳を直す必要はありません。
+   ◆ ふだんの変更は、このファイルを開く必要はありません。
+     送迎管理システムの「⚙️ 設定」→「お客様向け案内ページの設定」
+     から変更してください。保存すればすぐこのページに反映されます。
 
-   【編集のしかた】
-     ・" " で囲まれた中の文字だけを書き換えてください
-     ・" や , や : といった記号は消さないでください
-     ・書き換えたら保存 → GitHubにアップロード
-     ・不安なときは、直す前にファイルをコピーしておいてください
+   ◆ 下の値は、インターネットの調子が悪くて設定を読み込めなかったときに
+     代わりに表示される「予備」です。ページが真っ白になるのを防ぎます。
+     ふだんは触らなくて大丈夫です。
+
+   （もし直接書き換える場合は、" " で囲まれた中の文字だけを変え、
+     " や , や : といった記号は消さないでください）
    ====================================================================== */
+
+  // 設定の保存先（送迎管理システムと同じ場所です）
+  var SB_URL = "https://pzxikzejujtwpabikflk.supabase.co";
+  var SB_KEY = "sb_publishable_IV9yZp3BFwOacBmvoc5P_Q_S_WI0WC7";
 
   var SETTINGS = {
 
@@ -674,7 +679,7 @@
     en:{
       appTitle:"Asagirisou Guest Guide", subTitle:"Kinosaki Onsen",
       navWifi:"Wi-Fi", navInfo:"Information", navMeals:"Meals", navYukata:"Yukata", navBaths:"Outer Baths", navPlaces:"Nearby", navShuttle:"Shuttle", navPointing:"Point & Show",
-      alertTpl:"⚠️ {names} are currently CLOSED for maintenance.", alertJoin:" and ",
+      alertTpl:"⚠️ {names} are currently CLOSED for maintenance.", alertTpl1:"⚠️ {names} is currently CLOSED for maintenance.", alertJoin:" and ",
       weekdays:["Sundays","Mondays","Tuesdays","Wednesdays","Thursdays","Fridays","Saturdays"],
       closedNthTpl:"1st & 3rd {day}", walkTpl:"{n} min walk", noClosedDay:"Open daily", colon:": ",
       sectionWifi:"Wi-Fi Access", wifiDesc:"Tap the password below to copy it.", wifiPassLabel:"Password", wifiCopied:"Copied!",
@@ -909,7 +914,8 @@
       return;
     }
     banner.style.display = "block";
-    banner.textContent = fill(t.alertTpl, {names: closed.join(t.alertJoin)});
+    var tpl = (closed.length === 1 && t.alertTpl1) ? t.alertTpl1 : t.alertTpl;
+    banner.textContent = fill(tpl, {names: closed.join(t.alertJoin)});
   }
 
   function renderBaths(lang){
@@ -1054,6 +1060,36 @@
   }
 
   setLang(detectInitialLang());
+
+  // ------------------------------------------------------------------
+  // フロントで保存された設定を読みに行って、上書きする。
+  // 読めなかった場合は上の「予備の値」のまま表示されるので、
+  // ネットの調子が悪くてもページが壊れることはありません。
+  // ------------------------------------------------------------------
+  function applyRemoteSettings(){
+    try{
+      if(!window.supabase) return;
+      var sb = window.supabase.createClient(SB_URL, SB_KEY);
+      sb.from("app_settings").select("key,value").then(function(res){
+        if(!res || res.error || !res.data || !res.data.length) return;
+        for(var i=0;i<res.data.length;i++){
+          var row = res.data[i];
+          if(row.key === "baths"){
+            try{
+              var arr = JSON.parse(row.value);
+              if(arr && arr.length) SETTINGS.baths = arr;
+            }catch(e){}
+          } else if(SETTINGS[row.key] !== undefined){
+            SETTINGS[row.key] = row.value;
+          }
+        }
+        document.getElementById("wifiSsid").textContent = SETTINGS.wifiSSID;
+        document.getElementById("wifiPass").textContent = SETTINGS.wifiPass;
+        setLang(currentLang);
+      }).catch(function(){ /* 読めなくても予備の値で表示され続ける */ });
+    }catch(e){ /* 同上 */ }
+  }
+  window.addEventListener("load", applyRemoteSettings);
 
 })();
 </script>

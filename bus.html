@@ -138,6 +138,18 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
 .urlbox{font-family:ui-monospace,Consolas,monospace; font-size:12px; background:#f6f8fa; border:1px solid var(--line);
   border-radius:6px; padding:9px; word-break:break-all; user-select:all; margin-top:10px}
 
+.gfield{display:flex; align-items:center; gap:10px; padding:7px 0; border-bottom:1px solid #eef1f4}
+.gfield:last-child{border-bottom:none}
+.gfield label{flex:0 0 168px; font-size:12.5px; font-weight:700; color:var(--sub)}
+.gfield input[type=text]{flex:1; padding:9px 10px; border:1px solid var(--line); border-radius:7px; font-size:14px; min-width:0}
+.gtable{width:100%; border-collapse:collapse; font-size:13px}
+.gtable th{font-size:11px; color:var(--sub); text-align:left; padding:5px 6px; border-bottom:2px solid var(--line); white-space:nowrap}
+.gtable td{padding:6px; border-bottom:1px solid var(--line); vertical-align:middle}
+.gtable td.nm{font-weight:700; white-space:nowrap; font-size:13px}
+.gtable input[type=text]{width:100%; padding:7px 8px; border:1px solid var(--line); border-radius:6px; font-size:13px}
+.gtable select{padding:7px 6px; border-radius:6px; font-size:13px}
+.gtable input[type=checkbox]{width:19px; height:19px}
+.gwrap{overflow-x:auto}
 .mod-note{background:#f6f8fa; border-left:4px solid var(--blue); border-radius:6px; padding:10px 12px;
   font-size:13px; line-height:1.7; margin-bottom:14px; color:var(--sub)}
 
@@ -303,6 +315,17 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
         <button class="btn btn-g" id="csvBtn2" onclick="exportBase()">🕒 時刻表を書き出す</button>
       </div>
       <div id="csvMsg" style="font-size:13px;line-height:1.8"></div>
+    </div>
+
+    <div class="panel">
+      <h3>🏨 お客様向け案内ページの設定</h3>
+      <p class="desc">お客様にQRコードでお見せしている案内ページ（館内・外湯のご案内）の内容を、ここから変更できます。<br>
+      保存すると<b>日本語・英語・繁体字・簡体字・韓国語の5言語すべてに反映されます。</b>翻訳を直す必要はありません。</p>
+      <div id="guideBasic"></div>
+      <div style="font-size:12.5px;font-weight:800;color:#6b7684;margin:16px 0 6px">外湯（チェックを外すと「長期休業中」になり、お知らせも自動で出ます）</div>
+      <div class="gwrap"><div id="guideBaths"></div></div>
+      <button class="btn btn-p" id="guideSave" onclick="saveGuide()" style="width:100%;padding:13px;margin-top:14px">この内容で保存する</button>
+      <div id="guideMsg" style="font-size:13px;margin-top:10px;line-height:1.8"></div>
     </div>
 
     <div class="panel danger">
@@ -553,6 +576,7 @@ async function boot(){
     await cleanupOld();
     await ensureFlights();
     await loadPatterns();
+    await loadGuide();
     await load();
     buildQR(); buildAbout();
     // 画面が裏に回っている間は通信しない（通信量とスマホの電池を節約）
@@ -1184,6 +1208,103 @@ async function runDanger(){
     alert('完了しました。');
   }catch(e){ alert('実行できませんでした。\n\n'+e.message); }
   b.disabled=false; b.innerText='実行する';
+}
+
+
+/* =====================================================================
+   お客様向け案内ページ（index.html）の設定
+   ここで保存した内容が、案内ページの5言語すべてに反映されます。
+   ===================================================================== */
+const GUIDE_FIELDS = [
+  {k:'wifiSSID',      l:'Wi-Fi の名前（SSID）'},
+  {k:'wifiPass',      l:'Wi-Fi のパスワード'},
+  {k:'checkout',      l:'チェックアウト'},
+  {k:'curfew',        l:'門限'},
+  {k:'frontExt',      l:'フロントの内線番号'},
+  {k:'bigBathPM',     l:'館内大浴場（夜）'},
+  {k:'bigBathAM',     l:'館内大浴場（朝）'},
+  {k:'breakfastFrom', l:'朝食の開始時刻'},
+  {k:'shopAM',        l:'売店（朝）'},
+  {k:'shopPM',        l:'売店（夕方）'}
+];
+// 案内ページ側にも同じ「予備の値」が書いてあります。
+const GUIDE_DEFAULTS = {
+  wifiSSID:'asagirisou', wifiPass:'asagiri322921',
+  checkout:'10:00', curfew:'24:00', frontExt:'9',
+  bigBathPM:'15:00～24:00', bigBathAM:'6:00～9:30',
+  breakfastFrom:'7:00', shopAM:'7:30～10:00', shopPM:'15:00～20:00',
+  baths:[
+    {name:'地蔵湯',           romaji:'Jizo-yu',    hours:'7:00–23:00',  walk:'6〜8',   closedDay:5, closedNth:null,  open:true },
+    {name:'柳湯',             romaji:'Yanagi-yu',  hours:'15:00–23:00', walk:'8〜10',  closedDay:4, closedNth:null,  open:true },
+    {name:'一の湯',           romaji:'Ichino-yu',  hours:'7:00–23:00',  walk:'10〜12', closedDay:3, closedNth:null,  open:true },
+    {name:'御所の湯',         romaji:'Goshono-yu', hours:'7:00–23:00',  walk:'13〜15', closedDay:4, closedNth:[1,3], open:true },
+    {name:'まんだら湯',       romaji:'Mandara-yu', hours:'15:00–23:00', walk:'15〜18', closedDay:3, closedNth:null,  open:true },
+    {name:'鴻の湯',           romaji:'Konoyu',     hours:'7:00–23:00',  walk:'18〜20', closedDay:2, closedNth:null,  open:false},
+    {name:'さとの湯（駅前）', romaji:'Satono-yu',  hours:'13:00–21:00', walk:'7〜9',   closedDay:1, closedNth:null,  open:false}
+  ]
+};
+const WDNAME = ['日曜','月曜','火曜','水曜','木曜','金曜','土曜'];
+let guide = null;
+
+async function loadGuide(){
+  guide = JSON.parse(JSON.stringify(GUIDE_DEFAULTS));
+  var r = await sb.from('app_settings').select('key,value');
+  if(r.error){ guideMsg('設定の読み込みに失敗しました：'+fmtErr(r.error), true); renderGuide(); return; }
+  (r.data||[]).forEach(function(row){
+    if(row.key==='baths'){
+      try{ var a=JSON.parse(row.value); if(a&&a.length) guide.baths=a; }catch(e){}
+    } else if(guide[row.key]!==undefined){ guide[row.key]=row.value; }
+  });
+  renderGuide();
+}
+function guideMsg(t,bad){
+  el('guideMsg').innerHTML = t ? '<span style="color:'+(bad?'#b32020':'#0f9d58')+'">'+esc(t)+'</span>' : '';
+}
+function renderGuide(){
+  if(!guide) return;
+  var b='';
+  GUIDE_FIELDS.forEach(function(f){
+    b+='<div class="gfield"><label>'+esc(f.l)+'</label>'
+      +'<input type="text" id="g_'+f.k+'" value="'+esc(guide[f.k])+'"></div>';
+  });
+  el('guideBasic').innerHTML=b;
+
+  var t='<table class="gtable"><tr><th>外湯</th><th>営業中</th><th>定休日</th><th>第1・第3<br>のみ</th><th>営業時間</th><th>徒歩(分)</th></tr>';
+  guide.baths.forEach(function(x,i){
+    var sel='<select id="gb_day_'+i+'"><option value="">なし</option>';
+    for(var d=0;d<7;d++) sel+='<option value="'+d+'"'+(x.closedDay===d?' selected':'')+'>'+WDNAME[d]+'</option>';
+    sel+='</select>';
+    t+='<tr><td class="nm">'+esc(x.name)+'</td>'
+      +'<td style="text-align:center"><input type="checkbox" id="gb_open_'+i+'"'+(x.open?' checked':'')+'></td>'
+      +'<td>'+sel+'</td>'
+      +'<td style="text-align:center"><input type="checkbox" id="gb_nth_'+i+'"'+(x.closedNth?' checked':'')+'></td>'
+      +'<td><input type="text" id="gb_hours_'+i+'" value="'+esc(x.hours)+'" style="min-width:104px"></td>'
+      +'<td><input type="text" id="gb_walk_'+i+'" value="'+esc(x.walk)+'" style="min-width:64px"></td></tr>';
+  });
+  el('guideBaths').innerHTML=t+'</table>';
+}
+async function saveGuide(){
+  if(needOnline()) return;
+  var btn=el('guideSave'); btn.disabled=true; btn.innerText='保存中...';
+  try{
+    GUIDE_FIELDS.forEach(function(f){ guide[f.k]=el('g_'+f.k).value.trim(); });
+    guide.baths.forEach(function(x,i){
+      x.open   = el('gb_open_'+i).checked;
+      var d    = el('gb_day_'+i).value;
+      x.closedDay = (d==='') ? null : parseInt(d,10);
+      x.closedNth = el('gb_nth_'+i).checked ? [1,3] : null;
+      x.hours  = el('gb_hours_'+i).value.trim();
+      x.walk   = el('gb_walk_'+i).value.trim();
+    });
+    var rows = GUIDE_FIELDS.map(function(f){ return {key:f.k, value:guide[f.k]}; });
+    rows.push({key:'baths', value:JSON.stringify(guide.baths)});
+    var r = await sb.from('app_settings').upsert(rows, {onConflict:'key'});
+    if(r.error) throw new Error(fmtErr(r.error));
+    var closed = guide.baths.filter(function(x){return !x.open;}).map(function(x){return x.name;});
+    guideMsg('✅ 保存しました。案内ページに反映されています。'
+      + (closed.length ? '（休業中のお知らせ：'+closed.join('・')+'）' : '（休業中の外湯はありません。お知らせは表示されません）'));
+  }catch(e){ guideMsg('保存できませんでした：'+e.message, true); }
+  btn.disabled=false; btn.innerText='この内容で保存する';
 }
 
 /* ---------- CSV書き出し ---------- */
