@@ -168,11 +168,11 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
 .albar.gray .txt{color:var(--sub)}
 /* まだ音をONにしていないとき：大きなボタン */
 .alsetup{width:100%; background:#fff8ec; border:2px solid var(--amber); border-radius:12px;
-  padding:16px; margin-bottom:14px; text-align:center}
-.alsetup .h2b{font-size:17px; font-weight:800; color:#8a5200; margin-bottom:4px}
-.alsetup .p2{font-size:14px; color:#8a5200; line-height:1.65; margin-bottom:12px}
-.alsetup button{width:100%; background:var(--amber); color:#fff; border:none; border-radius:10px;
-  padding:18px; font-size:19px; font-weight:800; cursor:pointer}
+  padding:11px 14px; margin-bottom:10px; text-align:center}
+.alsetup .h2b{font-size:15.5px; font-weight:800; color:#8a5200; margin-bottom:2px}
+.alsetup .p2{font-size:12.5px; color:#8a5200; line-height:1.55; margin-bottom:9px}
+.alsetup button{width:100%; background:var(--amber); color:#fff; border:none; border-radius:9px;
+  padding:13px; font-size:17px; font-weight:800; cursor:pointer}
 .alov{display:none; position:fixed; inset:0; background:#d93a3a; z-index:900;
   flex-direction:column; justify-content:center; align-items:center; color:#fff; text-align:center; padding:24px}
 .alov.on{display:flex; animation:alpulse 1s infinite alternate}
@@ -226,7 +226,7 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
 
 /* 人数クイックボタン */
 .quick{display:flex; gap:6px; flex-wrap:wrap; margin-top:7px}
-.quick button{flex:1; min-width:48px; padding:14px 0; border:1px solid var(--line); background:#fff;
+.quick button{flex:1; min-width:38px; padding:13px 0; border:1px solid var(--line); background:#fff;
   border-radius:8px; font-size:19px; font-weight:800; cursor:pointer; color:var(--text)}
 .quick button.sel{background:var(--blue); color:#fff; border-color:var(--blue)}
 
@@ -259,23 +259,14 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
 .fbar2{display:flex; align-items:center; gap:12px; margin-bottom:8px; flex-wrap:wrap}
 .fbar2 .chips{margin-bottom:0; flex:1}
 .fbar2 .chips button{padding:8px 14px; font-size:14px}
+@media (max-width:700px){
+  .fbar2{flex-direction:column; align-items:stretch; gap:6px}
+  .fbar2 .chips{width:100%}
+  .summary2{justify-content:flex-end}
+}
 .summary2{display:flex; gap:14px; font-size:14px; white-space:nowrap; color:var(--sub)}
 .summary2 b{font-size:17px; color:var(--text)}
 
-/* ---- フロント：全便を1画面で見る一覧 ---- */
-.flist{background:#fff; border:1px solid var(--line); border-radius:12px; overflow:hidden; box-shadow:var(--shadow)}
-.fhead{display:grid; grid-template-columns:70px 1fr 1.15fr 74px 44px 38px; gap:8px; align-items:center;
-  padding:6px 12px; background:#f4f6f9; border-bottom:2px solid var(--line);
-  font-size:12px; font-weight:800; color:var(--sub)}
-.brow{display:grid; grid-template-columns:70px 1fr 1.15fr 74px 44px 38px; gap:8px; align-items:center;
-  padding:2px 10px; border-bottom:1px solid #eef1f4; min-height:38px}
-.brow:last-of-type{border-bottom:none}
-.brow.mk{background:#fffaf0; box-shadow:inset 4px 0 0 var(--amber)}
-.brow.now{background:#eaf6ee; box-shadow:inset 4px 0 0 var(--green)}
-.brow.past{opacity:.45}
-.brow{cursor:pointer}
-.brow.sel{background:#e8f0fd !important; box-shadow:inset 4px 0 0 var(--blue) !important}
-.fchev{text-align:center; color:var(--faint); font-size:19px}
 .ftm{font-size:17.5px; font-weight:800; font-variant-numeric:tabular-nums; line-height:1.1}
 .ftag{display:inline-block; font-size:10px; font-weight:800; background:#eef3fb; color:var(--blue);
   border-radius:3px; padding:1px 4px; margin-left:3px; vertical-align:3px}
@@ -293,52 +284,47 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
 .fadd{background:var(--blue); color:#fff; border:none; border-radius:7px; padding:6px 0;
   font-size:16px; font-weight:800; cursor:pointer}
 
-/* 右側の詳細パネル */
-.dcard{background:#fff; border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow); overflow:hidden}
-.dhead{padding:16px 18px; border-bottom:1px solid var(--line); position:relative}
-.dhead.mk{background:#fffaf0} .dhead.now{background:#eaf6ee}
-.dtm{font-size:40px; font-weight:800; line-height:1; font-variant-numeric:tabular-nums}
-.dtag{display:inline-block; font-size:12px; font-weight:800; background:#eef3fb; color:var(--blue);
-  border-radius:5px; padding:2px 8px; margin-left:8px; vertical-align:8px}
-.drt{font-size:17px; font-weight:700; color:var(--sub); margin-top:8px}
-.dcd{font-size:14px; font-weight:800; margin-top:6px}
-.dcd.soon{color:var(--amber)} .dcd.late{color:var(--red)} .dcd.done{color:var(--faint)}
-.dpax{position:absolute; right:18px; top:16px; text-align:right}
-.dpax .n{font-size:30px; font-weight:800; font-variant-numeric:tabular-nums}
-.dpax .c{font-size:12px; color:var(--sub); display:block}
-.dpax.z .n{font-size:15px; color:var(--faint)}
-.dpax.f .n{color:var(--amber)} .dpax.o .n{color:var(--red)}
-.dbody{padding:14px 18px 18px}
-.dmemo{background:#fffdf2; border:1px solid #f0e6c0; border-radius:8px; padding:10px 12px;
-  font-size:15px; color:#7a5c00; font-weight:600; margin-bottom:12px}
-.dres{list-style:none; margin:0 0 14px; padding:0}
-.dres li{display:flex; justify-content:space-between; align-items:center; gap:8px;
-  background:#f6f8fa; border:1px solid #e8ecf1; border-radius:9px; padding:12px 14px; margin-bottom:8px}
-.dres .rm{font-size:18px; font-weight:800}
-.dres .ct{font-size:17px; font-weight:800; margin-right:6px}
-.dnone{color:var(--faint); font-size:15px; padding:10px 0 16px}
-.dbtns{display:flex; gap:8px; flex-wrap:wrap}
-.dbtns .w{width:100%}
-.sheetclose{position:absolute; right:12px; bottom:-2px; background:none; border:none;
-  font-size:22px; color:var(--sub); cursor:pointer; padding:6px 10px}
-.dhint{background:#fff; border:1px dashed var(--line); border-radius:14px; padding:30px 20px;
-  text-align:center; color:var(--faint); font-size:15px; line-height:1.9}
 
 /* 横長の画面では2列に並べて、全部を1画面に収める */
-/* 左：一覧 ／ 右：詳細 */
-.fmain{display:flex; gap:14px; align-items:flex-start}
-.fleft{flex:1; min-width:0}
-.fright{flex:0 0 372px; position:sticky; top:62px}
-@media (max-width:1099px){
-  .fmain{display:block}
-  .fright{position:fixed; left:0; right:0; bottom:0; top:auto; z-index:300;
-    max-height:56vh; overflow-y:auto; border-radius:18px 18px 0 0;
-    box-shadow:0 -8px 30px rgba(16,24,40,.28); flex:none; padding:0 10px 10px}
-  .fright.empty2{display:none}
-  /* パネルが出ている間は、下の便もスクロールして選べるように余白をつくる */
-  body.sheet .fleft{padding-bottom:58vh}
-}
-@media (min-width:1100px){ .fright .sheetclose{display:none} }
+
+/* ---- フロント：便の一覧 ---- */
+.flist{background:#fff; border:1px solid var(--line); border-radius:12px; overflow:hidden; box-shadow:var(--shadow)}
+.brow{display:flex; align-items:center; gap:12px; padding:6px 14px;
+  border-bottom:1px solid #eef1f4; cursor:pointer}
+.brow:last-child{border-bottom:none}
+.brow.mk{background:#fffaf0; box-shadow:inset 5px 0 0 var(--amber)}
+.brow.now{background:#eaf6ee; box-shadow:inset 5px 0 0 var(--green)}
+.brow.past{opacity:.4}
+.btm{font-size:21px; font-weight:800; font-variant-numeric:tabular-nums; min-width:60px; line-height:1.2}
+.bmid{flex:1; min-width:0}
+.brt{font-size:15.5px; font-weight:700; line-height:1.35}
+.brt .ar{color:var(--green); margin-right:5px}
+.brt .ar.rt{color:var(--blue)}
+.btag{display:inline-block; font-size:11px; font-weight:800; background:#eef3fb; color:var(--blue);
+  border-radius:4px; padding:1px 6px; margin-left:6px; vertical-align:2px}
+.brooms{font-size:13.5px; color:var(--sub); margin-top:1px; line-height:1.35}
+.bmemo{font-size:12.5px; color:#7a5c00; background:#fffdf2; border:1px solid #f0e6c0;
+  border-radius:5px; padding:1px 7px; display:inline-block; margin-top:2px}
+.bpax{font-size:20px; font-weight:800; font-variant-numeric:tabular-nums; white-space:nowrap; text-align:right}
+.bpax span{font-size:13px; color:var(--sub)}
+.bpax.z{font-size:14px; color:var(--faint); font-weight:600}
+.bpax.f{color:var(--amber)} .bpax.o{color:var(--red)}
+.badd{background:var(--blue); color:#fff; border:none; border-radius:8px; padding:8px 15px;
+  font-size:18px; font-weight:800; cursor:pointer; flex:0 0 auto; line-height:1.25}
+
+/* 便のモーダル（予約・メモ・変更をここに集約） */
+.mod.wide{max-width:460px}
+.mfhead{border-bottom:1px solid var(--line); padding-bottom:12px; margin-bottom:14px}
+.mftm{font-size:32px; font-weight:800; line-height:1}
+.mfrt{font-size:16px; color:var(--sub); font-weight:700; margin-top:5px}
+.mfpax{float:right; font-size:15px; font-weight:800; color:var(--sub)}
+.mflbl{font-size:13px; font-weight:800; color:var(--sub); margin:16px 0 7px}
+.addbox{background:#f6f8fa; border:1px solid var(--line); border-radius:10px; padding:13px}
+.mfoot{display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; padding-top:12px; border-top:1px dashed var(--line)}
+.lnk{background:none; border:none; color:var(--sub); font-size:13.5px; font-weight:700;
+  cursor:pointer; padding:6px 2px; text-decoration:underline}
+.lnk.d{color:var(--red)}
+.editing{background:#fff8ec !important; border-color:var(--amber) !important}
 
 .hide{display:none !important}
 #boot{text-align:center; padding:50px 20px; color:var(--blue); font-weight:700}
@@ -391,10 +377,7 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
       <div class="summary2" id="summary"></div>
     </div>
 
-    <div class="fmain">
-      <div class="fleft"><div id="listF"></div></div>
-      <aside class="fright empty2" id="detailF"></aside>
-    </div>
+    <div id="listF"></div>
   </div>
 
   <!-- ================= 運転手 ================= -->
@@ -590,25 +573,53 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
   <div class="foot" id="foot"></div>
 </div>
 
-<!-- 予約の追加・修正 -->
-<div id="mRes" class="ov"><div class="mod">
-  <div id="resStep1">
-    <h3 id="resTtl">予約を追加</h3>
-    <p class="sub" id="resWhich"></p>
-    <div class="fg"><label>人数（必須）</label><input type="number" id="rCount" min="1" inputmode="numeric" placeholder="例）2">
-      <div class="quick" id="rQuick"></div></div>
-    <div class="fg"><label>部屋番号</label><input type="text" id="rRoom" placeholder="例）302">
-      <div class="hint">お客様のお名前は記録しません</div></div>
-    <div class="mbtn"><button class="bc" onclick="closeAll()">やめる</button>
-      <button class="bs" onclick="resToConfirm()">確認へ ▶</button></div>
+<!-- 便の画面（予約・メモ・変更をここにまとめています） -->
+<div id="mFlight" class="ov"><div class="mod wide">
+  <div class="mfhead">
+    <span class="mfpax" id="mfPax"></span>
+    <div class="mftm" id="mfTm"></div>
+    <div class="mfrt" id="mfRt"></div>
   </div>
-  <div id="resStep2" class="hide">
-    <h3 id="resTtl2">この内容で登録します</h3>
-    <p class="sub">間違いがなければ下のボタンを押してください</p>
-    <div class="confirm" id="resPreview"></div>
-    <div id="resWarn" class="warn hide"></div>
-    <div class="mbtn"><button class="bc" onclick="resBack()">◀ 戻る</button>
-      <button class="bs" id="resGo" onclick="saveRes()">登録する</button></div>
+
+  <div id="mfList"></div>
+
+  <div class="addbox" id="mfAdd">
+    <div id="mfStep1">
+      <div style="font-size:14px;font-weight:800;margin-bottom:10px" id="mfAddTtl">予約を追加</div>
+      <div class="fg" style="margin-bottom:10px"><label>人数</label>
+        <input type="number" id="rCount" min="1" inputmode="numeric" placeholder="例）2">
+        <div class="quick" id="rQuick"></div></div>
+      <div class="fg" style="margin-bottom:12px"><label>部屋番号</label>
+        <input type="text" id="rRoom" placeholder="例）302"></div>
+      <div class="mbtn">
+        <button class="bc" id="mfCancelEdit" onclick="resReset()" style="display:none">やめる</button>
+        <button class="bs" onclick="resToConfirm()">確認へ ▶</button>
+      </div>
+    </div>
+    <div id="mfStep2" class="hide">
+      <div class="confirm" id="mfPreview" style="margin-bottom:12px"></div>
+      <div id="mfWarn" class="warn hide"></div>
+      <div class="mbtn">
+        <button class="bc" onclick="resBack()">◀ 戻る</button>
+        <button class="bs" id="mfGo" onclick="saveRes()">この内容で登録</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="mflbl">この便のメモ（運転手の画面にも出ます）</div>
+  <div style="display:flex; gap:8px">
+    <input type="text" id="mfNote" maxlength="60" placeholder="例）ベビーカーあり"
+      style="flex:1;padding:12px;border:1px solid #dde2e8;border-radius:8px;font-size:16px">
+    <button class="btn btn-g" onclick="saveNoteInline()">保存</button>
+  </div>
+
+  <div class="mfoot">
+    <button class="lnk" onclick="openEdit(curFid)">⚙️ この便の時刻・行き先を変える</button>
+    <button class="lnk d hide" id="mfDelFlight" onclick="delFlight(curFid)">🗑 この臨時便を削除</button>
+  </div>
+
+  <div class="mbtn" style="margin-top:14px">
+    <button class="bc" onclick="closeAll()" style="flex:1">閉じる</button>
   </div>
 </div></div>
 
@@ -621,15 +632,6 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
   <div class="fg"><label>行き先</label><input type="text" id="eDest" list="places"></div>
   <div class="mbtn"><button class="bc" onclick="closeAll()">やめる</button>
     <button class="bs" onclick="saveEdit()">変更する</button></div>
-</div></div>
-
-<!-- 便のメモ -->
-<div id="mNote" class="ov"><div class="mod">
-  <h3>この便のメモ</h3>
-  <p class="sub">運転手の画面にも表示されます。<br>例）ベビーカーあり／車椅子の方／大きい荷物2つ</p>
-  <div class="fg"><input type="text" id="nText" placeholder="メモを入力（空にすると消えます）" maxlength="60"></div>
-  <div class="mbtn"><button class="bc" onclick="closeAll()">やめる</button>
-    <button class="bs" onclick="saveNote()">保存する</button></div>
 </div></div>
 
 <!-- 臨時便 -->
@@ -1011,12 +1013,6 @@ function shortRoute(f){
   return esc(f.origin) + ' → ' + esc(f.destination);
 }
 
-let selId = null;            // 右に出している便
-let selTouched = false;      // 一度でも自分で選んだか
-function selectRow(id){ selId = id; selTouched = true; renderFront(); }
-function closeDetail(){ selId = null; selTouched = true; renderFront(); }
-function findAny(id){ for(var i=0;i<flightsF.length;i++) if(flightsF[i].id===id) return flightsF[i]; return null; }
-
 function renderFront(){
   if(view!=='front') return;
   var box=el('listF'), total=0, marked=0;
@@ -1025,113 +1021,49 @@ function renderFront(){
     +'</b>便</div><div>合計 <b>'+total+'</b>名</div>';
   if(!flightsF.length){
     box.innerHTML='<div class="empty">この日の便がまだありません。<br>ページを再読み込みすると自動でつくられます。</div>';
-    renderDetail(); renderAlarmBar(); return;
+    renderAlarmBar(); return;
   }
 
   var cur = nowMin(), nextIdx = -1;
   if(dateStr===todayStr){
     for(var i=0;i<flightsF.length;i++){ if(toMin(flightsF[i].departure_time)>=cur){ nextIdx=i; break; } }
   }
-  // 最初は「次の便」を右に出しておく
-  var wide = true;
-  try{ wide = window.matchMedia('(min-width:1100px)').matches; }catch(e){}
-  if(wide && !selTouched && !selId) selId = (nextIdx>=0 ? flightsF[nextIdx].id : flightsF[0].id);
 
-  var out='<div class="flist"><div class="fhead"><div>時刻</div><div>行き先 <span style="font-weight:600">▶出/◀戻</span></div><div>部屋番号</div>'
-        + '<div style="text-align:right">人数</div><div style="text-align:center">予約</div><div></div></div>'
-        + '<div class="fbody">';
-  var shown=0;
+  var out='<div class="flist">', shown=0;
   for(var i=0;i<flightsF.length;i++){
     var f=flightsF[i];
     if(filter!=='all'&&f.category!==filter) continue;
     shown++;
-    var n=pax(f), t=hm(f.departure_time);
+    var n=pax(f);
     var isPast = (dateStr===todayStr && toMin(f.departure_time) < cur);
     var cls = isPast ? 'past' : (i===nextIdx ? 'now' : (n>0 ? 'mk' : ''));
-    if(f.id===selId) cls += ' sel';
 
-    var rooms='<span class="none2">—</span>';
+    var rooms='';
     if(n>0){
       var parts=[];
       for(var j=0;j<f.reservations.length;j++){
         var r=f.reservations[j];
-        parts.push((r.room_number ? esc(r.room_number)+'号室' : '部屋なし') + '×' + esc(r.passenger_count));
+        parts.push((r.room_number ? esc(r.room_number)+'号室' : '部屋番号なし') + '×' + esc(r.passenger_count));
       }
-      rooms = parts.join(' ／ ');
+      rooms = '<div class="brooms">'+parts.join(' ／ ')+'</div>';
     }
     var pcls = n===0?'z':(n>CONFIG.CAPACITY?'o':(n===CONFIG.CAPACITY?'f':''));
     var pnum = n===0 ? '予約なし' : (n+'<span>/'+CONFIG.CAPACITY+'</span>');
 
-    out+='<div class="brow '+cls+'" onclick="selectRow(\''+esc(f.id)+'\')">'
-      +'<div class="ftm">'+esc(t)+(f.is_temporary?'<span class="ftag">臨</span>':'')+'</div>'
-      +'<div class="frt">'+shortRoute(f)
-        +(f.note?' <span class="fmemo">📝</span>':'')+'</div>'
-      +'<div class="frooms">'+rooms+'</div>'
-      +'<div class="fpax '+pcls+'">'+pnum+'</div>'
-      +'<button class="fadd" onclick="event.stopPropagation();openRes(\''+esc(f.id)+'\')">＋</button>'
-      +'<div class="fchev">›</div>'
+    out+='<div class="brow '+cls+'" onclick="openFlight(\''+esc(f.id)+'\')">'
+      +'<div class="btm">'+esc(hm(f.departure_time))+'</div>'
+      +'<div class="bmid"><div class="brt">'+shortRoute(f)
+        +(f.is_temporary?'<span class="btag">臨時</span>':'')+'</div>'
+        + rooms
+        + (f.note?'<div class="bmemo">📝 '+esc(f.note)+'</div>':'')
+      +'</div>'
+      +'<div class="bpax '+pcls+'">'+pnum+'</div>'
+      +'<button class="badd" onclick="event.stopPropagation();openFlight(\''+esc(f.id)+'\',true)">＋</button>'
       +'</div>';
   }
-  out+='</div></div>';
+  out+='</div>';
   box.innerHTML = shown ? out : '<div class="empty">この区分の便はありません。</div>';
-  renderDetail();
   renderAlarmBar();
-}
-
-// 右側（狭い画面では下から出るパネル）
-function renderDetail(){
-  var box = el('detailF'); if(!box) return;
-  var f = selId ? findAny(selId) : null;
-  if(!f){
-    document.body.classList.remove('sheet');
-    box.classList.add('empty2');
-    box.innerHTML = '<div class="dhint">便を選ぶと、ここに詳細が出ます</div>';
-    return;
-  }
-  box.classList.remove('empty2');
-  document.body.classList.add('sheet');
-  var n = pax(f), cur = nowMin(), diff = toMin(f.departure_time) - cur;
-  var head = '', cd = '';
-  if(dateStr===todayStr){
-    if(diff < 0){ head='';   cd='<div class="dcd done">出発済み（'+(-diff)+'分前）</div>'; }
-    else if(diff <= CONFIG.SOON_MIN){ head='now'; cd='<div class="dcd soon">'+untilText(diff)+'</div>'; }
-    else { head='now'; cd='<div class="dcd">'+untilText(diff)+'</div>'; }
-  }
-  if(n>0 && head==='') head='mk';
-  var pcls = n===0?'z':(n>CONFIG.CAPACITY?'o':(n===CONFIG.CAPACITY?'f':''));
-
-  var h2 = '<div class="dcard"><div class="dhead '+head+'">'
-    + '<div class="dtm">'+esc(hm(f.departure_time))+(f.is_temporary?'<span class="dtag">臨時便</span>':'')+'</div>'
-    + '<div class="drt">'+esc(f.origin)+' → '+esc(f.destination)+'</div>'
-    + cd
-    + '<div class="dpax '+pcls+'"><span class="n">'+(n===0?'予約なし':n)+'</span>'
-      + (n>0?'<span class="c">定員 '+CONFIG.CAPACITY+'名</span>':'')+'</div>'
-    + '<button class="sheetclose" onclick="closeDetail()">✕</button>'
-    + '</div><div class="dbody">';
-
-  if(f.note) h2 += '<div class="dmemo">📝 '+esc(f.note)+'</div>';
-
-  if(n>0){
-    h2 += '<ul class="dres">';
-    for(var j=0;j<f.reservations.length;j++){
-      var r=f.reservations[j];
-      h2 += '<li><span class="rm">'+esc(who(r))+'</span><span style="white-space:nowrap">'
-        + '<span class="ct">'+esc(r.passenger_count)+'名</span>'
-        + '<button class="mini e" onclick="openResEdit(\''+esc(f.id)+'\',\''+esc(r.id)+'\')">修正</button>'
-        + '<button class="mini d" onclick="delRes(\''+esc(r.id)+'\')">削除</button></span></li>';
-    }
-    h2 += '</ul>';
-  } else {
-    h2 += '<div class="dnone">この便に予約は入っていません</div>';
-  }
-
-  h2 += '<div class="dbtns">'
-    + '<button class="btn btn-p w" onclick="openRes(\''+esc(f.id)+'\')">＋ 予約を追加</button>'
-    + '<button class="btn btn-g" onclick="openEdit(\''+esc(f.id)+'\')">⚙️ 便を変更</button>'
-    + '<button class="btn btn-g" onclick="openNote(\''+esc(f.id)+'\')">📝 メモ</button>'
-    + (f.is_temporary?'<button class="btn btn-g" onclick="delFlight(\''+esc(f.id)+'\')">🗑 削除</button>':'')
-    + '</div></div></div>';
-  box.innerHTML = h2;
 }
 
 function renderDriver(){
@@ -1193,74 +1125,152 @@ function renderDriver(){
 
 
 /* ---------- モーダル共通 ---------- */
-function closeAll(){ ['mRes','mEdit','mTemp','mNote','mRow','mBulk','mPat','mDanger','mText'].forEach(function(i){
+function closeAll(){ ['mFlight','mEdit','mTemp','mRow','mBulk','mPat','mDanger','mText'].forEach(function(i){
   el(i).classList.remove('on');}); }
 function needOnline(){ if(online) return false;
   alert('オフラインのため操作できません。\n電波の届く場所で、もう一度お試しください。'); return true; }
 function findF(id){for(var i=0;i<flightsF.length;i++) if(flightsF[i].id===id) return flightsF[i]; return null;}
 function findR(f,id){for(var i=0;i<(f.reservations||[]).length;i++) if(f.reservations[i].id===id) return f.reservations[i]; return null;}
 
-/* ---------- 予約 追加／修正 ---------- */
-function openRes(id){
+/* ---------- 便の画面（予約・メモ・変更をまとめたモーダル） ---------- */
+let curFid  = null;   // いま開いている便
+let editRid = null;   // 修正中の予約（null なら新規追加）
+
+function openFlight(id, focusAdd){
   if(needOnline()) return;
-  var f=findF(id); if(!f) return;
-  pending={flightId:id,f:f,editId:null};
-  el('resTtl').innerText='予約を追加'; el('resTtl2').innerText='この内容で登録します';
-  el('resGo').innerText='登録する';
-  el('resWhich').innerText=hm(f.departure_time)+'　'+f.origin+' → '+f.destination;
-  el('rCount').value=''; el('rRoom').value='';
-  el('resStep1').classList.remove('hide'); el('resStep2').classList.add('hide');
-  renderQuick();
-  el('mRes').classList.add('on');
-  setTimeout(function(){el('rCount').focus();},80);
+  var f = findF(id); if(!f) return;
+  curFid = id; editRid = null;
+  renderFlightModal();
+  el('mFlight').classList.add('on');
+  if(focusAdd) setTimeout(function(){ el('rCount').focus(); }, 80);
 }
-function openResEdit(fid,rid){
-  if(needOnline()) return;
-  var f=findF(fid); if(!f) return; var r=findR(f,rid); if(!r) return;
-  pending={flightId:fid,f:f,editId:rid,before:r.passenger_count};
-  el('resTtl').innerText='予約を修正'; el('resTtl2').innerText='この内容に変更します';
-  el('resGo').innerText='変更する';
-  el('resWhich').innerText=hm(f.departure_time)+'　'+f.origin+' → '+f.destination;
-  el('rCount').value=r.passenger_count; el('rRoom').value=r.room_number||'';
-  renderQuick();
-  el('resStep1').classList.remove('hide'); el('resStep2').classList.add('hide');
-  el('mRes').classList.add('on');
+function renderFlightModal(){
+  var f = findF(curFid);
+  if(!f){ closeAll(); return; }
+  var n = pax(f);
+  el('mfTm').innerText = hm(f.departure_time);
+  el('mfRt').innerText = f.origin + ' → ' + f.destination + (f.is_temporary ? '（臨時便）' : '');
+  el('mfPax').innerHTML = n===0 ? '<span style="color:#9aa4b0">予約なし</span>'
+    : ('合計 <b style="font-size:20px;color:'+(n>CONFIG.CAPACITY?'#d93a3a':'#1c2430')+'">'+n+'</b> / '+CONFIG.CAPACITY+'名'
+       + (n>CONFIG.CAPACITY?' ⚠️定員超':''));
+
+  var L='';
+  if(n>0){
+    L='<div class="mflbl">この便の予約</div><ul class="res">';
+    for(var j=0;j<f.reservations.length;j++){
+      var r=f.reservations[j];
+      L+='<li'+(editRid===r.id?' class="editing"':'')+'><span class="who">'+esc(who(r))+'</span>'
+        +'<span style="white-space:nowrap"><span class="cnt">'+esc(r.passenger_count)+'名</span>'
+        +'<button class="mini e" onclick="startEditRes(\''+esc(r.id)+'\')">修正</button>'
+        +'<button class="mini d" onclick="delRes(\''+esc(r.id)+'\')">削除</button></span></li>';
+    }
+    L+='</ul>';
+  }
+  el('mfList').innerHTML = L;
+
+  el('mfNote').value = f.note || '';
+  el('mfDelFlight').classList.toggle('hide', !f.is_temporary);
+  resReset(true);
 }
+
+// 追加フォームを「新規追加」の状態に戻す
+function resReset(keepValues){
+  editRid = null;
+  el('mfAddTtl').innerText = '予約を追加';
+  el('mfCancelEdit').style.display = 'none';
+  if(!keepValues){ el('rCount').value=''; el('rRoom').value=''; }
+  else { el('rCount').value=''; el('rRoom').value=''; }
+  el('mfStep1').classList.remove('hide');
+  el('mfStep2').classList.add('hide');
+  renderQuick();
+  var f=findF(curFid); if(f) renderFlightModalListOnly(f);
+}
+function renderFlightModalListOnly(f){
+  var items = el('mfList').querySelectorAll('li');
+  for(var i=0;i<items.length;i++) items[i].classList.remove('editing');
+}
+function startEditRes(rid){
+  var f=findF(curFid); if(!f) return;
+  var r=findR(f,rid); if(!r) return;
+  editRid = rid;
+  el('mfAddTtl').innerText = 'この予約を修正';
+  el('mfCancelEdit').style.display = '';
+  el('rCount').value = r.passenger_count;
+  el('rRoom').value  = r.room_number || '';
+  el('mfStep1').classList.remove('hide');
+  el('mfStep2').classList.add('hide');
+  renderQuick();
+  renderFlightModal_mark();
+  el('rCount').focus();
+}
+function renderFlightModal_mark(){
+  var f=findF(curFid); if(!f) return;
+  var items = el('mfList').querySelectorAll('li');
+  for(var i=0;i<items.length;i++) items[i].classList.toggle('editing', f.reservations[i] && f.reservations[i].id===editRid);
+}
+
+function renderQuick(){
+  var q = el('rQuick'); if(!q) return;
+  var cur = parseInt(el('rCount').value,10);
+  q.innerHTML = [1,2,3,4,5,6].map(function(n){
+    return '<button type="button" class="'+(cur===n?'sel':'')+'" onclick="setCount('+n+')">'+n+'</button>';
+  }).join('');
+}
+function setCount(n){ el('rCount').value = n; renderQuick(); }
+
 function resToConfirm(){
   var c=parseInt(el('rCount').value,10);
   if(!c||c<1){ alert('人数を入力してください。'); return; }
-  pending.count=c; pending.room=el('rRoom').value.trim();
-  var f=pending.f, after=pax(f)-(pending.editId?pending.before:0)+c;
-  el('resPreview').innerHTML='<div><span class="k">便</span><b>'+esc(hm(f.departure_time))+'</b></div>'
-    +'<div><span class="k">行き先</span>'+esc(f.origin)+' → '+esc(f.destination)+'</div>'
-    +'<div><span class="k">人数</span><b>'+c+'名</b></div>'
+  var f=findF(curFid); if(!f) return;
+  pending = {count:c, room:el('rRoom').value.trim()};
+  var before = editRid ? (findR(f,editRid)||{}).passenger_count || 0 : 0;
+  var after = pax(f) - before + c;
+  el('mfPreview').innerHTML =
+     '<div><span class="k">'+(editRid?'変更後':'追加')+'</span><b>'+c+'名</b></div>'
     +'<div><span class="k">部屋番号</span>'+esc(pending.room||'（なし）')+'</div>';
-  var w=el('resWarn');
-  if(after>CONFIG.CAPACITY){ w.classList.remove('hide');
+  var w=el('mfWarn');
+  if(after>CONFIG.CAPACITY){
+    w.classList.remove('hide');
     w.innerHTML='⚠️ この便の合計が <b>'+after+'名</b> になり、定員の目安 '+CONFIG.CAPACITY+'名を超えます。<br>'
       +'登録はできます。2台目を出すかどうかは現場で判断してください。';
   } else w.classList.add('hide');
-  el('resStep1').classList.add('hide'); el('resStep2').classList.remove('hide');
+  el('mfGo').innerText = editRid ? 'この内容に変更' : 'この内容で登録';
+  el('mfStep1').classList.add('hide');
+  el('mfStep2').classList.remove('hide');
 }
-function resBack(){ el('resStep2').classList.add('hide'); el('resStep1').classList.remove('hide'); }
+function resBack(){ el('mfStep2').classList.add('hide'); el('mfStep1').classList.remove('hide'); }
+
 async function saveRes(){
-  var b=el('resGo'), t=b.innerText; b.disabled=true; b.innerText='処理中...';
+  var b=el('mfGo'), t=b.innerText; b.disabled=true; b.innerText='処理中...';
   try{
-    var v={passenger_count:pending.count,name:null,room_number:pending.room||null};
-    var r = pending.editId
-      ? await sb.from('reservations').update(v).eq('id',pending.editId)
-      : await sb.from('reservations').insert([Object.assign({flight_id:pending.flightId},v)]);
+    var v={passenger_count:pending.count, name:null, room_number:pending.room||null};
+    var r = editRid
+      ? await sb.from('reservations').update(v).eq('id',editRid)
+      : await sb.from('reservations').insert([Object.assign({flight_id:curFid},v)]);
     if(r.error) throw new Error(fmtErr(r.error));
-    closeAll(); await load();
+    await load();
+    renderFlightModal();       // 続けてもう1件入れられるように、開いたまま
   }catch(e){ alert('保存できませんでした。\n\n'+e.message); }
   b.disabled=false; b.innerText=t;
 }
 async function delRes(id){
   if(needOnline()) return;
   if(!confirm('この予約を削除します。よろしいですか？')) return;
-  try{ var r=await sb.from('reservations').delete().eq('id',id);
-    if(r.error) throw new Error(fmtErr(r.error)); await load();
+  try{
+    var r=await sb.from('reservations').delete().eq('id',id);
+    if(r.error) throw new Error(fmtErr(r.error));
+    await load();
+    if(el('mFlight').classList.contains('on')) renderFlightModal();
   }catch(e){ alert('削除できませんでした。\n\n'+e.message); }
+}
+async function saveNoteInline(){
+  var v = el('mfNote').value.trim();
+  try{
+    var r=await sb.from('flights').update({note:v||null}).eq('id',curFid);
+    if(r.error) throw new Error(fmtErr(r.error));
+    await load();
+    renderFlightModal();
+  }catch(e){ alert('メモを保存できませんでした。\n\n'+e.message); }
 }
 
 /* ---------- 便の変更・メモ・臨時便 ---------- */
@@ -1276,20 +1286,10 @@ async function saveEdit(){
   if(!o||!d){alert('出発地と行き先を入力してください。');return;}
   try{ var r=await sb.from('flights').update({departure_time:t+':00',origin:o,destination:d,category:catOf(t)})
         .eq('id',pending.flightId);
-    if(r.error) throw new Error(fmtErr(r.error)); closeAll(); await load();
+    if(r.error) throw new Error(fmtErr(r.error));
+    el('mEdit').classList.remove('on'); await load();
+    if(el('mFlight').classList.contains('on')) renderFlightModal();
   }catch(e){ alert('変更できませんでした。\n\n'+e.message); }
-}
-function openNote(id){
-  if(needOnline()) return;
-  var f=findF(id); if(!f) return; pending={flightId:id};
-  el('nText').value=f.note||''; el('mNote').classList.add('on');
-  setTimeout(function(){el('nText').focus();},80);
-}
-async function saveNote(){
-  var v=el('nText').value.trim();
-  try{ var r=await sb.from('flights').update({note:v||null}).eq('id',pending.flightId);
-    if(r.error) throw new Error(fmtErr(r.error)); closeAll(); await load();
-  }catch(e){ alert('保存できませんでした。\n\n'+e.message); }
 }
 function openTemp(){
   if(needOnline()) return; pending={};
@@ -1330,7 +1330,7 @@ async function delFlight(id){
   if(needOnline()) return;
   if(!confirm('この臨時便を削除します。中の予約も一緒に消えます。よろしいですか？')) return;
   try{ var r=await sb.from('flights').delete().eq('id',id);
-    if(r.error) throw new Error(fmtErr(r.error)); await load();
+    if(r.error) throw new Error(fmtErr(r.error)); closeAll(); await load();
   }catch(e){ alert('削除できませんでした。\n\n'+e.message); }
 }
 
@@ -1745,7 +1745,7 @@ function alarmBarHtml(){
   if(!audioReady){
     return '<div class="alsetup">'
       + '<div class="h2b">🔔 アラームを使うには、ここを1回押してください</div>'
-      + '<div class="p2">画面を開き直すたびに、1回押す必要があります。<br>朝いちばんに押してください。</div>'
+      + '<div class="p2">開き直すたびに1回必要です。朝いちばんに押してください。</div>'
       + '<button onclick="enableAudio()">音をONにする</button></div>';
   }
   var next = null, cur = nowMin();
