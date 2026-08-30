@@ -35,7 +35,8 @@ input,select{font-family:inherit}
 .topbar button.on{background:var(--blue); color:#fff}
 .topbar button.set{max-width:110px}
 
-.wrap{max-width:900px; margin:0 auto; padding:10px 12px 40px}
+.wrap{max-width:1500px; margin:0 auto; padding:10px 14px 40px}
+.narrow{max-width:820px; margin:0 auto}
 
 .netbar{display:none; margin-bottom:12px; padding:10px 12px; border-radius:8px; font-size:13px; font-weight:700; line-height:1.6}
 .netbar.offline{display:block; background:#fff4e0; color:#8a5200; border:1px solid #f0d3a0}
@@ -230,6 +231,14 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
 .quick button.sel{background:var(--blue); color:#fff; border-color:var(--blue)}
 
 
+/* 設定：3つに分けるタブ */
+.stabs{display:flex; gap:8px; margin-bottom:10px; flex-wrap:wrap}
+.stabs button{flex:1; min-width:150px; padding:14px 10px; border:2px solid var(--line); background:#fff;
+  border-radius:11px; font-size:16px; font-weight:800; cursor:pointer; color:var(--sub)}
+.stabs button.on{background:#222c3a; color:#fff; border-color:#222c3a}
+.sgnote{font-size:14px; color:var(--sub); background:#f4f6f9; border-radius:9px;
+  padding:11px 14px; margin-bottom:16px; line-height:1.75}
+
 /* 設定：選ぶボタン */
 .pick{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:6px}
 .pick button{flex:1; min-width:96px; padding:14px 10px; border:2px solid var(--line); background:#fff;
@@ -264,6 +273,9 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
 .brow.mk{background:#fffaf0; box-shadow:inset 4px 0 0 var(--amber)}
 .brow.now{background:#eaf6ee; box-shadow:inset 4px 0 0 var(--green)}
 .brow.past{opacity:.45}
+.brow{cursor:pointer}
+.brow.sel{background:#e8f0fd !important; box-shadow:inset 4px 0 0 var(--blue) !important}
+.fchev{text-align:center; color:var(--faint); font-size:19px}
 .ftm{font-size:17.5px; font-weight:800; font-variant-numeric:tabular-nums; line-height:1.1}
 .ftag{display:inline-block; font-size:10px; font-weight:800; background:#eef3fb; color:var(--blue);
   border-radius:3px; padding:1px 4px; margin-left:3px; vertical-align:3px}
@@ -280,23 +292,53 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
 .fpax.f{color:var(--amber)} .fpax.o{color:var(--red)}
 .fadd{background:var(--blue); color:#fff; border:none; border-radius:7px; padding:6px 0;
   font-size:16px; font-weight:800; cursor:pointer}
-.fmore{background:#fff; color:var(--sub); border:1px solid var(--line); border-radius:7px;
-  padding:6px 0; font-size:13px; cursor:pointer}
-.fdet{padding:10px 12px 14px; background:#f8fafc; border-bottom:1px solid #eef1f4}
-.fdet .res{margin:0 0 10px}
-.fdet .acts{margin-top:0; border-top:none; padding-top:0}
+
+/* 右側の詳細パネル */
+.dcard{background:#fff; border:1px solid var(--line); border-radius:14px; box-shadow:var(--shadow); overflow:hidden}
+.dhead{padding:16px 18px; border-bottom:1px solid var(--line); position:relative}
+.dhead.mk{background:#fffaf0} .dhead.now{background:#eaf6ee}
+.dtm{font-size:40px; font-weight:800; line-height:1; font-variant-numeric:tabular-nums}
+.dtag{display:inline-block; font-size:12px; font-weight:800; background:#eef3fb; color:var(--blue);
+  border-radius:5px; padding:2px 8px; margin-left:8px; vertical-align:8px}
+.drt{font-size:17px; font-weight:700; color:var(--sub); margin-top:8px}
+.dcd{font-size:14px; font-weight:800; margin-top:6px}
+.dcd.soon{color:var(--amber)} .dcd.late{color:var(--red)} .dcd.done{color:var(--faint)}
+.dpax{position:absolute; right:18px; top:16px; text-align:right}
+.dpax .n{font-size:30px; font-weight:800; font-variant-numeric:tabular-nums}
+.dpax .c{font-size:12px; color:var(--sub); display:block}
+.dpax.z .n{font-size:15px; color:var(--faint)}
+.dpax.f .n{color:var(--amber)} .dpax.o .n{color:var(--red)}
+.dbody{padding:14px 18px 18px}
+.dmemo{background:#fffdf2; border:1px solid #f0e6c0; border-radius:8px; padding:10px 12px;
+  font-size:15px; color:#7a5c00; font-weight:600; margin-bottom:12px}
+.dres{list-style:none; margin:0 0 14px; padding:0}
+.dres li{display:flex; justify-content:space-between; align-items:center; gap:8px;
+  background:#f6f8fa; border:1px solid #e8ecf1; border-radius:9px; padding:12px 14px; margin-bottom:8px}
+.dres .rm{font-size:18px; font-weight:800}
+.dres .ct{font-size:17px; font-weight:800; margin-right:6px}
+.dnone{color:var(--faint); font-size:15px; padding:10px 0 16px}
+.dbtns{display:flex; gap:8px; flex-wrap:wrap}
+.dbtns .w{width:100%}
+.sheetclose{position:absolute; right:12px; bottom:-2px; background:none; border:none;
+  font-size:22px; color:var(--sub); cursor:pointer; padding:6px 10px}
+.dhint{background:#fff; border:1px dashed var(--line); border-radius:14px; padding:30px 20px;
+  text-align:center; color:var(--faint); font-size:15px; line-height:1.9}
 
 /* 横長の画面では2列に並べて、全部を1画面に収める */
-@media (min-width:1000px){
-  .fbody{columns:2; column-gap:0}
-  .brow,.fdet{break-inside:avoid}
-  .brow{border-right:1px solid #eef1f4;
-    grid-template-columns:54px 1.35fr 1fr 56px 38px 32px; gap:6px; padding:2px 8px}
-  .brow .ftm{font-size:16.5px}
-  .brow .frt,.brow .frooms{font-size:12.5px}
-  .brow .fpax{font-size:15.5px}
-  .fhead{display:none}
+/* 左：一覧 ／ 右：詳細 */
+.fmain{display:flex; gap:14px; align-items:flex-start}
+.fleft{flex:1; min-width:0}
+.fright{flex:0 0 372px; position:sticky; top:62px}
+@media (max-width:1099px){
+  .fmain{display:block}
+  .fright{position:fixed; left:0; right:0; bottom:0; top:auto; z-index:300;
+    max-height:56vh; overflow-y:auto; border-radius:18px 18px 0 0;
+    box-shadow:0 -8px 30px rgba(16,24,40,.28); flex:none; padding:0 10px 10px}
+  .fright.empty2{display:none}
+  /* パネルが出ている間は、下の便もスクロールして選べるように余白をつくる */
+  body.sheet .fleft{padding-bottom:58vh}
 }
+@media (min-width:1100px){ .fright .sheetclose{display:none} }
 
 .hide{display:none !important}
 #boot{text-align:center; padding:50px 20px; color:var(--blue); font-weight:700}
@@ -349,11 +391,14 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
       <div class="summary2" id="summary"></div>
     </div>
 
-    <div id="listF"></div>
+    <div class="fmain">
+      <div class="fleft"><div id="listF"></div></div>
+      <aside class="fright empty2" id="detailF"></aside>
+    </div>
   </div>
 
   <!-- ================= 運転手 ================= -->
-  <div id="viewD" class="hide">
+  <div id="viewD" class="hide narrow">
     <div class="datenav" style="margin-bottom:14px">
       <div class="today-label" id="dlabelD"></div>
     </div>
@@ -368,9 +413,16 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
   </div>
 
   <!-- ================= 設定 ================= -->
-  <div id="viewS" class="hide">
+  <div id="viewS" class="hide narrow">
+    <div class="stabs">
+      <button class="on" onclick="setGrp('bus',this)">🚌 送迎バス</button>
+      <button onclick="setGrp('guide',this)">🏨 お客様の案内</button>
+      <button onclick="setGrp('data',this)">🛠 データ・その他</button>
+    </div>
+    <div class="sgnote" id="sgNote"></div>
 
-    <div class="panel">
+
+    <div class="panel" data-grp="bus">
       <h3>🕒 時刻表を編集する</h3>
       <p class="desc">毎日つくられる便の元になる表です。<b>「通常」</b>が普段使う時刻表で、これを変えると明日以降の便に反映されます（今日ぶんは変わりません）。<br>
       繁忙期など一時的に増やしたいときは、別のパターンを作って下の「期間に適用」で使ってください。</p>
@@ -387,7 +439,7 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
       </div>
     </div>
 
-    <div class="panel">
+    <div class="panel" data-grp="bus">
       <h3>📅 パターンを期間に適用する</h3>
       <p class="desc">選んだ期間の便を、そのパターンの内容に合わせます。<br>
       <b>すでに予約が入っている便は消えません。</b>予約ゼロの通常便だけが入れ替わり、足りない便が追加されます。臨時便もそのまま残ります。</p>
@@ -402,7 +454,7 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
       <div id="apResult" style="font-size:13px;margin-top:10px;line-height:1.8"></div>
     </div>
 
-    <div class="panel">
+    <div class="panel" data-grp="bus">
       <h3>📲 スマホのホーム画面に追加する（おすすめ）</h3>
       <p class="desc">運転手のスマホでこのページを開いたあと、下の手順で<b>ホーム画面にアイコンとして追加</b>できます。<br>
       アプリのように<b>1タップで開けて、ブラウザの余計な枠が消えて画面が広く使えます。</b>毎回URLを開く手間もなくなります。</p>
@@ -414,7 +466,7 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
       ※アプリのように見えますが中身はこのページです。<b>閉じている間はアラームは鳴りません。</b></div>
     </div>
 
-    <div class="panel">
+    <div class="panel" data-grp="bus">
       <h3>📱 運転手用のリンク</h3>
       <p class="desc">このQRコードを運転手のスマホで読み込むと、運転手画面が直接開きます。印刷して控室に貼っておくと引き継ぎが楽です。<br>
       ※インターネット上に公開（GitHub Pagesなど）してから使ってください。パソコン内のファイルのままだとスマホからは開けません。</p>
@@ -422,12 +474,12 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
       <div class="urlbox" id="qrurl"></div>
     </div>
 
-    <div class="panel">
+    <div class="panel" data-grp="data">
       <h3>📖 使い方・メンテナンスの説明書</h3>
       <p class="desc">フロントスタッフ向けの説明書です。デスクトップの <b>送迎システム説明書.html</b> をダブルクリックすると開きます。困ったときはまずこれを見てください。</p>
     </div>
 
-    <div class="panel">
+    <div class="panel" data-grp="data">
       <h3>💾 データを手元に書き出す</h3>
       <p class="desc">保存されている予約と時刻表を、エクセルで開けるCSVファイルとしてパソコンに保存します。<br>
       <b>万一クラウド側で何かあっても、手元にデータが残ります。</b>月に一度くらい押しておくと安心です。</p>
@@ -438,7 +490,7 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
       <div id="csvMsg" style="font-size:13px;line-height:1.8"></div>
     </div>
 
-    <div class="panel">
+    <div class="panel" data-grp="bus">
       <h3>🔔 出発アラーム</h3>
       <p class="desc">出発時刻が近づいたら、<b>音とバイブレーションと画面いっぱいの表示</b>でお知らせします。<br>
       フロントのパッドでも、運転手のスマホでも鳴ります。</p>
@@ -476,7 +528,7 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
       </div>
     </div>
 
-    <div class="panel">
+    <div class="panel" data-grp="guide">
       <h3>🏨 お客様向け案内ページの設定</h3>
       <p class="desc">お客様にQRコードでお見せしている案内ページ（館内・外湯のご案内）の内容を、ここから変更できます。<br>
       保存すると<b>日本語・英語・繁体字・簡体字・韓国語の5言語すべてに反映されます。</b>翻訳を直す必要はありません。</p>
@@ -487,7 +539,7 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
       <div id="guideMsg" style="font-size:13px;margin-top:10px;line-height:1.8"></div>
     </div>
 
-    <div class="panel">
+    <div class="panel" data-grp="guide">
       <h3>👁 案内ページに表示する項目</h3>
       <p class="desc">チェックを外した項目は、お客様の画面から消えます。<br>
       <b>サービスが変わって内容が合わなくなったときは、間違った案内を出し続けるより消してしまうほうが安全です。</b></p>
@@ -499,7 +551,7 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
       <div id="visMsg" style="font-size:13px;margin-top:10px"></div>
     </div>
 
-    <div class="panel">
+    <div class="panel" data-grp="guide">
       <h3>📝 案内ページの文章を書き換える</h3>
       <p class="desc">サービスの内容が変わったときは、ここから文章そのものを直せます。<br>
       <b>日本語だけ入れればOKです。</b>他の言語を空欄にした場合は、その言語でも日本語が表示されます（古い外国語が残るより安全なため）。<br>
@@ -507,7 +559,7 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
       <div id="textList"></div>
     </div>
 
-    <div class="panel">
+    <div class="panel" data-grp="guide">
       <h3>📢 お知らせ（一時的なご案内）</h3>
       <p class="desc">案内ページのいちばん上に、黄色い帯でお知らせを出します。「本日は臨時休業です」など、その日限りのことに使ってください。<br>
       <b>空にすれば消えます。</b>日本語だけでも構いません。</p>
@@ -519,7 +571,7 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
       <div id="noticeMsg" style="font-size:13px;margin-top:10px"></div>
     </div>
 
-    <div class="panel danger">
+    <div class="panel danger" data-grp="data">
       <h3>⚠️ データのリセット</h3>
       <p class="desc">押し間違いを防ぐため、実行するには文字の入力が必要です。<b>消したものは元に戻せません。</b></p>
       <div class="frow">
@@ -529,7 +581,7 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
       </div>
     </div>
 
-    <div class="panel">
+    <div class="panel" data-grp="data">
       <h3>ℹ️ このシステムについて</h3>
       <p class="desc" id="aboutBox"></p>
     </div>
@@ -738,6 +790,11 @@ function parseYmd(s){var p=String(s).split('-');return new Date(+p[0],+p[1]-1,+p
 function label(d){return (d.getMonth()+1)+'月'+d.getDate()+'日（'+WD[d.getDay()]+'）';}
 function hm(t){return String(t==null?'':t).substring(0,5);}
 function toMin(t){var p=hm(t).split(':');return (+p[0])*60+(+p[1]);}
+function untilText(m){
+  if(m < 60) return 'あと ' + m + ' 分';
+  var hh = Math.floor(m/60), mm = m%60;
+  return 'あと ' + hh + ' 時間' + (mm ? mm + ' 分' : '');
+}
 function minToHm(m){return String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');}
 function nowMin(){var n=new Date();return n.getHours()*60+n.getMinutes();}
 function pax(f){return (f.reservations||[]).reduce(function(s,r){return s+(r.passenger_count||0);},0);}
@@ -924,7 +981,7 @@ function setFilter(c,btn){
   for(var i=0;i<bs.length;i++) bs[i].classList.remove('on');
   btn.classList.add('on'); render();
 }
-function render(){ paintDate(); renderFront(); renderDriver(); if(view==='settings') renderSettings(); }
+function render(){ paintDate(); renderFront(); renderDriver(); if(view==='settings'){ renderSettings(); setGrp(curGrp, document.querySelector('.stabs button.on')||document.querySelector('.stabs button')); } }
 
 /* ---------- 画面スリープ防止 ---------- */
 async function wakeOn(){
@@ -954,8 +1011,11 @@ function shortRoute(f){
   return esc(f.origin) + ' → ' + esc(f.destination);
 }
 
-let openRows = {};   // ⋯ を押して開いている便
-function toggleRow(id){ openRows[id] = !openRows[id]; renderFront(); }
+let selId = null;            // 右に出している便
+let selTouched = false;      // 一度でも自分で選んだか
+function selectRow(id){ selId = id; selTouched = true; renderFront(); }
+function closeDetail(){ selId = null; selTouched = true; renderFront(); }
+function findAny(id){ for(var i=0;i<flightsF.length;i++) if(flightsF[i].id===id) return flightsF[i]; return null; }
 
 function renderFront(){
   if(view!=='front') return;
@@ -965,15 +1025,19 @@ function renderFront(){
     +'</b>便</div><div>合計 <b>'+total+'</b>名</div>';
   if(!flightsF.length){
     box.innerHTML='<div class="empty">この日の便がまだありません。<br>ページを再読み込みすると自動でつくられます。</div>';
-    renderAlarmBar(); return;
+    renderDetail(); renderAlarmBar(); return;
   }
 
   var cur = nowMin(), nextIdx = -1;
   if(dateStr===todayStr){
     for(var i=0;i<flightsF.length;i++){ if(toMin(flightsF[i].departure_time)>=cur){ nextIdx=i; break; } }
   }
+  // 最初は「次の便」を右に出しておく
+  var wide = true;
+  try{ wide = window.matchMedia('(min-width:1100px)').matches; }catch(e){}
+  if(wide && !selTouched && !selId) selId = (nextIdx>=0 ? flightsF[nextIdx].id : flightsF[0].id);
 
-  var out='<div class="flist"><div class="fhead"><div>時刻</div><div>行き先 <span style=\'font-weight:600\'>▶出/◀戻</span></div><div>部屋番号</div>'
+  var out='<div class="flist"><div class="fhead"><div>時刻</div><div>行き先 <span style="font-weight:600">▶出/◀戻</span></div><div>部屋番号</div>'
         + '<div style="text-align:right">人数</div><div style="text-align:center">予約</div><div></div></div>'
         + '<div class="fbody">';
   var shown=0;
@@ -984,6 +1048,7 @@ function renderFront(){
     var n=pax(f), t=hm(f.departure_time);
     var isPast = (dateStr===todayStr && toMin(f.departure_time) < cur);
     var cls = isPast ? 'past' : (i===nextIdx ? 'now' : (n>0 ? 'mk' : ''));
+    if(f.id===selId) cls += ' sel';
 
     var rooms='<span class="none2">—</span>';
     if(n>0){
@@ -997,39 +1062,76 @@ function renderFront(){
     var pcls = n===0?'z':(n>CONFIG.CAPACITY?'o':(n===CONFIG.CAPACITY?'f':''));
     var pnum = n===0 ? '予約なし' : (n+'<span>/'+CONFIG.CAPACITY+'</span>');
 
-    out+='<div class="brow '+cls+'">'
+    out+='<div class="brow '+cls+'" onclick="selectRow(\''+esc(f.id)+'\')">'
       +'<div class="ftm">'+esc(t)+(f.is_temporary?'<span class="ftag">臨</span>':'')+'</div>'
       +'<div class="frt">'+shortRoute(f)
-        +(f.note?' <span class="fmemo">📝 '+esc(f.note)+'</span>':'')+'</div>'
+        +(f.note?' <span class="fmemo">📝</span>':'')+'</div>'
       +'<div class="frooms">'+rooms+'</div>'
       +'<div class="fpax '+pcls+'">'+pnum+'</div>'
-      +'<button class="fadd" onclick="openRes(\''+esc(f.id)+'\')">＋</button>'
-      +'<button class="fmore" onclick="toggleRow(\''+esc(f.id)+'\')">'+(openRows[f.id]?'▲':'⋯')+'</button>'
+      +'<button class="fadd" onclick="event.stopPropagation();openRes(\''+esc(f.id)+'\')">＋</button>'
+      +'<div class="fchev">›</div>'
       +'</div>';
-
-    if(openRows[f.id]){
-      var d='<div class="fdet"><div style="font-size:14px;color:#6b7684;margin-bottom:8px">'
-        +esc(hm(f.departure_time))+'　'+esc(f.origin)+' → '+esc(f.destination)+'</div>';
-      if(n>0){
-        d+='<ul class="res">';
-        for(var j=0;j<f.reservations.length;j++){
-          var r=f.reservations[j];
-          d+='<li><span class="who">'+esc(who(r))+'</span><span><span class="cnt">'+esc(r.passenger_count)+'名</span>'
-            +'<button class="mini e" onclick="openResEdit(\''+esc(f.id)+'\',\''+esc(r.id)+'\')">修正</button>'
-            +'<button class="mini d" onclick="delRes(\''+esc(r.id)+'\')">削除</button></span></li>';
-        }
-        d+='</ul>';
-      }
-      d+='<div class="acts"><button class="btn btn-g" onclick="openEdit(\''+esc(f.id)+'\')">⚙️ 便を変更</button>'
-        +'<button class="btn btn-g" onclick="openNote(\''+esc(f.id)+'\')">📝 メモ</button>'
-        +(f.is_temporary?'<button class="btn btn-g" onclick="delFlight(\''+esc(f.id)+'\')">🗑 この臨時便を削除</button>':'')
-        +'</div></div>';
-      out+=d;
-    }
   }
   out+='</div></div>';
   box.innerHTML = shown ? out : '<div class="empty">この区分の便はありません。</div>';
+  renderDetail();
   renderAlarmBar();
+}
+
+// 右側（狭い画面では下から出るパネル）
+function renderDetail(){
+  var box = el('detailF'); if(!box) return;
+  var f = selId ? findAny(selId) : null;
+  if(!f){
+    document.body.classList.remove('sheet');
+    box.classList.add('empty2');
+    box.innerHTML = '<div class="dhint">便を選ぶと、ここに詳細が出ます</div>';
+    return;
+  }
+  box.classList.remove('empty2');
+  document.body.classList.add('sheet');
+  var n = pax(f), cur = nowMin(), diff = toMin(f.departure_time) - cur;
+  var head = '', cd = '';
+  if(dateStr===todayStr){
+    if(diff < 0){ head='';   cd='<div class="dcd done">出発済み（'+(-diff)+'分前）</div>'; }
+    else if(diff <= CONFIG.SOON_MIN){ head='now'; cd='<div class="dcd soon">'+untilText(diff)+'</div>'; }
+    else { head='now'; cd='<div class="dcd">'+untilText(diff)+'</div>'; }
+  }
+  if(n>0 && head==='') head='mk';
+  var pcls = n===0?'z':(n>CONFIG.CAPACITY?'o':(n===CONFIG.CAPACITY?'f':''));
+
+  var h2 = '<div class="dcard"><div class="dhead '+head+'">'
+    + '<div class="dtm">'+esc(hm(f.departure_time))+(f.is_temporary?'<span class="dtag">臨時便</span>':'')+'</div>'
+    + '<div class="drt">'+esc(f.origin)+' → '+esc(f.destination)+'</div>'
+    + cd
+    + '<div class="dpax '+pcls+'"><span class="n">'+(n===0?'予約なし':n)+'</span>'
+      + (n>0?'<span class="c">定員 '+CONFIG.CAPACITY+'名</span>':'')+'</div>'
+    + '<button class="sheetclose" onclick="closeDetail()">✕</button>'
+    + '</div><div class="dbody">';
+
+  if(f.note) h2 += '<div class="dmemo">📝 '+esc(f.note)+'</div>';
+
+  if(n>0){
+    h2 += '<ul class="dres">';
+    for(var j=0;j<f.reservations.length;j++){
+      var r=f.reservations[j];
+      h2 += '<li><span class="rm">'+esc(who(r))+'</span><span style="white-space:nowrap">'
+        + '<span class="ct">'+esc(r.passenger_count)+'名</span>'
+        + '<button class="mini e" onclick="openResEdit(\''+esc(f.id)+'\',\''+esc(r.id)+'\')">修正</button>'
+        + '<button class="mini d" onclick="delRes(\''+esc(r.id)+'\')">削除</button></span></li>';
+    }
+    h2 += '</ul>';
+  } else {
+    h2 += '<div class="dnone">この便に予約は入っていません</div>';
+  }
+
+  h2 += '<div class="dbtns">'
+    + '<button class="btn btn-p w" onclick="openRes(\''+esc(f.id)+'\')">＋ 予約を追加</button>'
+    + '<button class="btn btn-g" onclick="openEdit(\''+esc(f.id)+'\')">⚙️ 便を変更</button>'
+    + '<button class="btn btn-g" onclick="openNote(\''+esc(f.id)+'\')">📝 メモ</button>'
+    + (f.is_temporary?'<button class="btn btn-g" onclick="delFlight(\''+esc(f.id)+'\')">🗑 削除</button>':'')
+    + '</div></div></div>';
+  box.innerHTML = h2;
 }
 
 function renderDriver(){
@@ -1048,7 +1150,7 @@ function renderDriver(){
   }else{
     var f=flightsD[idx], n=pax(f), diff=toMin(f.departure_time)-cur;
     var cls=diff<0?'late':(diff<=CONFIG.SOON_MIN?'soon':'');
-    var cd=diff<0?('出発時刻を'+(-diff)+'分過ぎています'):(diff===0?'まもなく出発':('あと '+diff+' 分'));
+    var cd=diff<0?('出発時刻を'+(-diff)+'分過ぎています'):(diff===0?'まもなく出発':untilText(diff));
     var h='<div class="next '+cls+'"><div class="lab">次の便</div><div class="big">'+esc(hm(f.departure_time))+'</div>'
       +'<div class="cd">'+cd+'</div><div class="rt2">'+esc(f.origin)+' → '+esc(f.destination)
       +(f.is_temporary?'（臨時便）':'')+'</div>';
@@ -1763,6 +1865,23 @@ async function saveAlarm(){
     render();
   }catch(e){ el('alMsg').innerHTML = '<span style="color:#b32020">'+esc(e.message)+'</span>'; }
   b.disabled = false; b.innerText = 'アラームの設定を保存する';
+}
+
+/* ---------- 設定：3つのタブ ---------- */
+const SGRP = {
+  bus:  '送迎バスの時刻表・アラームの設定です。<b>ふだん触るのはここだけです。</b>',
+  guide:'お客様がQRコードで見る<b>案内ページ</b>の設定です。送迎バスとは関係ありません。',
+  data: 'データの書き出し・リセット・説明書など、たまにしか使わないものです。'
+};
+let curGrp = 'bus';
+function setGrp(g, btn){
+  curGrp = g;
+  var bs = document.querySelectorAll('.stabs button');
+  for(var i=0;i<bs.length;i++) bs[i].classList.remove('on');
+  if(btn) btn.classList.add('on');
+  var ps = document.querySelectorAll('#viewS .panel');
+  for(var j=0;j<ps.length;j++) ps[j].classList.toggle('hide', ps[j].getAttribute('data-grp') !== g);
+  el('sgNote').innerHTML = SGRP[g] || '';
 }
 
 /* ---------- 案内ページ：表示のON/OFF・文章・お知らせ ---------- */
