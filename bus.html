@@ -731,16 +731,16 @@ select{border:1px solid var(--line); background:#fff; padding:10px; border-radiu
 <!-- ログイン -->
 <div id="mLogin" class="ov"><div class="mod">
   <h3>🔐 ログインが必要です</h3>
-  <p class="sub" id="loginMsg">宿の共有アカウントでログインしてください。<br>
+  <p class="sub" id="loginMsg">登録されているアカウントでログインしてください。<br>
     <b>この端末では、次からは自動でログインされます。</b></p>
   <div class="fg"><label>メールアドレス</label>
-    <input type="email" id="lgMail" autocomplete="username" inputmode="email" placeholder="例）asagirisou.front@gmail.com"></div>
+    <input type="email" id="lgMail" autocomplete="username" inputmode="email" placeholder="登録されているメールアドレス"></div>
   <div class="fg"><label>パスワード</label>
     <input type="password" id="lgPass" autocomplete="current-password"></div>
   <div id="lgErr" class="hide" style="background:#ffecec;border:1px solid #f3c0c0;color:#a01b1b;
     border-radius:8px;padding:10px 12px;font-size:13px;line-height:1.7;margin-bottom:10px"></div>
   <div class="mbtn"><button class="bs" id="lgBtn" onclick="doLogin()" style="flex:1">ログイン</button></div>
-  <p class="sub" style="margin-top:12px">パスワードが分からないときは、フロントの引き継ぎ書類を確認してください。</p>
+  <p class="sub" style="margin-top:12px">ログイン情報が分からないときは、引き継ぎ書類を確認してください。</p>
 </div></div>
 
 <div id="mDanger" class="ov"><div class="mod">
@@ -910,7 +910,7 @@ async function boot(){
     el('boot').classList.add('hide');
     if(isAuthErr(e)){
       setView('front');
-      showLogin('このデータを見るには、宿の共有アカウントでのログインが必要です。<br>'
+      showLogin('このデータを見るには、ログインが必要です。<br>'
         +'<b>この端末では、次からは自動でログインされます。</b>');
       return;
     }
@@ -1344,8 +1344,8 @@ async function doLogin(){
     paintAuth();
     location.reload();     // 権限が変わるので、読み込み直すのが確実
   }catch(e){
-    er.innerHTML='ログインできませんでした。<br>メールアドレスとパスワードを確かめてください。<br>'
-      +'<span style="font-size:12px;color:#7a4b4b">'+esc(e.message||'')+'</span>';
+    er.innerHTML='ログインできませんでした。<br>メールアドレスとパスワードを確かめてください。';
+    console.warn('login error:', e.message||e);
     er.classList.remove('hide');
     b.disabled=false; b.innerText='ログイン';
   }
